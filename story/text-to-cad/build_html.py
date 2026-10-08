@@ -3,7 +3,7 @@
 """从 script.json 生成 index.html（电光青蓝主题，text-to-cad 短篇：4 场景 ≤60s）"""
 import json, os, html
 
-STORY = "/Volumes/PSSD/抖音视频/story/text-to-cad"
+STORY = os.path.dirname(os.path.abspath(__file__))
 
 def render_stat(s):
     return "".join(f'<div class="stat"><div class="k">{html.escape(x["k"])}</div><div class="v">{html.escape(x["v"])}</div></div>' for x in s)

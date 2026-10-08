@@ -2,7 +2,7 @@
 """腾讯元宝桌宠 - 抖音竖屏视频生成器（沿用产线规范，支持截图场景）"""
 import json, os, re, shutil, subprocess, sys, time
 
-PIPELINE_DIR = "/Volumes/PSSD/抖音视频"
+PIPELINE_DIR = os.environ.get("PIPELINE_ROOT") or os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, PIPELINE_DIR)
 import generate_news_card_video as g
 

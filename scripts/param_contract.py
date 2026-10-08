@@ -3,7 +3,7 @@
 """
 param_contract.py —— 参数快照（snapshot）与漂移比对（diff）
 
-所属产线：/Volumes/PSSD/抖音视频（Python + FFmpeg + HyperFrames 竖屏短视频）
+所属产线：hyperframes 竖屏短视频产线（部署根由 PIPELINE_HOME / 仓库位置决定）
 参数合同：config/param_contract.json（contract_version 1.0.0）
 资料来源：AI-Film-Studio (qpzRm) 通用参数漂移清单 10 项 + 两级负控节奏
 
@@ -53,7 +53,11 @@ PEAKS_DIR = os.path.join(ROOT_DEFAULT, "reports", "peaks")
 DEFAULT_MODEL_DIR = os.path.expanduser(
     "~/Projects/qwen3-tts-apple-silicon/models/Qwen3-TTS-12Hz-1.7B-Base-8bit"
 )
-BREW_BIN = "/opt/homebrew/bin"
+# 跨平台适配层（真源 scripts/platform_env.py）：PATH/which 查找 + 环境变量覆盖，
+# 不再写死 /opt/homebrew/bin 等 macOS 路径。本模块保留同名薄封装以兼容既有调用点。
+if SCRIPT_DIR not in sys.path:
+    sys.path.insert(0, SCRIPT_DIR)
+import platform_env  # noqa: E402
 
 SEVERITY = {"OK": 0, "SKIP": 1, "WARN": 2, "FAIL": 3}
 
@@ -77,21 +81,17 @@ def _first_exec(cands):
 
 
 def find_tool(name: str):
-    """定位可执行文件：环境变量 → PATH → Homebrew/macOS 常见路径。"""
-    return _first_exec([
-        os.environ.get(name.upper().replace("-", "_")),
-        shutil.which(name),
-        os.path.join(BREW_BIN, name),
-        os.path.join("/usr/local/bin", name),
-        os.path.join("/opt/homebrew/opt/ffmpeg-full/bin", name),
-        os.path.join("/usr/bin", name),
-    ])
+    """定位可执行文件：环境变量（PIPELINE_<TOOL> / <TOOL>）→ PATH → 平台常见路径。
+
+    跨平台实现在 platform_env.find_tool：macOS(Homebrew/MacPorts) / Linux(/usr,
+    /usr/local,snap,linuxbrew,~/.local) / Windows(WinGet Links,scoop shims,Program Files)。
+    """
+    return platform_env.find_tool(name)
 
 
 def brew_env():
-    env = dict(os.environ)
-    env["PATH"] = BREW_BIN + ":/usr/local/bin:" + env.get("PATH", "")
-    return env
+    """PATH 已按平台补齐的环境变量副本（历史名保留；Linux/Windows 同样适用）。"""
+    return platform_env.tool_env()
 
 
 def now_iso():

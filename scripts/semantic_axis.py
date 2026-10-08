@@ -34,19 +34,21 @@ from datetime import datetime
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# 跨平台适配层（真源 scripts/platform_env.py）：工具按 PATH/which + 平台常见位解析，
+# 支持环境变量覆盖（PIPELINE_<TOOL> / <TOOL>）。
+_SDIR = os.path.dirname(os.path.abspath(__file__))
+if _SDIR not in sys.path:
+    sys.path.insert(0, _SDIR)
+import platform_env  # noqa: E402
+
 
 def _which(name: str) -> str:
-    """解析可执行文件：先 PATH，再 macOS 常见安装位（Homebrew arm64/x86、MacPorts）。"""
-    import shutil as _sh
-    hit = _sh.which(name)
-    if hit:
-        return hit
-    for d in ("/opt/homebrew/bin", "/usr/local/bin", "/opt/local/bin", "/usr/bin"):
-        cand = os.path.join(d, name)
-        if os.path.isfile(cand) and os.access(cand, os.X_OK):
-            return cand
-    return name
-WHISPER = "/opt/homebrew/bin/whisper-cli"
+    """解析可执行文件：环境变量 → PATH → 平台常见安装位（跨平台，见 platform_env）。"""
+    return platform_env.find_tool(name) or name
+
+
+# whisper.cpp 可执行：PATH/平台常见位解析（环境变量 PIPELINE_WHISPER_CLI / WHISPER_CLI 可覆盖）
+WHISPER = platform_env.find_tool("whisper-cli") or ""
 KEEP = re.compile(r"[\u3400-\u9fff\uf900-\ufaffA-Za-z0-9]+")
 
 
@@ -90,8 +92,11 @@ def main() -> int:
     if not os.path.isfile(sp) or not os.path.isfile(audio):
         print(f"[semantic] 编排器侧故障：缺 {sp} 或 {audio}", file=sys.stderr)
         return 1
-    if not os.path.isfile(WHISPER):
-        print(f"[semantic] 编排器侧故障：缺 ASR 可执行 {WHISPER}", file=sys.stderr)
+    if not WHISPER or not os.path.isfile(WHISPER):
+        print(f"[semantic] 编排器侧故障：找不到 ASR 可执行 whisper-cli（当前解析值 {WHISPER or '未找到'}）。\n"
+              f"  修复：安装 whisper.cpp 并确保 whisper-cli 在 PATH，或 export "
+              f"PIPELINE_WHISPER_CLI=/绝对/路径/whisper-cli（Windows 为 whisper-cli.exe）；\n"
+              f"  自检：python3 scripts/doctor.py", file=sys.stderr)
         return 1
     if not os.path.isfile(a.model):
         print(f"[semantic] 编排器侧故障：缺 ASR 模型 {a.model}", file=sys.stderr)

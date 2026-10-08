@@ -36,20 +36,17 @@ from datetime import datetime
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# 跨平台适配层（真源 scripts/platform_env.py）：工具按 PATH/which + 平台常见位解析，
+# 支持环境变量覆盖（PIPELINE_<TOOL> / <TOOL>）。
+_SDIR = os.path.dirname(os.path.abspath(__file__))
+if _SDIR not in sys.path:
+    sys.path.insert(0, _SDIR)
+import platform_env  # noqa: E402
+
 
 def _which(name: str) -> str:
-    """解析可执行文件：先 PATH，再 macOS 常见安装位（Homebrew arm64/x86、MacPorts）。"""
-    import shutil as _sh
-    hit = _sh.which(name)
-    if hit:
-        return hit
-    for _d in ("/opt/homebrew/bin", "/usr/local/bin", "/opt/local/bin", "/usr/bin"):
-        _c = os.path.join(_d, name)
-        if os.path.isfile(_c) and os.access(_c, os.X_OK):
-            return _c
-    return name
-
-
+    """解析可执行文件：环境变量 → PATH → 平台常见安装位（跨平台，见 platform_env）。"""
+    return platform_env.find_tool(name) or name
 PATTERNS = [
     (r"Math\.random", "HIGH", "运行时随机数：每次渲染取值不同"),
     (r"Date\.now|new Date\s*\(|performance\.now", "HIGH", "读取时钟：与渲染时刻绑定"),

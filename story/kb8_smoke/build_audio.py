@@ -19,8 +19,8 @@ import wave
 
 import numpy as np
 
-ROOT = "/Volumes/PSSD/抖音视频"
-STORY = os.path.join(ROOT, "story/kb8_smoke")
+ROOT = os.environ.get("PIPELINE_ROOT") or os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+STORY = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
 
 import generate_qa_video as qa
@@ -31,8 +31,10 @@ from append_epilogue import reshape_g
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import rhythm as RZ
 
-FFMPEG = "/opt/homebrew/bin/ffmpeg"
-FFPROBE = "/opt/homebrew/bin/ffprobe"
+sys.path.insert(0, os.path.join(ROOT, "scripts"))   # 跨平台适配层真源
+import platform_env
+FFMPEG = platform_env.require_tool("ffmpeg", purpose="配音转码 / 静音检测")
+FFPROBE = platform_env.require_tool("ffprobe", purpose="配音时长探测")
 
 # G 版停顿表（由 rhythm 真源回填，保持既有变量名兼容）
 PAUSE_COMMA = RZ.PAUSE_COMMA

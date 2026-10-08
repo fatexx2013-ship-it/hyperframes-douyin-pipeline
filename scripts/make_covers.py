@@ -32,30 +32,24 @@ from PIL import Image, ImageDraw, ImageFont
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# 跨平台适配层（真源 scripts/platform_env.py）：工具与中文字体按平台探测，
+# 支持环境变量覆盖（FONT_FILE / STORY_FONT_FAMILY / PIPELINE_FFMPEG ...）。
+_SDIR = os.path.dirname(os.path.abspath(__file__))
+if _SDIR not in sys.path:
+    sys.path.insert(0, _SDIR)
+import platform_env  # noqa: E402
+
 
 def _which(name: str) -> str:
-    """解析可执行文件：先 PATH，再 macOS 常见安装位（Homebrew arm64/x86、MacPorts）。"""
-    import shutil as _sh
-    hit = _sh.which(name)
-    if hit:
-        return hit
-    for _d in ("/opt/homebrew/bin", "/usr/local/bin", "/opt/local/bin", "/usr/bin"):
-        _c = os.path.join(_d, name)
-        if os.path.isfile(_c) and os.access(_c, os.X_OK):
-            return _c
-    return name
+    """解析可执行文件：环境变量 → PATH → 平台常见安装位（跨平台）。"""
+    return platform_env.find_tool(name) or name
+
 
 THEME = (255, 89, 38)
 INK = (242, 242, 245)
 INK3 = (154, 154, 163)
 CARD = (27, 30, 36)
 W, H = 1080, 1920
-FONT_CANDIDATES = [
-    "/System/Library/AssetsV2/com_apple_MobileAsset_Font8/*/AssetData/PingFang.ttc",
-    "/System/Library/Fonts/PingFang.ttc",
-    "/System/Library/Fonts/Supplemental/Hiragino Sans GB.ttc",
-    "/System/Library/Fonts/Supplemental/Songti.ttc",
-]
 
 
 def _ts() -> str:
@@ -63,14 +57,20 @@ def _ts() -> str:
 
 
 def pick_font(size: int):
-    for pat in FONT_CANDIDATES:
-        for p in sorted(glob.glob(pat)):
-            try:
-                return ImageFont.truetype(p, size), os.path.basename(p)
-            except OSError:
-                continue
-    f = ImageFont.load_default(size)
-    return f, "PIL-default"
+    """按平台挑中文字体：macOS PingFang / Linux Noto Sans CJK / Windows 微软雅黑。
+
+    三个平台都找不到时抛 FontNotFound，报错含各平台安装命令（不静默退回 PIL 默认字体，
+    否则封面会出现方块字）。
+    """
+    hit = platform_env.require_font_file(purpose="封面渲染中文字体")
+    try:
+        return ImageFont.truetype(hit, size), os.path.basename(hit)
+    except OSError as exc:
+        raise platform_env.FontNotFound(
+            f"字体文件无法被 PIL 加载：{hit}（{exc}）\n"
+            f"  请更换字体文件：export {platform_env.FONT_FILE_ENV}=/绝对/路径/字体.ttf|ttc\n"
+            f"  自检：python3 scripts/doctor.py"
+        ) from exc
 
 
 def wrap(draw, text, font, max_w):
@@ -215,7 +215,7 @@ def main() -> int:
         "title_b": title_b,
         "font_used": sorted(set(x for x in font_used if x)),
         "style_anchors": {"theme": "#FF5926", "card_bg": "rgba(27,30,36,.94)",
-                          "size": f"{W}x{H}", "font_family": "PingFang SC"},
+                          "size": f"{W}x{H}", "font_family": platform_env.font_family()},
         "covers": made,
         "size_ok": not bad,
         "passed": not bad,

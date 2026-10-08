@@ -3,7 +3,7 @@
 """
 canon_guard.py —— 工程口径吸纳层校验器（对等交换三轮共 22 组口径）
 
-所属产线：/Volumes/PSSD/抖音视频
+所属产线：hyperframes 竖屏短视频产线（部署根由 PIPELINE_HOME / 仓库位置决定）
 真源    ：config/engineering_canons.json（canons 1.5.0，纯新增，未改动任何存量真源）
 对接存量：config/param_contract.json / canonicalization.json / frozen_baseline.json
           / observability_rules.json / negcontrol_cases.json（只读引用，不修改）

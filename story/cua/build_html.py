@@ -21,7 +21,7 @@
 """
 import json, os, html
 
-STORY = "/Volumes/PSSD/抖音视频/story/cua"
+STORY = os.path.dirname(os.path.abspath(__file__))
 
 
 def esc(x):

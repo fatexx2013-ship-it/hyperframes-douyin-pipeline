@@ -7,7 +7,7 @@
 """
 import json, os, html
 
-STORY = "/Volumes/PSSD/抖音视频/story/iopaint"
+STORY = os.path.dirname(os.path.abspath(__file__))
 
 def render_stat(s):
     return "".join(f'<div class="stat"><div class="k">{html.escape(x["k"])}</div><div class="v">{html.escape(x["v"])}</div></div>' for x in s)

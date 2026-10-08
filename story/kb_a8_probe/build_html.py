@@ -20,7 +20,7 @@ V-BASE 视觉提亮基线（真源 docs/产线规范.md v1.12.0，2026-10-07 默
 """
 import json, os, html, sys, re
 
-STORY = "/Volumes/PSSD/抖音视频/story/kb_a8_probe"
+STORY = os.path.dirname(os.path.abspath(__file__))
 
 # A1（v1.13.0）：入场速度按 script.json 的 beat 缩放；无 beat 字段时倍率恒为 1.0，
 # 生成的 index.html 与本文件 .bak-20261008 逐字节一致（默认链路零漂移）。

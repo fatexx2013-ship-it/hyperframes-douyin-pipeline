@@ -3,7 +3,7 @@
 """
 observability_anchors.py —— 观测锚与口径校验器（四条外部方法落地）
 
-所属产线：/Volumes/PSSD/抖音视频
+所属产线：hyperframes 竖屏短视频产线（部署根由 PIPELINE_HOME / 仓库位置决定）
 配置真源：config/observability_rules.json
 资料来源（均为 2026-09-26 交换资料，来源可回溯）
 --------------------------------------------------

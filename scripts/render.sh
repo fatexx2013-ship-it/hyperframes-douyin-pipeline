@@ -32,10 +32,59 @@ VIDEO_HEIGHT="${VIDEO_HEIGHT:-1920}"
 FPS="${FPS:-30}"
 CRF="${CRF:-20}"
 
+# ── 跨平台适配层（真源 scripts/platform_env.py） ────────────
+# 工具解析：环境变量（PIPELINE_FFMPEG / FFMPEG 等）→ PATH → 平台常见安装目录；
+# 不再写死 /opt/homebrew/opt/ffmpeg-full/bin 等 macOS 专属路径。
+PLATFORM_ENV_PY="${PIPELINE_ROOT}/scripts/platform_env.py"
+_plat() {  # $1=子命令 [参数...]；解析失败返回非 0
+    command -v python3 >/dev/null 2>&1 || return 1
+    python3 "$PLATFORM_ENV_PY" "$@" 2>/dev/null
+}
+_resolve_tool() {  # $1=工具名；环境变量 PIPELINE_<TOOL>/<TOOL> → platform_env → PATH
+    local name="$1" upper hit=""
+    upper="$(printf '%s' "$name" | tr '[:lower:]-' '[:upper:]_')"
+    hit="$(printenv "PIPELINE_${upper}" 2>/dev/null || true)"
+    if [[ -z "$hit" ]]; then
+        hit="$(printenv "$upper" 2>/dev/null || true)"
+    fi
+    if [[ -z "$hit" ]]; then
+        hit="$(_plat tool "$name" || true)"
+    fi
+    if [[ -z "$hit" ]]; then
+        hit="$(command -v "$name" 2>/dev/null || true)"
+    fi
+    printf '%s' "$hit"
+}
+
+FFMPEG="$(_resolve_tool ffmpeg)"
+FFPROBE="$(_resolve_tool ffprobe)"
+if [[ -z "$FFMPEG" || -z "$FFPROBE" ]]; then
+    echo "错误：找不到 ffmpeg / ffprobe（当前解析：ffmpeg='${FFMPEG}' ffprobe='${FFPROBE}'）" >&2
+    echo "  修复：安装 FFmpeg（macOS: brew install ffmpeg；Debian-Ubuntu: sudo apt install ffmpeg；" >&2
+    echo "        Windows(WSL2): sudo apt install ffmpeg）或 export PIPELINE_FFMPEG=/绝对/路径/ffmpeg" >&2
+    echo "  自检：python3 ${PIPELINE_ROOT}/scripts/doctor.py   详见 docs/DEPLOY.md" >&2
+    exit 1
+fi
+
+# 字幕字体族：环境变量 STORY_FONT_FAMILY 优先，否则按平台（macOS PingFang SC /
+# Linux Noto Sans CJK SC / Windows Microsoft YaHei）
+FONT_FAMILY="${STORY_FONT_FAMILY:-$(_plat font-family || true)}"
+if [[ -z "$FONT_FAMILY" || "$FONT_FAMILY" == "auto" ]]; then
+    FONT_FAMILY="PingFang SC"
+fi
+
 # ── P0 编码链改造（E6） ────────────────────────────────────
-# HF_ENCODER: videotoolbox(默认, Apple Silicon 硬件编码) | libx264(兼容回退)
+# HF_ENCODER: videotoolbox(Apple Silicon 硬件编码) | libx264(兼容)
+# 默认 auto：macOS 走 videotoolbox（行为与改造前一致），Linux/Windows 走 libx264
+HF_ENCODER="${HF_ENCODER:-auto}"
+if [[ "$HF_ENCODER" == "auto" ]]; then
+    if [[ "$(_plat platform || true)" == "macos" ]]; then
+        HF_ENCODER="videotoolbox"
+    else
+        HF_ENCODER="libx264"
+    fi
+fi
 # 硬件编码模式下终合成直接输出抖音交付规格，post_process.py 检测到达标即跳过重编码
-HF_ENCODER="${HF_ENCODER:-videotoolbox}"
 HF_VIDEO_BITRATE="${HF_VIDEO_BITRATE:-8M}"
 HF_MAXRATE="${HF_MAXRATE:-10M}"
 HF_BUFSIZE="${HF_BUFSIZE:-12M}"
@@ -189,7 +238,7 @@ ScaledBorderAndShadow: yes
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default, PingFang SC, 36, &H00FFFFFF, &H000000FF, &H00000000, &H00000000, 0, 0, 0, 0, 100, 100, 0, 0, 3, 2, 1, 2, 30, 30, 150, 1
+Style: Default, ${FONT_FAMILY}, 36, &H00FFFFFF, &H000000FF, &H00000000, &H00000000, 0, 0, 0, 0, 100, 100, 0, 0, 3, 2, 1, 2, 30, 30, 150, 1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -306,23 +355,23 @@ if [[ "$MODE" == "materials" ]]; then
     for mat in "${STORY_DIR}"/materials/*.mp4; do
         NORM="${NORM_DIR}/norm_${IDX}.mp4"
         echo "规范化 $(basename "$mat")..."
-        /opt/homebrew/opt/ffmpeg-full/bin/ffmpeg -y -i "$mat" -vf "scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=decrease,pad=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2:black,setsar=1,fps=${FPS}" -c:v libx264 -preset medium -crf 24 -pix_fmt yuv420p "$NORM" 2>/dev/null
+        "$FFMPEG" -y -i "$mat" -vf "scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=decrease,pad=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2:black,setsar=1,fps=${FPS}" -c:v libx264 -preset medium -crf 24 -pix_fmt yuv420p "$NORM" 2>/dev/null
         echo "file '$NORM'" >> "$CONCAT_LIST"
         IDX=$((IDX + 1))
     done
     # 拼接
-    /opt/homebrew/opt/ffmpeg-full/bin/ffmpeg -y -f concat -safe 0 -i "$CONCAT_LIST" -c:v libx264 -preset medium -crf 22 -pix_fmt yuv420p -r "$FPS" -an "${STORY_DIR}/_concat_temp.mp4" 2>/dev/null
+    "$FFMPEG" -y -f concat -safe 0 -i "$CONCAT_LIST" -c:v libx264 -preset medium -crf 22 -pix_fmt yuv420p -r "$FPS" -an "${STORY_DIR}/_concat_temp.mp4" 2>/dev/null
     INPUT_VIDEO="${STORY_DIR}/_concat_temp.mp4"
-    DURATION=$(/opt/homebrew/opt/ffmpeg-full/bin/ffprobe -v error -show_entries format=duration -of csv=p=0 "$INPUT_VIDEO" 2>/dev/null | tr -d '\r')
+    DURATION=$("$FFPROBE" -v error -show_entries format=duration -of csv=p=0 "$INPUT_VIDEO" 2>/dev/null | tr -d '\r')
     echo "拼接完成，时长 ${DURATION}s"
 else
-    DURATION=$(/opt/homebrew/opt/ffmpeg-full/bin/ffprobe -v error -show_entries format=duration -of csv=p=0 "$INPUT_VIDEO" 2>/dev/null | tr -d '\r')
+    DURATION=$("$FFPROBE" -v error -show_entries format=duration -of csv=p=0 "$INPUT_VIDEO" 2>/dev/null | tr -d '\r')
     echo "视频时长: ${DURATION}s"
 fi
 
 # ── 获取配音时长 ───────────────────────────────────────────
 
-NARR_DURATION=$(/opt/homebrew/opt/ffmpeg-full/bin/ffprobe -v error -show_entries format=duration -of csv=p=0 "$NARRATION" 2>/dev/null | tr -d '\r')
+NARR_DURATION=$("$FFPROBE" -v error -show_entries format=duration -of csv=p=0 "$NARRATION" 2>/dev/null | tr -d '\r')
 echo "配音时长: ${NARR_DURATION}s"
 
 # ── 构建滤镜图 ─────────────────────────────────────────────
@@ -359,7 +408,7 @@ if [[ -f "$SIMPLE_ASS" ]]; then
     FILTER_PARTS+=("[0:v]scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=decrease,pad=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2:black,drawtext=text=\"抖音号 jerrychen2001\":x=w-tw-20:y=h-th-20:fontsize=24:fontcolor=white@0.6:borderw=1:bordercolor=black@0.8,ass=./sub.ass,format=yuv420p[vout]")
 else
     ln -sf "$CAPTIONS" ./sub.srt
-    FILTER_PARTS+=("[0:v]scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=decrease,pad=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2:black,drawtext=text=\"抖音号 jerrychen2001\":x=w-tw-20:y=h-th-20:fontsize=24:fontcolor=white@0.6:borderw=1:bordercolor=black@0.8,ass=./sub.srt:force_style='FontSize=36,FontName=PingFang SC,Alignment=2,MarginV=150,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=3,Outline=2,Shadow=1',format=yuv420p[vout]")
+    FILTER_PARTS+=("[0:v]scale=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:force_original_aspect_ratio=decrease,pad=${VIDEO_WIDTH}:${VIDEO_HEIGHT}:(ow-iw)/2:(oh-ih)/2:black,drawtext=text=\"抖音号 jerrychen2001\":x=w-tw-20:y=h-th-20:fontsize=24:fontcolor=white@0.6:borderw=1:bordercolor=black@0.8,ass=./sub.srt:force_style='FontSize=36,FontName=${FONT_FAMILY},Alignment=2,MarginV=150,PrimaryColour=&H00FFFFFF,OutlineColour=&H00000000,BorderStyle=3,Outline=2,Shadow=1',format=yuv420p[vout]")
 fi
 
 # [1:a] 配音处理（如果有）
@@ -400,7 +449,7 @@ FILTER_COMPLEX=$(IFS=';'; echo "${FILTER_PARTS[*]}")
 
 # ── 构建完整命令 ───────────────────────────────────────────
 
-CMD=(/opt/homebrew/opt/ffmpeg-full/bin/ffmpeg)
+CMD=("$FFMPEG")
 CMD+=(-y)
 CMD+=("${INPUTS[@]}")
 CMD+=(-filter_complex "$FILTER_COMPLEX")

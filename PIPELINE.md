@@ -73,7 +73,8 @@ python scripts/download_materials.py \
 for f in ~/Projects/qwen3-tts-apple-silicon/outputs/批量配音/narration/*.wav; do
   echo "file '$f'"
 done > /tmp/narr_concat.txt
-/opt/homebrew/bin/ffmpeg -y -f concat -safe 0 -i /tmp/narr_concat.txt \
+FFMPEG="$(python3 scripts/platform_env.py tool ffmpeg || command -v ffmpeg)"
+"$FFMPEG" -y -f concat -safe 0 -i "$TMPDIR/narr_concat.txt" \
   -ar 24000 -ac 1 -c:a pcm_s16le story/001-ai-future/narration.wav
 
 export KMP_DUPLICATE_LIB_OK=TRUE
@@ -516,7 +517,7 @@ set +a
 | HyperFrames 渲染黑屏 | 运行 `npx hyperframes lint` 检查 composition 配置 |
 | 视频尺寸不对 | 确保 Pexels 下载的是 `orientation=portrait` 素材 |
 | 片尾未追加 | 检查 `narration.wav` 是否在成片目录；`script.json` 中 `epilogue.enabled` 是否为 true |
-| 片尾段渲染失败（node not found） | 确保 `/opt/homebrew/bin` 在 PATH 中（hyperframes 依赖 node） |
+| 片尾段渲染失败（node not found） | 确保 `node` / `hyperframes` 可被解析到（PATH，或 `export PIPELINE_HYPERFRAMES=/绝对/路径/hyperframes`），自检 `python3 scripts/doctor.py` |
 
 ---
 

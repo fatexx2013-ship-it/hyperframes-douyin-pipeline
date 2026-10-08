@@ -5,12 +5,14 @@
 """
 import os, sys, json, subprocess
 
-ROOT = "/Volumes/PSSD/抖音视频"
-STORY = os.path.join(ROOT, "story/howtolivebetter")
+ROOT = os.environ.get("PIPELINE_ROOT") or os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+STORY = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, ROOT)
 import generate_qa_video as qa
 
-FFMPEG = "/opt/homebrew/bin/ffmpeg"
+sys.path.insert(0, os.path.join(ROOT, "scripts"))   # 跨平台适配层真源
+import platform_env
+FFMPEG = platform_env.require_tool("ffmpeg", purpose="配音转码 / 静音检测")
 
 def trim_silence(src, dst):
     r = subprocess.run([FFMPEG, "-y", "-i", src, "-af",

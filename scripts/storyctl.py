@@ -33,6 +33,7 @@
                                       两段门禁，可单独重跑，不依赖 build
                                       · --check 为显式 opt-in（保持 qc 原语义）
   storyctl catalog voice|video|frontend
+  storyctl doctor [--tts]              跨平台自检：工具链/字体/不变量/TTS provider 配置
 
 产物命名收口：`douyin.mp4` + `douyin_epilogue.mp4`
 （废弃 `douyin_final.mp4` / `output.mp4` 旧命名；既有项目不改动）
@@ -64,8 +65,14 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+# 跨平台适配层（scripts/platform_env.py）与 TTS provider 抽象（scripts/tts_provider.py）
+# 与本脚本同目录：先确保同目录在 sys.path 上，再导入（不依赖调用方式）。
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import platform_env  # noqa: E402
+import tts_provider  # noqa: E402
+
 # ── 路径常量（全部以本脚本位置为准，避免硬编码 cwd） ──────────────────────
-ROOT = Path(__file__).resolve().parent.parent          # /Volumes/PSSD/抖音视频
+ROOT = Path(__file__).resolve().parent.parent          # 仓库根（自动推导，不写死绝对路径）
 STORY_ROOT = ROOT / "story"
 SCRIPTS = ROOT / "scripts"
 GATE_PY = SCRIPTS / "design_ai_gate.py"                # 段1：渲染前门禁
@@ -82,8 +89,35 @@ KB_SLOTS_PY = ROOT / "scripts" / "template_slots.py"       # KB-A8 模板库槽�
 CATALOG_JSON = ROOT / "config" / "selection_catalog.json"
 
 # ── 可调外部命令（环境变量可覆盖，便于换 venv / 本地 CLI） ────────────────
-PY = os.environ.get("STORYCTL_PYTHON", "python3")
-HYPERFRAMES = os.environ.get("STORYCTL_HYPERFRAMES", "npx hyperframes")
+# 跨平台解析：环境变量 > 仓库 venv > PATH/平台常见目录（Windows 补 .exe）> 兜底
+
+
+def _resolve_python() -> str:
+    env = os.environ.get("STORYCTL_PYTHON", "").strip()
+    if env:
+        return env
+    for rel in (".venv/bin/python", ".venv/Scripts/python.exe",
+                "venv/bin/python", "venv/Scripts/python.exe"):
+        cand = ROOT / rel
+        if cand.is_file():
+            return str(cand)
+    return (platform_env.find_tool("python3") or platform_env.find_tool("python")
+            or sys.executable or "python3")
+
+
+def _resolve_hyperframes() -> list:
+    raw = os.environ.get("STORYCTL_HYPERFRAMES", "").strip()
+    if raw:
+        return raw.split()
+    hit = platform_env.find_tool("hyperframes")
+    if hit:
+        return [hit]
+    npx = platform_env.find_tool("npx") or platform_env.find_tool("npx.cmd") or "npx"
+    return [npx, "hyperframes"]
+
+
+PY = _resolve_python()
+HYPERFRAMES = _resolve_hyperframes()
 
 # ── 脚手架模板（per-story 双脚本路线的样板 story） ───────────────────────
 DEFAULT_TEMPLATE = os.environ.get("STORYCTL_TEMPLATE", "compositor-mac")
@@ -185,7 +219,8 @@ def run_step(step: str, cmd, cwd: Path, dry_run: bool = False) -> int:
         _log("  [dry-run] 未执行")
         return EXIT_OK
     try:
-        proc = subprocess.run([str(c) for c in cmd], cwd=str(cwd))
+        # 注入跨平台工具链 PATH（node/npx 等 shim 依赖 PATH，避免调用方 shell PATH 精简导致 rc=127）
+        proc = subprocess.run([str(c) for c in cmd], cwd=str(cwd), env=platform_env.tool_env())
     except FileNotFoundError as exc:
         _err(f"{step}: 找不到可执行文件 —— {exc}")
         return EXIT_ORCH
@@ -703,6 +738,37 @@ def _render_output(sd: Path, name: str) -> Path:
     return sd / "renders" / f"{name}_{stamp}.mp4"
 
 
+def tts_preflight(dry_run: bool = False) -> int:
+    """build_audio 前置：TTS provider 配置自检（跨平台可插拔 provider 闸门）。
+
+    口径（与 config/tts.json 真源一致）：
+      · 自检在 build 实际使用的解释器（PY）里执行，确保 mlx-audio 等依赖的可见性
+        与被测解释器一致；
+      · provider 未配置/依赖缺失/凭据缺失 → 明确报错并中止（退出码 1），
+        **不静默降级**到其它 provider；
+      · 只读检查：不写盘、不联网（云端 provider 的凭据仅从环境变量读取）。
+    """
+    if dry_run:
+        _log("▶ TTS provider 自检（dry-run 仍执行：只读、不联网）")
+    try:
+        proc = subprocess.run([PY, str(SCRIPTS / "tts_provider.py")],
+                              cwd=str(ROOT), capture_output=True, text=True)
+    except FileNotFoundError as exc:
+        _err(f"TTS 自检失败：找不到解释器 {PY}（{exc}）")
+        return EXIT_ORCH
+    msg = (proc.stdout or "").strip() or (proc.stderr or "").strip()
+    first = msg.splitlines()[0] if msg else ""
+    if proc.returncode != 0:
+        _err("TTS provider 配置未就绪，build_audio 未启动（未配置即失败，不静默降级）：\n"
+             + (msg or "（无输出）"))
+        return EXIT_ORCH
+    _log(f"1/6 前置 · TTS provider 自检 —— 就绪：{first}")
+    if msg and msg != first:
+        for line in msg.splitlines()[1:]:
+            _log(f"    {line}")
+    return EXIT_OK
+
+
 def cmd_build(args) -> int:
     name = args.name
     sd = resolve_story(name)
@@ -758,6 +824,12 @@ def cmd_build(args) -> int:
             _log("0.5/6 文案去 AI 味 —— 完成（无 FAIL 级命中）")
 
     # 1) 配音 + 时间轴回填
+    #    前置：TTS provider 配置自检（跨平台可插拔 provider；未配置即明确报错，
+    #    严禁静默降级到其它 provider）。自检在 build 实际使用的解释器（PY）里执行，
+    #    避免「storyctl 的解释器」与「build_audio 的解释器」不一致导致误判。
+    rc = tts_preflight(dry_run=dry)
+    if rc != EXIT_OK:
+        return rc
     rc = run_step("1/6 build_audio.py（逐句配音 + 时间轴回填）",
                   [PY, str(sd / "build_audio.py")], cwd=sd, dry_run=dry)
     if rc != EXIT_OK:
@@ -830,7 +902,7 @@ def cmd_build(args) -> int:
     #    时默认 portrait-4k 超采样；显式置白名单档位覆盖，置 off/none/1x 则完全不
     #    追加 --resolution（命令行与默认化前逐字节一致）。交付尺寸/编码仍由
     #    post_process 从合同真源收口。
-    render_cmd = HYPERFRAMES.split() + ["render", "--fps", "30", "--quality", "high"]
+    render_cmd = list(HYPERFRAMES) + ["render", "--fps", "30", "--quality", "high"]
     _raw = os.environ.get(RENDER_RESOLUTION_ENV)
     _explicit = _raw is not None and _raw.strip() != ""
     res = _raw.strip() if _explicit else RENDER_RESOLUTION_DEFAULT
@@ -1028,6 +1100,21 @@ def cmd_catalog(args) -> int:
 # CLI
 # ══════════════════════════════════════════════════════════════════════════
 
+def cmd_doctor(args) -> int:
+    """跨平台自检（scripts/doctor.py 的编排器入口）。
+
+    检查项：平台/架构、python 与工具链（ffmpeg/ffprobe/node/hyperframes/whisper-cli）、
+    中文字体候选、不变量（只读 param_contract.json：1080×1920 / 30fps / 编码链）、
+    TTS provider 配置。退出码沿用 doctor.py：0 = 无阻塞项，1 = 存在阻塞项。
+    """
+    cmd = [PY, str(SCRIPTS / "doctor.py")]
+    if args.tts:
+        cmd.append("--tts")
+    if args.verbose:
+        cmd.append("--verbose")
+    return run_step("doctor.py（跨平台自检）", cmd, cwd=ROOT, dry_run=args.dry_run)
+
+
 def build_parser() -> _Parser:
     ap = _Parser(
         prog="storyctl",
@@ -1036,7 +1123,7 @@ def build_parser() -> _Parser:
         epilog="退出码：0=成功 / 1=编排器侧故障（含门禁用法错误）/ 2=成片检出问题\n"
                "产物命名收口：douyin.mp4 + douyin_epilogue.mp4",
     )
-    sub = ap.add_subparsers(dest="command", metavar="{new,build,qc,catalog}",
+    sub = ap.add_subparsers(dest="command", metavar="{new,build,qc,catalog,doctor}",
                             parser_class=_Parser)
 
     p_new = sub.add_parser("new", help="脚手架：复制模板 story 并注入 STORY/name")
@@ -1127,6 +1214,13 @@ def build_parser() -> _Parser:
     p_cat.add_argument("category", choices=["voice", "video", "frontend"])
     p_cat.set_defaults(func=cmd_catalog)
 
+    p_doc = sub.add_parser("doctor", help="跨平台自检：工具链/字体/不变量/TTS provider")
+    p_doc.add_argument("--tts", action="store_true",
+                       help="只跑 TTS provider 配置自检（跨平台可插拔 provider 的配置体检）")
+    p_doc.add_argument("--verbose", action="store_true", help="打印每个工具命中的路径明细")
+    p_doc.add_argument("--dry-run", action="store_true", help="只打印命令不执行")
+    p_doc.set_defaults(func=cmd_doctor)
+
     return ap
 
 
@@ -1135,7 +1229,7 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
     if not getattr(args, "command", None):
         ap.print_help(sys.stderr)
-        _err("缺少子命令，可选：new / build / qc / catalog")
+        _err("缺少子命令，可选：new / build / qc / catalog / doctor")
         return EXIT_ORCH
     try:
         return args.func(args)

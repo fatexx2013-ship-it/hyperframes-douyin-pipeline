@@ -26,13 +26,18 @@ sys.path.insert(0, ROOT)
 import generate_qa_video as qa
 from append_epilogue import reshape_g
 
+# A1（v1.13.0）：停顿表不再在本脚本硬编码，统一由 scripts/rhythm.py 解析
+# script.json 的 beat/pause_before/pause_after/gap_after；无字段时其返回值与原 G 版常量一致。
+sys.path.insert(0, os.path.join(ROOT, "scripts"))
+import rhythm as RZ
+
 FFMPEG = "/opt/homebrew/bin/ffmpeg"
 FFPROBE = "/opt/homebrew/bin/ffprobe"
 
-# G 版停顿表
-PAUSE_COMMA = 0.25
-PAUSE_PERIOD = 0.75
-PAUSE_PARAGRAPH = 1.20
+# G 版停顿表（由 rhythm 真源回填，保持既有变量名兼容）
+PAUSE_COMMA = RZ.PAUSE_COMMA
+PAUSE_PERIOD = RZ.PAUSE_PERIOD
+PAUSE_PARAGRAPH = RZ.PAUSE_PARAGRAPH
 
 
 def dur_of(path):
@@ -63,9 +68,31 @@ def trailing_check(path):
     return n
 
 
+def segments_gap_src(rz, k):
+    """取第 k→k+1 段停顿的来源说明（用于日志与规范可追溯）。"""
+    for g in rz["gaps"]:
+        if g["from"] == k:
+            extra = g["pause_after_extra"] + g["pause_before_extra"]
+            return g["base_source"] + (f" + 覆盖 {extra:.2f}s" if extra else "")
+    return "默认段落停顿"
+
+
 def main():
     script = json.load(open(os.path.join(STORY, "script.json"), encoding="utf-8"))
     scenes = script["scenes"]
+
+    # A1：先解析全篇节奏（beat / 停顿覆盖），缺字段时等价原 G 版
+    rz = RZ.resolve(script)
+    rz_issues = RZ.validate(script)
+    for it in rz_issues:
+        if it["level"] in ("FAIL", "WARN"):
+            print(f"[rhythm/{it['level']}] {it['id']} {it['detail']}", flush=True)
+    if any(it["level"] == "FAIL" for it in rz_issues):
+        raise SystemExit("节奏参数体检 FAIL：请先修 script.json 的 beat/停顿字段")
+    if rz["has_overrides"]:
+        print("[rhythm] 检测到节奏覆盖：" +
+              " ".join(f"#{s['scene_index']}beat{s['beat']}/×{s['enter_scale']}"
+                       for s in rz["segments"]), flush=True)
 
     # 1) 逐场景（逐句）Qwen3 御姐配音 + G 版重排
     line_metas = []
@@ -100,13 +127,18 @@ def main():
         w.close()
 
     chunks, starts, t = [], [], 0.0
+    gap_log = []
     for k, fr in enumerate(frames):
         starts.append(t)
         chunks.append(fr)
         t += len(fr) / sr
         if k != len(frames) - 1:
-            gap = PAUSE_PARAGRAPH
-            chunks.append(np.zeros(int(gap * sr), dtype=np.float32))
+            # A1：句间停顿按节奏解析结果取值（无覆盖时 == PAUSE_PARAGRAPH）
+            gap = RZ.gap_for(rz, k, default=PAUSE_PARAGRAPH)
+            nxt = segments_gap_src(rz, k)
+            gap_log.append({"from": k, "gap": round(gap, 3), "base_source": nxt})
+            print(f"  [rhythm] segment#{k}→#{k+1} 停顿 {gap:.2f}s（{nxt}）", flush=True)
+            chunks.append(np.zeros(int(round(gap * sr)), dtype=np.float32))
             t += gap
     total_voice = t
 
@@ -135,7 +167,10 @@ def main():
         sc["_start"] = round(st, 2)
         sc["_end"] = round(st + lm["duration"], 2)
         flat_lines.append({"scene_index": i, "text": lm["text"],
-                           "start": round(st, 2), "end": round(st + lm["duration"], 2)})
+                           "start": round(st, 2), "end": round(st + lm["duration"], 2),
+                           "beat": rz["segments"][i]["beat"] if i < len(rz["segments"]) else None,
+                           "enter_scale": rz["segments"][i]["enter_scale"]
+                           if i < len(rz["segments"]) else 1.0})
     script["scenes"] = scenes
     script["lines"] = flat_lines
     script["total_duration"] = round(total_voice, 2)
@@ -148,6 +183,16 @@ def main():
         "pause_paragraph": PAUSE_PARAGRAPH,
         "sample_rate": sr, "channels": 1,
         "silence_ge_040s_total": sum(lm["silence_ge_040s"] for lm in line_metas),
+        # A1（v1.13.0）：节奏解析留痕，便于回溯"这条片子的停顿是谁定的"
+        "rhythm": {
+            "version": "A1/v1",
+            "resolver": "scripts/rhythm.py",
+            "has_overrides": rz["has_overrides"],
+            "beats": [s["beat"] for s in rz["segments"]],
+            "enter_scales": [s["enter_scale"] for s in rz["segments"]],
+            "gaps": [g["gap"] for g in rz["gaps"]],
+            "issues": [f"{it['level']}:{it['id']}" for it in rz_issues],
+        },
     }
     json.dump(script, open(os.path.join(STORY, "script.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=2)

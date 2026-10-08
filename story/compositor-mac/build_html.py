@@ -20,7 +20,7 @@ V-BASE 视觉提亮基线（真源 docs/产线规范.md v1.12.0，2026-10-07 默
 """
 import json, os, html, sys, re
 
-STORY = "/Volumes/PSSD/抖音视频/story/compositor-mac"
+STORY = os.path.dirname(os.path.abspath(__file__))
 
 # A1（v1.13.0）：入场速度按 script.json 的 beat 缩放；无 beat 字段时倍率恒为 1.0，
 # 生成的 index.html 与本文件 .bak-20261008 逐字节一致（默认链路零漂移）。
@@ -502,7 +502,7 @@ def main():
                   ensure_ascii=False, indent=2)
         print(f"anchors.json 已登记：{tgt}")
     open(os.path.join(STORY, "hyperframes.json"), "w").write(json.dumps({
-        "name": "compositor-mac", "width": 1080, "height": 1920, "fps": 30,
+        "name": os.path.basename(STORY), "width": 1080, "height": 1920, "fps": 30,
         "duration": DUR, "output": "output.mp4"
     }, ensure_ascii=False, indent=2))
     print(f"index.html 已生成，总时长 {DUR}s，{len(scenes)} 场景")

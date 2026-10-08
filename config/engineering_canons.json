@@ -1,7 +1,8 @@
 {
   "canons_version": "1.7.0",
   "created_at": "2026-09-29",
-  "root": "/Volumes/PSSD/抖音视频",
+  "root": "auto",
+  "root_note": "部署根不再写死：默认取仓库根（脚本按 __file__ 推导），可用 PIPELINE_ROOT / --root 覆盖",
   "positioning": "对等交换工程口径吸纳层。声明式真源 + 校验器 scripts/canon_guard.py。原则：只补缺口、不推翻存量；存量真源仍以 param_contract.json / canonicalization.json / frozen_baseline.json / observability_rules.json / negcontrol_cases.json 为准，本文件只在缺口语义上做补充与归一，冲突时以存量真源为准。",
   "sources": [
     "Hermes721：挂起与判据账本",

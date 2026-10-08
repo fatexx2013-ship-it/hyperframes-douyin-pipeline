@@ -2,16 +2,27 @@
 # -*- coding: utf-8 -*-
 """《闺蜜反目》情绪测试配音 — 复用 generate_qa_video 的 Qwen3-TTS 管线
 林悦 = 御姐音(yujie, 带情绪)；苏苏 = 少女音(shaonv, 单一参考)
-输出: /Volumes/PSSD/抖音视频/output/guimi_dub_test/闺蜜反目-配音测试.mp3
+输出: <部署根>/output/guimi_dub_test/闺蜜反目-配音测试.mp3
+      （部署根默认取仓库根，可用 PIPELINE_ROOT 覆盖）
 """
 import os, sys, subprocess, asyncio
 
-sys.path.insert(0, "/Volumes/PSSD/抖音视频")
-import generate_qa_video as qa
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.environ.get("PIPELINE_ROOT") or os.path.dirname(SCRIPT_DIR)   # 跨平台部署根
+sys.path.insert(0, ROOT)
+sys.path.insert(0, SCRIPT_DIR)
+import platform_env
+try:
+    import generate_qa_video as qa
+except ModuleNotFoundError as exc:      # 该模块为历史 Qwen3-TTS 管线，未必随仓库分发
+    raise SystemExit(
+        f"缺少 generate_qa_video 模块（{exc}）：本脚本为其薄封装，需先把该模块放到 "
+        f"PIPELINE_ROOT={ROOT} 或 scripts/ 下；仅 mlx 档（Apple Silicon）适用。"
+    )
 
-OUT = "/Volumes/PSSD/抖音视频/output/guimi_dub_test"
+OUT = os.path.join(ROOT, "output", "guimi_dub_test")
 os.makedirs(OUT, exist_ok=True)
-FFMPEG = "/opt/homebrew/bin/ffmpeg"
+FFMPEG = platform_env.require_tool("ffmpeg", purpose="配音静音修剪")
 
 # (文件名, 角色, 强制情绪, 台词, 台词后停顿秒)
 LINES = [

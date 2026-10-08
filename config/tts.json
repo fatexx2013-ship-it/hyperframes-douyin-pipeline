@@ -1,0 +1,66 @@
+{
+  "version": "1.0.0",
+  "created_at": "2026-10-08",
+  "note": "TTS 可插拔 provider 真源。仅声明 provider 行为与「环境变量名」，严禁在本文件写入任何凭据（api_key / token）。默认档 mlx 与改造前行为逐字节一致（本地 MLX Qwen3-TTS，Apple Silicon）；未配置时明确报错，绝不静默降级到其它 provider。",
+  "provider": "mlx",
+  "provider_env": "TTS_PROVIDER",
+  "providers": {
+    "mlx": {
+      "label": "本地 MLX Qwen3-TTS（默认档）",
+      "requires": {
+        "platform": "darwin",
+        "machine": "arm64",
+        "note": "MLX 仅 Apple Silicon 可用；Linux/Windows 请改用 openai 兼容 provider"
+      },
+      "kind": "local_module",
+      "module_dir_env": "TTS_MLX_MODULE_DIR",
+      "module_dir_candidates": [
+        "${TTS_MLX_MODULE_DIR}",
+        "${PIPELINE_HOME}",
+        "${REPO_ROOT}",
+        "${REPO_ROOT}/tools",
+        "${QWEN3_TTS_DIR}"
+      ],
+      "narration_module": "generate_qa_video",
+      "narration_entry": "generate_qwen3_tts",
+      "epilogue_module": "generate_news_card_video",
+      "epilogue_entry": "batch_tts",
+      "model_root": "${QWEN3_TTS_DIR:-~/Projects/qwen3-tts-apple-silicon}",
+      "model_root_env": "QWEN3_TTS_DIR",
+      "voice_role": "answer",
+      "voice_role_env": "TTS_MLX_VOICE_ROLE",
+      "default_emotion": "thoughtful",
+      "default_emotion_env": "TTS_MLX_EMOTION",
+      "sample_rate": 24000,
+      "channels": 1
+    },
+    "openai": {
+      "label": "OpenAI 兼容云端 TTS",
+      "requires": {
+        "platform": "any",
+        "note": "任何实现 POST {base_url}/audio/speech 的服务均可（OpenAI、Azure OpenAI、硅基流动、本地 vLLM/OpenAI-Server 等）"
+      },
+      "kind": "http_openai_compat",
+      "endpoint": "${TTS_BASE_URL}/audio/speech",
+      "base_url_env": "TTS_BASE_URL",
+      "api_key_env": "TTS_API_KEY",
+      "model_env": "TTS_MODEL",
+      "voice_env": "TTS_VOICE",
+      "response_format_env": "TTS_RESPONSE_FORMAT",
+      "response_format": "wav",
+      "speed_env": "TTS_SPEED",
+      "speed": 1.0,
+      "timeout_env": "TTS_TIMEOUT_S",
+      "timeout_s": 120,
+      "extra_headers_env": "TTS_EXTRA_HEADERS",
+      "voice_by_emotion": {
+        "thoughtful": "${TTS_VOICE_THOUGHTFUL}",
+        "answer": "${TTS_VOICE}",
+        "question": "${TTS_VOICE_QUESTION}"
+      },
+      "credentials_rule": "凭据只读环境变量（TTS_API_KEY），禁止落盘 / 禁止写入日志 / 禁止回显",
+      "sample_rate": 24000,
+      "channels": 1
+    }
+  }
+}

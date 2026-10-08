@@ -26,8 +26,10 @@
   "voice": {
     "role": "thoughtful",
     "alias": "G 版慵懒御姐音",
-    "reference_wav": "/Users/mac/Projects/qwen3-tts-apple-silicon/voices/yujie_thoughtful.wav",
-    "engine": "Qwen3-TTS (mlx_audio) via generate_news_card_video.batch_tts",
+    "reference_wav": "${QWEN3_TTS_DIR:-~/Projects/qwen3-tts-apple-silicon}/voices/yujie_thoughtful.wav",
+    "reference_wav_env": "QWEN3_TTS_DIR",
+    "reference_wav_note": "音色参考音频路径按平台/安装位置解析：优先环境变量 QWEN3_TTS_DIR，其次 ~/Projects/qwen3-tts-apple-silicon；仅 mlx provider 使用（云端 provider 用 config/tts.json 的 voice 参数）",
+    "engine": "Qwen3-TTS (mlx_audio) via generate_news_card_video.batch_tts；可经 config/tts.json 切换 provider",
     "sample_rate": 24000,
     "channels": 1
   },
@@ -64,7 +66,7 @@
   "known_pitfalls": [
     "片尾口播的 adelay 必须放在「原片总时长 + gap」处，否则会叠到片头",
     "24kHz 单声道转 44.1kHz 立体声时 SWR 默认上混会衰减 -3dB，必须用 pan=stereo|c0=c0|c1=c0 显式复制",
-    "hyperframes 依赖 node，需保证 /opt/homebrew/bin 在 PATH 中",
+    "hyperframes 依赖 node，需保证 node/hyperframes 在 PATH 中；若不在 PATH，用 export PIPELINE_HYPERFRAMES=/绝对/路径/hyperframes（或 PIPELINE_NODE）显式指定",
     "片尾段 HTML 的 data-duration 是「片尾段自身时长」，不是整条成片总时长"
   ]
 }

@@ -3,7 +3,7 @@
 """
 normalize_point.py —— 规范化器（normalize_point 六步枚举 + 签名域）
 
-所属产线：/Volumes/PSSD/抖音视频
+所属产线：hyperframes 竖屏短视频产线（部署根由 PIPELINE_HOME / 仓库位置决定）
 配置真源：config/canonicalization.json
 资料来源：AI-Film-Studio 第二条私信 2026-09-26（normalize_point 完整枚举）
 

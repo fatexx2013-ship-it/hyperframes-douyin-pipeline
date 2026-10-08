@@ -3,7 +3,7 @@
 """
 resource_peaks.py —— 分阶段统一内存（RSS）峰值记录
 
-所属产线：/Volumes/PSSD/抖音视频
+所属产线：hyperframes 竖屏短视频产线（部署根由 PIPELINE_HOME / 仓库位置决定）
 来源思路：AI-Film-Studio (qpzRm) 的「峰值显存分阶段记录法」
   —— 决定 OOM 风险的是单阶段峰值，整段均值会把它抹平；
      分阶段还能定位是哪一段触发了降级。

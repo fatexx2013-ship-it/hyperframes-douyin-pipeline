@@ -1,7 +1,8 @@
 {
   "lock_version": "1.1.0",
   "locked_at": "2026-10-06T15:44:43",
-  "root": "/Volumes/PSSD/抖音视频",
+  "root": "auto",
+  "root_note": "不再绑定绝对部署路径：运行时以仓库根为根（scripts/*.py 按 __file__ 推导，可用 PIPELINE_ROOT 覆盖）",
   "tools": {
     "python3": "3.11.9",
     "ffmpeg": "9.0.1",
@@ -10,11 +11,11 @@
     "opencode": "1.18.31"
   },
   "tool_paths": {
-    "python3": "/Users/mac/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10371/runtime/python311/bin/python3",
-    "ffmpeg": "/opt/homebrew/bin/ffmpeg",
-    "ffprobe": "/opt/homebrew/bin/ffprobe",
-    "node": "/opt/homebrew/bin/node",
-    "opencode": "/opt/homebrew/bin/opencode"
+    "python3": "auto",
+    "ffmpeg": "auto",
+    "ffprobe": "auto",
+    "node": "auto",
+    "hyperframes": "auto"
   },
   "params": {
     "contract_version": "1.3.0",
@@ -32,10 +33,10 @@
   "locked_files": [
     {
       "path": "config/param_contract.json",
-      "sha256": "2411bf630447631c5d7b9b071de3421c8f2e996383672e3fa75f8a85446f93de"
+      "sha256": "8f7a47aa6aab483765febebe60a9cc5773f4a7fbe0dfaa7d6a033d8ae1800f3c"
     }
   ],
   "fixture": "tests/fixtures/fixed_input.json",
   "acceptance_version": "1.0.1",
-  "note": "参数与工具版本锁定 + 固定输入基线回归；漂移可回滚（回滚前先备份当前版本）"
+  "note": "参数与工具版本锁定 + 固定输入基线回归；漂移可回滚（回滚前先备份当前版本）；2026-10-08 跨平台适配：param_contract.json 的 toolchain_pins.*.path 由 macOS 绝对路径改为 PATH 解析口径（PATH:ffmpeg / PATH:ffprobe / PATH:hyperframes），fps / resolution_aspect 等不变量字段未改动，故仅重算 locked_files 摘要。"
 }

@@ -475,21 +475,24 @@
   "toolchain_pins": {
     "ffmpeg": {
       "version": "9.0.1",
-      "path": "/opt/homebrew/bin/ffmpeg",
+      "path": "PATH:ffmpeg",
       "pinned": true,
-      "drift_effect": "WARN"
+      "drift_effect": "WARN",
+      "path_note": "跨平台解析：环境变量 PIPELINE_FFMPEG / FFMPEG → PATH/which → 平台常见安装目录；不再绑定 macOS 专属绝对路径（scripts/platform_env.py 为真源）"
     },
     "ffprobe": {
       "version": "9.0.1",
-      "path": "/opt/homebrew/bin/ffprobe",
+      "path": "PATH:ffprobe",
       "pinned": true,
-      "drift_effect": "WARN"
+      "drift_effect": "WARN",
+      "path_note": "跨平台解析：环境变量 PIPELINE_FFPROBE / FFPROBE → PATH/which → 平台常见安装目录；不再绑定 macOS 专属绝对路径（scripts/platform_env.py 为真源）"
     },
     "hyperframes": {
       "version": "0.8.13",
-      "path": "/opt/homebrew/bin/hyperframes",
+      "path": "PATH:hyperframes",
       "pinned": true,
-      "drift_effect": "WARN"
+      "drift_effect": "WARN",
+      "path_note": "跨平台解析：环境变量 PIPELINE_HYPERFRAMES / HYPERFRAMES → PATH/which → 平台常见安装目录；不再绑定 macOS 专属绝对路径（scripts/platform_env.py 为真源）"
     },
     "node": {
       "version": "v26.8.1",

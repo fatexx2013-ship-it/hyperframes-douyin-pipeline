@@ -19,20 +19,24 @@ import wave
 
 import numpy as np
 
-ROOT = "/Volumes/PSSD/抖音视频"
-STORY = os.path.join(ROOT, "story/compositor-mac")
-sys.path.insert(0, ROOT)
+# ── 跨平台部署根解析（不再写死 /Volumes/PSSD/抖音视频）──────────────
+# 本脚本位于 <ROOT>/story/<name>/，故 ROOT = 上两级；可用 PIPELINE_ROOT 覆盖。
+STORY = os.path.dirname(os.path.abspath(__file__))
+ROOT = os.environ.get("PIPELINE_ROOT") or os.path.dirname(os.path.dirname(STORY))
+for _p in (ROOT, os.path.join(ROOT, "scripts")):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
 
-import generate_qa_video as qa
+import platform_env            # 跨平台工具/字体解析真源
+import tts_provider            # TTS 可插拔 provider（默认 mlx，行为与改造前一致）
 from append_epilogue import reshape_g
 
 # A1（v1.13.0）：停顿表不再在本脚本硬编码，统一由 scripts/rhythm.py 解析
 # script.json 的 beat/pause_before/pause_after/gap_after；无字段时其返回值与原 G 版常量一致。
-sys.path.insert(0, os.path.join(ROOT, "scripts"))
 import rhythm as RZ
 
-FFMPEG = "/opt/homebrew/bin/ffmpeg"
-FFPROBE = "/opt/homebrew/bin/ffprobe"
+FFMPEG = platform_env.require_tool("ffmpeg", purpose="配音转码/静音检测")
+FFPROBE = platform_env.require_tool("ffprobe", purpose="配音时长探测")
 
 # G 版停顿表（由 rhythm 真源回填，保持既有变量名兼容）
 PAUSE_COMMA = RZ.PAUSE_COMMA
@@ -102,9 +106,13 @@ def main():
         m24 = os.path.join(STORY, f"line_{i:02d}.24k.wav")
         out = os.path.join(STORY, f"line_{i:02d}.wav")
         print(f"[scene {i}] {text[:34]}...", flush=True)
-        ok = qa.generate_qwen3_tts(text, raw, "answer")
-        if not ok:
-            raise SystemExit(f"Qwen3-TTS 合成失败（scene {i}）：按规范不得切云端，需先修链路")
+        # TTS 按 config/tts.json 分派 provider（默认 mlx = 本地 Qwen3-TTS，逐参数与改造前一致；
+        # 云端需显式 TTS_PROVIDER=openai 并配好环境变量，未配置即报错，不静默降级）
+        tts_info = tts_provider.synthesize(text, raw, role="answer")
+        if not os.path.isfile(raw):
+            raise SystemExit(
+                f"TTS 合成失败（scene {i}，provider={tts_info.get('provider')}）："
+                f"未产出 {raw}，请先修链路（诊断：python3 scripts/doctor.py --tts）")
 
         to_24k_mono(raw, m24)
         info = g_reshape(m24, out)
@@ -175,7 +183,12 @@ def main():
     script["lines"] = flat_lines
     script["total_duration"] = round(total_voice, 2)
     script["tts_params"] = {
-        "version": "G", "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+        "version": "G",
+        # provider 留痕：mlx 档保持与原产线逐字一致的 engine 口径
+        "provider": tts_info.get("provider"),
+        "engine": ("Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)"
+                   if tts_info.get("provider") == "mlx"
+                   else "cloud TTS via provider=%s" % tts_info.get("provider")),
         "ref_voice": "yujie_thoughtful.wav（慵懒御姐音）",
         "silence_trim": "-52dB / 0.30s（句内上限）",
         "lead_silence": 0.12, "tail_silence": 0.08,

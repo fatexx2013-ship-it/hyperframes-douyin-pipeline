@@ -9,7 +9,7 @@ import os
 import json
 import html
 
-STORY = "/Volumes/PSSD/抖音视频/story/immich"
+STORY = os.path.dirname(os.path.abspath(__file__))
 
 
 def render_stat(s):

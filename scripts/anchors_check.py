@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """anchors_check.py —— KB-A2 外观一致性锚点漂移检查 + KB-A7 shot 级光照阈值检查（v1.13.0）
 
-统一口径（本机 /Volumes/PSSD/抖音视频 竖屏产线）：
+统一口径（本机 hyperframes 竖屏产线，部署根由 PIPELINE_HOME / 仓库位置决定）：
   * 真源：story/<name>/anchors.json（由 build_html.py --emit-anchors 首次登记）
   * 被检对象：story/<name>/index.html 内由 build_html.py 写入的一行注释
         <!-- ANCHOR-SNAPSHOT {...} -->

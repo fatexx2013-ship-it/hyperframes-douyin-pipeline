@@ -49,13 +49,35 @@ import numpy as np
 HERE = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE_PATH = os.path.join(HERE, "epilogue_template.json")
 sys.path.insert(0, HERE)
+sys.path.insert(0, os.path.join(HERE, "scripts"))
 
-# hyperframes 依赖 node，确保 Homebrew bin 在 PATH 中
-os.environ["PATH"] = os.environ.get("PATH", "") + os.pathsep + "/opt/homebrew/bin"
+# 跨平台工具解析（真源 scripts/platform_env.py）：
+#   · 一律走 PATH/which 查找（Windows 自动补 .exe/.cmd），不再写死 /opt/homebrew/bin；
+#   · 支持环境变量覆盖：PIPELINE_FFMPEG / PIPELINE_FFPROBE / PIPELINE_HYPERFRAMES；
+#   · 兼容旧行为：homebrew 前缀（macOS 上存在时）作为候选之一参与探测。
+import platform_env  # noqa: E402
+import tts_provider  # noqa: E402
 
-FFMPEG = "/opt/homebrew/bin/ffmpeg"
-FFPROBE = "/opt/homebrew/bin/ffprobe"
-HYPERFRAMES = "/opt/homebrew/bin/hyperframes"
+platform_env.ensure_brew_path()
+FFMPEG = platform_env.find_tool("ffmpeg")
+FFPROBE = platform_env.find_tool("ffprobe")
+HYPERFRAMES = platform_env.find_tool("hyperframes")
+
+
+def require_tools() -> None:
+    """入口处一次性校验外部工具（缺失给出各平台安装提示，而不是 None 崩栈）。"""
+    missing = [n for n, p in (("ffmpeg", FFMPEG), ("ffprobe", FFPROBE),
+                              ("hyperframes", HYPERFRAMES)) if not p]
+    if not missing:
+        return
+    lines = []
+    for n in missing:
+        try:
+            platform_env.find_tool(n)
+            lines.append(f"找不到可执行文件 {n}（用途：片尾追加）")
+        except platform_env.ToolNotFound as exc:
+            lines.append(str(exc))
+    raise SystemExit("\n".join(lines))
 
 # ── 片尾默认模板（后续所有成片默认追加这一段）────────────────
 DEFAULT_EPILOGUE = {
@@ -271,6 +293,7 @@ def build_epilogue_html(css, meta, card, text, total, card_start, sub_start, sub
 
 
 def main():
+    require_tools()
     ap = argparse.ArgumentParser()
     ap.add_argument("run_dir")
     ap.add_argument("--out", default="douyin_epilogue.mp4")
@@ -337,13 +360,20 @@ def main():
             % (cached.get("emotion"), want["emotion"], os.path.basename(old)))
     if not os.path.exists(raw_wav):
         log("\n[1/6] 生成片尾口播（御姐音 · %s）..." % cfg["emotion"])
-        import generate_news_card_video as g
-        n = g.batch_tts([(cfg["text"], raw_wav)], work, cfg["emotion"])
+        # TTS 走可插拔 provider 抽象（真源 config/tts.json）：
+        #   默认 provider=mlx 时与旧链路逐参数一致（本地 Qwen3-TTS 御姐音）；
+        #   切到 openai 等云端 provider 即可在非 Apple Silicon 平台出片。
+        #   未配置/依赖缺失一律明确报错，不静默降级。
+        try:
+            tts_provider.synthesize(cfg["text"], raw_wav, role="epilogue",
+                                    emotion=cfg["emotion"], work_dir=work)
+        except tts_provider.TtsConfigError as exc:
+            raise SystemExit("片尾口播 TTS 配置/依赖错误：%s" % exc)
         if not os.path.exists(raw_wav):
             raise SystemExit("片尾口播生成失败")
         with open(meta_path, "w", encoding="utf-8") as f:
             json.dump(want, f, ensure_ascii=False, indent=2)
-        log("  ok %d" % n)
+        log("  ok")
     else:
         log("\n[1/6] 复用已有片尾口播素材（音色 %s，缓存键匹配）" % want["emotion"])
 

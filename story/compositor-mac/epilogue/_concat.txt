@@ -1,2 +1,2 @@
-file '/Volumes/PSSD/抖音视频/story/compositor-mac/douyin.mp4'
-file '/Volumes/PSSD/抖音视频/story/compositor-mac/epilogue/_seg.mp4'
+file '/Volumes/PSSD/hyperframes-douyin-pipeline/story/compositor-mac/douyin.mp4'
+file '/Volumes/PSSD/hyperframes-douyin-pipeline/story/compositor-mac/epilogue/_seg.mp4'

@@ -24,7 +24,7 @@ V-BASE 视觉提亮基线（真源 docs/产线规范.md v1.12.0，2026-10-07 默
 """
 import json, os, html
 
-STORY = "/Volumes/PSSD/抖音视频/story/mediacrawler"
+STORY = os.path.dirname(os.path.abspath(__file__))
 
 def render_stat(s):
     return "".join(f'<div class="stat"><div class="k">{html.escape(x["k"])}</div><div class="v">{html.escape(x["v"])}</div></div>' for x in s)

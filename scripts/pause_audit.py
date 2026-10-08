@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """pause_audit.py —— KB-A6 无意义停顿检测（v1.13.0）
 
-口径（本机 /Volumes/PSSD/抖音视频 竖屏产线）：
+口径（本机 hyperframes 竖屏产线，部署根由 PIPELINE_HOME / 仓库位置决定）：
   "无意义停顿" = 相邻两句之间出现 ≥ 阈值（默认 1.20s）的空档，且该空档**未**在
   script.json 的节奏声明里被显式声明为有意停顿。
 
@@ -35,24 +35,21 @@ from datetime import datetime
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# 跨平台适配层（真源 scripts/platform_env.py）：工具按 PATH/which + 平台常见位解析，
+# 支持环境变量覆盖（PIPELINE_<TOOL> / <TOOL>）。
+_SDIR = os.path.dirname(os.path.abspath(__file__))
+if _SDIR not in sys.path:
+    sys.path.insert(0, _SDIR)
+import platform_env  # noqa: E402
+
 
 def _ts() -> str:
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def _which(name: str) -> str:
-    """解析可执行文件：先 PATH，再 macOS 常见安装位（Homebrew arm64/x86、MacPorts）。"""
-    import shutil as _sh
-    hit = _sh.which(name)
-    if hit:
-        return hit
-    for d in ("/opt/homebrew/bin", "/usr/local/bin", "/opt/local/bin", "/usr/bin"):
-        cand = os.path.join(d, name)
-        if os.path.isfile(cand) and os.access(cand, os.X_OK):
-            return cand
-    return name
-
-
+    """解析可执行文件：环境变量 → PATH → 平台常见安装位（跨平台，见 platform_env）。"""
+    return platform_env.find_tool(name) or name
 def _silences(wav: str, noise="-35dB", dur=0.5):
     if not os.path.isfile(wav):
         return None, "audio_combined.wav 缺失"

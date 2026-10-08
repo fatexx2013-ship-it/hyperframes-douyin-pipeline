@@ -4,7 +4,7 @@
   "enabled": true,
   "fallback_to_line_srt": true,
   "dtw": {
-    "bin": "/opt/homebrew/bin/whisper-cli",
+    "bin": "whisper-cli",
     "model": "models/ggml-small.bin",
     "dtw_preset": "small",
     "cross_check_model": "",

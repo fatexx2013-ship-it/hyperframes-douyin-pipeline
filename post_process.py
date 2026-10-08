@@ -21,6 +21,33 @@ from pathlib import Path
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
+# 跨平台适配层（真源 scripts/platform_env.py）：字体 / 外部工具按平台探测，
+# 全部支持环境变量覆盖（FONT_FILE / STORY_FONT_FAMILY / PIPELINE_FFMPEG ...）。
+_SDIR = os.path.join(SCRIPT_DIR, "scripts")
+if _SDIR not in sys.path:
+    sys.path.insert(0, _SDIR)
+import platform_env  # noqa: E402
+
+# 外部工具统一走适配层解析（缺失在调用时给出跨平台安装提示）
+def _tool(name):
+    """延迟解析 ffmpeg/ffprobe：缺工具时报跨平台可操作错误，而不是 FileNotFoundError。"""
+    return platform_env.require_tool(name, purpose="后处理（压缩/水印/片尾卡）")
+
+
+def _font_file():
+    """中文字体文件（macOS PingFang / Linux Noto Sans CJK / Windows 微软雅黑）。
+
+    ffmpeg filter 语法下需要转义（Windows 盘符 `C:` → `C\\:`），故单独封装。
+    """
+    hit = platform_env.require_font_file(purpose="drawtext 水印/片尾卡")
+    return hit.replace("\\", "/").replace(":", "\\:")
+
+
+def _font_family():
+    """字幕字体族名（libass force_style / ASS 用）。"""
+    return platform_env.font_family()
+
+
 
 # 回落用常量（真源 1.3.0 同值）：capped-CRF 为交付编码策略 —— 质量档取 CRF，
 # -maxrate/-bufsize 只作瞬时上限；8M 已降级为历史目标参考，不再作为 -b:v 目标输出。
@@ -130,7 +157,7 @@ def run(cmd, check=True):
 
 def probe_duration(path):
     r = subprocess.run(
-        ["ffprobe", "-v", "quiet", "-show_entries", "format=duration",
+        [_tool("ffprobe"), "-v", "quiet", "-show_entries", "format=duration",
          "-of", "default=noprint_wrappers=1:nokey=1", path],
         capture_output=True, text=True
     )
@@ -140,7 +167,7 @@ def probe_duration(path):
 def has_filter(name):
     """检测当前 ffmpeg 是否编译了指定滤镜"""
     try:
-        r = subprocess.run(["ffmpeg", "-hide_banner", "-filters"], capture_output=True, text=True)
+        r = subprocess.run([_tool("ffmpeg"), "-hide_banner", "-filters"], capture_output=True, text=True)
         return name in r.stdout
     except Exception:
         return False
@@ -156,7 +183,7 @@ TARGET_MAX_BITRATE = 11 * 1000 * 1000
 def probe_stream_spec(path):
     """读取首个视频流 + 音频流的关键规格，失败返回 None"""
     r = subprocess.run(
-        ["ffprobe", "-v", "quiet", "-print_format", "json",
+        [_tool("ffprobe"), "-v", "quiet", "-print_format", "json",
          "-show_streams", "-show_format", path],
         capture_output=True, text=True,
     )
@@ -237,7 +264,7 @@ def compress_douyin(input_mp4, output_mp4, srt=None, watermark=None):
         srt_escaped = srt.replace(":", "\\:").replace("'", "\\'")
         vf_parts.append(
             f"subtitles='{srt_escaped}':force_style='"
-            f"FontName=PingFang SC,FontSize=22,PrimaryColour=&H0024BFFB,"  # 黄字 &HAABBGGRR
+            f"FontName={_font_family()},FontSize=22,PrimaryColour=&H0024BFFB,"  # 黄字 &HAABBGGRR
             f"OutlineColour=&H00000000,BorderStyle=1,Outline=2,Shadow=1,"
             f"Alignment=2,MarginV=180,Bold=1'"
         )
@@ -249,7 +276,7 @@ def compress_douyin(input_mp4, output_mp4, srt=None, watermark=None):
         else:
             wm_escaped = watermark.replace("'", "\\'").replace(":", "\\:")
             vf_parts.append(
-                f"drawtext=text='{wm_escaped}':fontfile=/System/Library/Fonts/PingFang.ttc:"
+                f"drawtext=text='{wm_escaped}':fontfile={_font_file()}:"
                 f"fontsize=46:fontcolor=white@0.55:borderw=2:bordercolor=black@0.4:"
                 f"x=w-tw-40:y=h-th-100"
             )
@@ -257,7 +284,7 @@ def compress_douyin(input_mp4, output_mp4, srt=None, watermark=None):
     vf = ",".join(vf_parts)
 
     # 编码参数全部取自单一真源（S3）：profile/level/GOP/码率/音频规格不再本地硬编码
-    cmd = ["ffmpeg", "-y", "-i", input_mp4, "-vf", vf] + _enc_args(d) + [output_mp4]
+    cmd = [_tool("ffmpeg"), "-y", "-i", input_mp4, "-vf", vf] + _enc_args(d) + [output_mp4]
     run(cmd)
 
 
@@ -271,33 +298,43 @@ def append_end_card(input_mp4, output_mp4, title="点关注 不迷路", sub="每
 
     # 用 lavfi 生成与交付同画幅的片尾（深色底 + 大标题 + 副标题 + 淡入淡出）
     # 画幅/帧率/音频采样率与编码参数取自单一真源（S3），与压缩段同源同规格
+    # 中间文件落在成片同目录（跨平台，不写死 /tmp）：隐藏名 + .tmp 便于识别清理
+    out_dir = os.path.dirname(os.path.abspath(output_mp4)) or "."
+    os.makedirs(out_dir, exist_ok=True)
+    endcard_tmp = os.path.join(out_dir, "._endcard.tmp.mp4")
+    concat_tmp = os.path.join(out_dir, "._concat.tmp.txt")
+    font = _font_file()
     end_cmd = [
-        "ffmpeg", "-y",
+        _tool("ffmpeg"), "-y",
         "-f", "lavfi", "-i", f"color=c=#0a0a12:s={tw}x{th}:d={duration}:r={fps}",
         "-f", "lavfi", "-i", f"anullsrc=r={sr}:cl=stereo:d={duration}",
         "-vf",
-        f"drawtext=fontfile=/System/Library/Fonts/PingFang.ttc:text='{title}':"
+        f"drawtext=fontfile={font}:text='{title}':"
         f"fontsize=110:fontcolor=#fbbf24:borderw=4:bordercolor=black:"
         f"x=(w-text_w)/2:y=(h-text_h)/2-40,"
-        f"drawtext=fontfile=/System/Library/Fonts/PingFang.ttc:text='{sub}':"
+        f"drawtext=fontfile={font}:text='{sub}':"
         f"fontsize=52:fontcolor=white@0.85:"
         f"x=(w-text_w)/2:y=(h-text_h)/2+110,"
         f"fade=t=in:st=0:d=0.4,fade=t=out:st={duration-0.4}:d=0.4",
     ] + _enc_args(d) + [
         "-shortest",
-        "/tmp/_endcard.mp4"
+        endcard_tmp
     ]
     run(end_cmd)
 
     # concat
-    list_file = "/tmp/_concat.txt"
-    with open(list_file, "w") as f:
-        f.write(f"file '{input_mp4}'\nfile '/tmp/_endcard.mp4'\n")
+    with open(concat_tmp, "w", encoding="utf-8") as f:
+        f.write(f"file '{input_mp4}'\nfile '{endcard_tmp}'\n")
     concat_cmd = [
-        "ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", list_file,
+        _tool("ffmpeg"), "-y", "-f", "concat", "-safe", "0", "-i", concat_tmp,
         "-c", "copy", "-movflags", "+faststart", output_mp4
     ]
     run(concat_cmd)
+    for p in (endcard_tmp, concat_tmp):
+        try:
+            os.remove(p)
+        except OSError:
+            pass
 
 
 
