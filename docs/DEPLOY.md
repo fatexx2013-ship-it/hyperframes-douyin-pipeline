@@ -1,3 +1,14 @@
+---
+AIGC:
+    Label: "1"
+    ContentProducer: 001191440300708461136T1XGW3
+    ProduceID: b82594f1be8e85c02fc42784acc7d5b8_d1bec596c2e711f1884b525400cd780f
+    ReservedCode1: fVpmuDKfLdyTBACQ9ml1AlLLEqHSZW8ZY1kCSOwrzfH+OC/QI1hZCpX2V89gPVLwE5KwlWfMNVp9jfZMZnovA7wXBCDC0D42ff4RhMjPk+AVcRSjqF8CgA+bkFHyG0vTjCgQM1yll1PY4bapcs5t2nCzIezIY1QWx0ykc0j9hQ8nydsk5RV0IQplQSQ=
+    ContentPropagator: 001191440300708461136T1XGW3
+    PropagateID: b82594f1be8e85c02fc42784acc7d5b8_d1bec596c2e711f1884b525400cd780f
+    ReservedCode2: fVpmuDKfLdyTBACQ9ml1AlLLEqHSZW8ZY1kCSOwrzfH+OC/QI1hZCpX2V89gPVLwE5KwlWfMNVp9jfZMZnovA7wXBCDC0D42ff4RhMjPk+AVcRSjqF8CgA+bkFHyG0vTjCgQM1yll1PY4bapcs5t2nCzIezIY1QWx0ykc0j9hQ8nydsk5RV0IQplQSQ=
+---
+
 # 跨平台部署手册（DEPLOY）
 
 > 目标：在 **macOS / Linux / Windows(WSL2)** 上把 `hyperframes-douyin-pipeline` 从零跑通到
@@ -446,3 +457,4 @@ pip install -q -U pip scipy
 export STORYCTL_PYTHON="$PWD/venv/bin/python"
 python scripts/doctor.py
 ```
+*（内容由AI生成，仅供参考）*
