@@ -60,6 +60,9 @@ story/*/materials/
 story/*/audio/
 story/*/hyperframes.json
 story/*/index.html
+story/*/epilogue/index.html
+story/*/epilogue/hyperframes.json
+story/*/epilogue/epilogue.meta.json
 story/output/
 story/*/*.png
 story/*/*.jpg
