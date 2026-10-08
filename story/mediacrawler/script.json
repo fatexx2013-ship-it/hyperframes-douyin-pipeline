@@ -1,0 +1,284 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#FF5926",
+      "purpose": "赤焰热力主题大数字渐变描边（VIS 数据强调，用主题色）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "title": "不想啃加密算法，照样把评论抓下来",
+  "date": "2026.10.08",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "tts_emotion": "thoughtful",
+  "tts_emotion_desc": "慵懒御姐音（全片单一音色来源，防逐句漂移）",
+  "voice_desc": "慵懒玉女御姐音（Qwen3-TTS 本地 MLX，全片统一 thoughtful）",
+  "tts_line": "solo-yujie",
+  "tts_tuning": "G版（短篇压缩）：-52dB/0.30s 句内静音上限，句首留白0.12s，句间 逗号0.25s / 句末0.75s / 段落0.85s",
+  "source": "github.com/NanmiCoder/MediaCrawler · 官方 README（stars 66,389 / forks 12,721 / issues 214，Python，7 平台；合规口径取自仓库免责声明「仅限学习研究」）",
+  "facts": [
+    {
+      "k": "仓库",
+      "v": "NanmiCoder/MediaCrawler",
+      "src": "GitHub repo 元数据"
+    },
+    {
+      "k": "Stars",
+      "v": "66,389",
+      "src": "GitHub repo 元数据"
+    },
+    {
+      "k": "Forks",
+      "v": "12,721",
+      "src": "GitHub repo 元数据"
+    },
+    {
+      "k": "Open Issues",
+      "v": "214",
+      "src": "GitHub repo 元数据"
+    },
+    {
+      "k": "语言",
+      "v": "Python",
+      "src": "GitHub repo 元数据"
+    },
+    {
+      "k": "支持平台",
+      "v": "小红书 / 抖音 / 快手 / B站 / 微博 / 贴吧 / 知乎（7 个）",
+      "src": "README 平台支持表"
+    },
+    {
+      "k": "核心机制",
+      "v": "Playwright 浏览器自动化，默认 CDP 模式连接本机 Chrome，保留登录态；用 JS 表达式取签名参数，无需 JS 逆向",
+      "src": "README 说明"
+    },
+    {
+      "k": "采集能力",
+      "v": "关键词搜索 / 指定帖子ID / 二级评论 / 指定创作者主页 / 登录态缓存 / IP 代理池 / 评论词云",
+      "src": "README 平台支持表"
+    },
+    {
+      "k": "数据存储",
+      "v": "CSV / JSON / JSONL / Excel / SQLite / MySQL",
+      "src": "README 数据存储指南"
+    },
+    {
+      "k": "媒体下载",
+      "v": "默认关闭，开启后封面/视频/图文图片按帖子聚合落盘；B站装 ffmpeg 走 DASH 合流取最高画质",
+      "src": "README 媒体下载章节"
+    },
+    {
+      "k": "WebUI",
+      "v": "可视化操作界面，可配参数、看实时日志与数据预览",
+      "src": "README WebUI 章节"
+    },
+    {
+      "k": "上手",
+      "v": "uv sync 同步依赖；默认 CDP 模式无需安装浏览器驱动",
+      "src": "README 安装章节"
+    },
+    {
+      "k": "合规",
+      "v": "官方免责声明：爬虫技术仅用于学习和研究，禁止商业用途与非法用途",
+      "src": "README 免责声明"
+    }
+  ],
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你想拆的下一个开源项目。",
+    "emotion": "thoughtful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你想拆的下一个开源项目？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "chip",
+      "card": {
+        "eyebrow": "开源情报站 · 多平台数据采集",
+        "title": "不想啃加密算法，<accent>照样把评论抓下来</accent>",
+        "subtitle": "MediaCrawler · 支持 7 大平台的自媒体采集工具 · Python 开源",
+        "stats": [
+          {
+            "k": "GitHub Stars",
+            "v": "66,389"
+          },
+          {
+            "k": "Forks",
+            "v": "12,721"
+          },
+          {
+            "k": "Open Issues",
+            "v": "214"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "想抓小红书的笔记、抖音的评论，又不想硬啃加密算法？这个叫 MediaCrawler 的开源项目，GitHub 上已经攒了六万六千多颗星，专做多平台数据采集。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 15.1
+    },
+    {
+      "type": "feature",
+      "visual": "toolcall",
+      "card": {
+        "eyebrow": "核心机制",
+        "title": "复用一个已登录的浏览器，<accent>签名参数直接拿</accent>",
+        "subtitle": "Playwright 浏览器自动化 · 默认 CDP 模式连接本机 Chrome"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "它的思路挺聪明：用 Playwright 复用一个已经登录好的 Chrome 浏览器，直接在浏览器上下文里用 JS 表达式取签名参数，不用逆向加密算法，门槛一下就降下来了。"
+        }
+      ],
+      "_start": 15.95,
+      "_end": 30.37
+    },
+    {
+      "type": "feature",
+      "visual": "deploy",
+      "card": {
+        "eyebrow": "平台覆盖",
+        "title": "一套代码，<accent>打通 7 大平台</accent>",
+        "subtitle": "关键词搜索 · 指定帖子 · 二级评论 · 创作者主页 · 登录态缓存 · IP 代理池 · 评论词云"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "一套代码覆盖七个平台：小红书、抖音、快手、B站、微博、贴吧、知乎。打开媒体下载，封面、视频、图文图片会按帖子自动归档，B站装好 ffmpeg 还能走 DASH 拿最高画质。"
+        }
+      ],
+      "_start": 31.22,
+      "_end": 49.14
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "采集与落盘",
+        "title": "抓得全，<accent>也存得下</accent>",
+        "subtitle": "数据存储支持 5 种格式 · 媒体下载可在配置里按需打开"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "抓下来的数据能存成 CSV、JSON、Excel、SQLite 或者 MySQL；关键词搜索、指定帖子、二级评论、创作者主页、登录态缓存、IP 代理池、评论词云，这些能力都齐。"
+        }
+      ],
+      "_start": 49.99,
+      "_end": 68.23
+    },
+    {
+      "type": "feature",
+      "visual": "ladder",
+      "card": {
+        "eyebrow": "上手成本",
+        "title": "装好 uv，<accent>一条命令就能跑</accent>",
+        "subtitle": "uv sync 同步依赖 · 还有可视化 WebUI 可替代命令行"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "上手也简单：装好 uv，一条 uv sync 同步依赖就能跑；不想敲命令行，还有可视化 WebUI，点点鼠标就能配平台、登录方式，实时看运行日志。"
+        }
+      ],
+      "_start": 69.08,
+      "_end": 84.01
+    },
+    {
+      "type": "outro",
+      "visual": "chip2",
+      "card": {
+        "title": "关注 jerrychen2001",
+        "cta": "评论区聊聊",
+        "sub": "你想拆的下一个开源项目？"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "最后提醒一句：这个工具仅限学习研究，禁止商业用途和非法用途。想研究多平台采集的架构，这个六万六千多颗星的仓库，值得一看。"
+        }
+      ],
+      "_start": 84.86,
+      "_end": 99.07
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "想抓小红书的笔记、抖音的评论，又不想硬啃加密算法？这个叫 MediaCrawler 的开源项目，GitHub 上已经攒了六万六千多颗星，专做多平台数据采集。",
+      "start": 0.0,
+      "end": 15.1
+    },
+    {
+      "scene_index": 1,
+      "text": "它的思路挺聪明：用 Playwright 复用一个已经登录好的 Chrome 浏览器，直接在浏览器上下文里用 JS 表达式取签名参数，不用逆向加密算法，门槛一下就降下来了。",
+      "start": 15.95,
+      "end": 30.37
+    },
+    {
+      "scene_index": 2,
+      "text": "一套代码覆盖七个平台：小红书、抖音、快手、B站、微博、贴吧、知乎。打开媒体下载，封面、视频、图文图片会按帖子自动归档，B站装好 ffmpeg 还能走 DASH 拿最高画质。",
+      "start": 31.22,
+      "end": 49.14
+    },
+    {
+      "scene_index": 3,
+      "text": "抓下来的数据能存成 CSV、JSON、Excel、SQLite 或者 MySQL；关键词搜索、指定帖子、二级评论、创作者主页、登录态缓存、IP 代理池、评论词云，这些能力都齐。",
+      "start": 49.99,
+      "end": 68.23
+    },
+    {
+      "scene_index": 4,
+      "text": "上手也简单：装好 uv，一条 uv sync 同步依赖就能跑；不想敲命令行，还有可视化 WebUI，点点鼠标就能配平台、登录方式，实时看运行日志。",
+      "start": 69.08,
+      "end": 84.01
+    },
+    {
+      "scene_index": 5,
+      "text": "最后提醒一句：这个工具仅限学习研究，禁止商业用途和非法用途。想研究多平台采集的架构，这个六万六千多颗星的仓库，值得一看。",
+      "start": 84.86,
+      "end": 99.07
+    }
+  ],
+  "total_duration": 99.07,
+  "tts_params": {
+    "version": "G-short",
+    "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+    "ref_voice": "yujie_thoughtful.wav（慵懒御姐音）",
+    "emotion": "thoughtful",
+    "voice_role": "answer",
+    "voice_source": "script.json.tts_emotion（全片单一来源，逐句 emotion 已禁用）",
+    "voice_guard": "build_audio.py 启动即校验 voice_role / tts_emotion / 片尾 emotion 三者一致，冲突直接拒绝出片",
+    "silence_trim": "-52dB / 0.30s（句内上限）",
+    "lead_silence": 0.12,
+    "tail_silence": 0.08,
+    "pause_comma": 0.25,
+    "pause_period": 0.75,
+    "pause_paragraph": 0.85,
+    "note": "短篇压缩版：段落停顿 1.20s→0.85s，尾静音 0.4s→0.35s",
+    "sample_rate": 24000,
+    "channels": 1,
+    "silence_ge_040s_total": 0
+  },
+  "tts_note": "单人女声口播 → 走单人线：本地 Qwen3-TTS 12Hz 1.7B Base 8bit（MLX）+ 慵懒御姐音参考音 yujie_thoughtful.wav，全片单一音色来源（script.json.tts_emotion），G 版短篇压缩参数；未启用任何云端 TTS",
+  "render_note": "产线默认档：渲染超采样 portrait-4k（Chrome DPR=2，按 2160×3840 采样）+ 视觉提亮基线 V-BASE（compositor-mac 模板固化），post_process 收口 1080×1920 / H.264 / 30fps"
+}

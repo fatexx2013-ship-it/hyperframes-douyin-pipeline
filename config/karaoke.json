@@ -1,0 +1,43 @@
+{
+  "version": "1.1.0",
+  "note": "逐字卡拉OK字幕（\\kf 逐字上色）产线配置。enabled=false 或 render.sh 传 --no-karaoke / KARAOKE=off 即一键回退到原整句 SRT->ASS 烧录链路；回退不删除任何中间产物、不改样式头，仅切换烧录用 ASS。",
+  "enabled": true,
+  "fallback_to_line_srt": true,
+  "dtw": {
+    "bin": "/opt/homebrew/bin/whisper-cli",
+    "model": "models/ggml-small.bin",
+    "dtw_preset": "small",
+    "cross_check_model": "",
+    "language": "zh",
+    "extra_args": []
+  },
+  "io": {
+    "srt": "captions.srt",
+    "dtw_json": "captions.dtw.json",
+    "out_ass": "captions.kara.ass"
+  },
+  "style": {
+    "font_name": "PingFang SC",
+    "font_size": 36,
+    "primary_colour": "&H0000D7FF",
+    "secondary_colour": "&H00FFFFFF",
+    "outline_colour": "&H00000000",
+    "back_colour": "&H00000000",
+    "border_style": 3,
+    "outline": 2,
+    "shadow": 1,
+    "alignment": 2,
+    "margin_l": 30,
+    "margin_r": 30,
+    "margin_v": 150,
+    "play_res_x": 1080,
+    "play_res_y": 1920
+  },
+  "gate": {
+    "strict_text_match": false,
+    "min_cue_ratio": 0.6,
+    "min_chars_per_cue": 1,
+    "max_char_ms": 800,
+    "require_watermark": true
+  }
+}

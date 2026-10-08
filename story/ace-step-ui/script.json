@@ -1,0 +1,217 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#FF5926",
+      "purpose": "赤焰热力主题大数字渐变描边（VIS 数据强调，用主题色）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "title": "Suno 一年上千块？这个开源平替一分不花",
+  "date": "2026.10.04",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "voice_desc": "慵懒玉女御姐音（Qwen3-TTS 本地 MLX，情绪自动匹配）",
+  "tts_line": "solo-yujie",
+  "tts_tuning": "G版（逐句·对比停顿）：-52dB/0.30s 句内静音上限，句首留白0.12s，句间 逗号0.25s / 句末0.75s / 段落1.20s",
+  "source": "github.com/fspecii/ace-step-ui · 官方 README（MIT 协议）+ GitHub Search API 实时数据（星标数抓取于 2026-10-04）",
+  "facts": [
+    "定位：ACE-Step UI 是开源音乐模型 ACE-Step 1.5 的专业前端，React + TypeScript + 本地 SQLite，MIT 协议",
+    "卖点：对标 Suno / Udio 订阅制（官方 README 自述 $10-50/月），本地运行、永久免费、无队列限制、无商用限制",
+    "能力：4 分钟以上完整歌曲带人声歌词、器乐模式、自定义 BPM / 调号 / 拍号 / 时长、批量生成、种子可复现、局部重绘、翻唱",
+    "工具链：内置 Demucs 一键分离人声/鼓/贝斯、AudioMass 波形编辑、Pexels 素材自动配画面生成 MV、渐变封面生成",
+    "门槛：需 NVIDIA GPU 4GB 显存起步（带 LLM 模式 12GB+ 推荐）；Windows / Linux 有一键脚本；macOS 不支持 GPU 推理——本机 Mac 跑不起来，文案如实标注不吹",
+    "引擎：ACE-Step 1.5（github.com/ace-step/ACE-Step-1.5），独立开源模型仓库，UI 与模型分离"
+  ],
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你想用它生成什么歌。",
+    "emotion": "playful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你想用它生成第一首什么歌？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "chip",
+      "card": {
+        "eyebrow": "开源情报站 · AI 音乐",
+        "title": "Suno 一年上千块？<accent>这个平替一分不花</accent>",
+        "subtitle": "ACE-Step UI · 开源 Suno 平替 · MIT 协议 · 本地运行",
+        "stats": [
+          {
+            "k": "Star",
+            "v": "5.1k+"
+          },
+          {
+            "k": "形态",
+            "v": "本地 Web 应用"
+          },
+          {
+            "k": "协议",
+            "v": "MIT"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "做短视频谁不为 BGM 发愁？Suno 一个月十刀到五十刀，一年小一千。GitHub 上这个项目叫 ACE-Step UI，本地跑、不限量、一分钱不花。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 13.2
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "贵在哪",
+        "title": "云端订阅 vs <accent>本地无限</accent>",
+        "subtitle": "同样的整曲生成，一个按月收钱，一个永久免费"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "差别很直白：Suno 按月收钱，十刀到五十刀，还限队列，商用得加钱。ACE-Step 装在自己电脑上，不限量、断网都能生成，作品全部归你。"
+        }
+      ],
+      "_start": 14.4,
+      "_end": 28.56
+    },
+    {
+      "type": "feature",
+      "visual": "ladder",
+      "card": {
+        "eyebrow": "它能做什么",
+        "title": "不是片段，<accent>是整首歌</accent>",
+        "subtitle": "4 分钟以上完整歌曲 · 自带人声和歌词 · 批量出多个版本"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "它生成的不是十几秒的片段，是四分钟以上的完整歌曲，自带人声和歌词。节奏、调号、时长全都能自定义，一次还能批量出好几个版本。"
+        }
+      ],
+      "_start": 29.76,
+      "_end": 44.4
+    },
+    {
+      "type": "feature",
+      "visual": "toolcall",
+      "card": {
+        "eyebrow": "一条龙",
+        "title": "生成只是第一步，<accent>它还管后期</accent>",
+        "subtitle": "Demucs 分离人声 · AudioMass 波形剪辑 · 自动配画面出 MV"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "不光能生成。它内置 Demucs，一键把人声、鼓点、贝斯分开；内置波形编辑器直接剪；甚至自动配画面，一首歌到一条 MV，一个应用全包了。"
+        }
+      ],
+      "_start": 45.6,
+      "_end": 58.3
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "跑起来要什么",
+        "title": "一张 4G 显存的卡，<accent>就能跑</accent>",
+        "subtitle": "Pinokio 一键安装 · Windows / Linux 均有脚本"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "emotion": "thoughtful",
+          "text": "说说门槛，得诚实：它需要一张英伟达显卡，4G 显存起步。Windows 和 Linux 都有一键安装脚本。Mac 用户暂时不支持 GPU 推理，这点必须讲清楚。"
+        }
+      ],
+      "_start": 59.5,
+      "_end": 75.26
+    },
+    {
+      "type": "outro",
+      "visual": "chip",
+      "card": {
+        "title": "关注 jerrychen2001",
+        "cta": "评论区聊聊",
+        "sub": "你想用它生成第一首什么歌？"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "MIT 开源，代码和模型都在 GitHub。你会用它生成第一首什么歌？"
+        }
+      ],
+      "_start": 76.46,
+      "_end": 82.86
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "做短视频谁不为 BGM 发愁？Suno 一个月十刀到五十刀，一年小一千。GitHub 上这个项目叫 ACE-Step UI，本地跑、不限量、一分钱不花。",
+      "start": 0.0,
+      "end": 13.2
+    },
+    {
+      "scene_index": 1,
+      "text": "差别很直白：Suno 按月收钱，十刀到五十刀，还限队列，商用得加钱。ACE-Step 装在自己电脑上，不限量、断网都能生成，作品全部归你。",
+      "start": 14.4,
+      "end": 28.56
+    },
+    {
+      "scene_index": 2,
+      "text": "它生成的不是十几秒的片段，是四分钟以上的完整歌曲，自带人声和歌词。节奏、调号、时长全都能自定义，一次还能批量出好几个版本。",
+      "start": 29.76,
+      "end": 44.4
+    },
+    {
+      "scene_index": 3,
+      "text": "不光能生成。它内置 Demucs，一键把人声、鼓点、贝斯分开；内置波形编辑器直接剪；甚至自动配画面，一首歌到一条 MV，一个应用全包了。",
+      "start": 45.6,
+      "end": 58.3
+    },
+    {
+      "scene_index": 4,
+      "text": "说说门槛，得诚实：它需要一张英伟达显卡，4G 显存起步。Windows 和 Linux 都有一键安装脚本。Mac 用户暂时不支持 GPU 推理，这点必须讲清楚。",
+      "start": 59.5,
+      "end": 75.26
+    },
+    {
+      "scene_index": 5,
+      "text": "MIT 开源，代码和模型都在 GitHub。你会用它生成第一首什么歌？",
+      "start": 76.46,
+      "end": 82.86
+    }
+  ],
+  "total_duration": 82.86,
+  "tts_params": {
+    "version": "G",
+    "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+    "ref_voice": "yujie_thoughtful.wav（慵懒御姐音）",
+    "silence_trim": "-52dB / 0.30s（句内上限）",
+    "lead_silence": 0.12,
+    "tail_silence": 0.08,
+    "pause_comma": 0.25,
+    "pause_period": 0.75,
+    "pause_paragraph": 1.2,
+    "sample_rate": 24000,
+    "channels": 1,
+    "silence_ge_040s_total": 0
+  }
+}

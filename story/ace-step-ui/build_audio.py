@@ -1,0 +1,169 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""ace-step-ui 视频构建：Qwen3 慵懒御姐配音（G 版）+ 时间轴回填
+
+G 版口径（docs/产线规范.md 5.3）：
+  静音修剪  -52dB / 0.30s（仅句内长于 0.30s 的静音截到 0.30s）
+  句首留白  0.12s    句尾留白 0.08s（reshape_g lead_s / 尾部校正）
+  句间停顿  逗号 0.25s / 句末 0.75s / 段落 1.20s
+  输出      24000Hz / mono（TTS 出口口径）
+
+本脚本逐句合成（合成单元 = 每个场景的 line），场景之间按「段落」1.20s 定位，
+句子内部由 -52dB/0.30s 修剪保证句内静音 ≤0.30s。
+"""
+import os
+import sys
+import json
+import subprocess
+import wave
+
+import numpy as np
+
+ROOT = "/Volumes/PSSD/抖音视频"
+STORY = os.path.join(ROOT, "story/ace-step-ui")
+sys.path.insert(0, ROOT)
+
+import generate_qa_video as qa
+from append_epilogue import reshape_g
+
+FFMPEG = "/opt/homebrew/bin/ffmpeg"
+FFPROBE = "/opt/homebrew/bin/ffprobe"
+
+# G 版停顿表
+PAUSE_COMMA = 0.25
+PAUSE_PERIOD = 0.75
+PAUSE_PARAGRAPH = 1.20
+
+
+def dur_of(path):
+    r = subprocess.run([FFPROBE, "-v", "quiet", "-show_entries", "format=duration",
+                        "-of", "default=noprint_wrappers=1:nokey=1", path],
+                       capture_output=True, text=True)
+    return float(r.stdout.strip())
+
+
+def to_24k_mono(src, dst):
+    subprocess.run([FFMPEG, "-y", "-v", "error", "-i", src, "-ar", "24000", "-ac", "1",
+                    "-c:a", "pcm_s16le", dst], check=True)
+    return dst
+
+
+def g_reshape(src, dst, lead_s=0.12, cap_s=0.30, thr_db=-52.0):
+    """G 版：句内长静音截到 cap_s，句首留白 lead_s。输入须为 24k mono wav。"""
+    info = reshape_g(src, dst, lead_s=lead_s, cap_s=cap_s, thr_db=thr_db)
+    return info
+
+
+def trailing_check(path):
+    """统计句内静音 ≥0.40s 的档位数量（硬指标必须为 0）。"""
+    r = subprocess.run([FFMPEG, "-v", "error", "-i", path, "-af",
+                        "silencedetect=noise=-52dB:d=0.40", "-f", "null", "-"],
+                       capture_output=True, text=True)
+    n = r.stderr.count("silence_duration")
+    return n
+
+
+def main():
+    script = json.load(open(os.path.join(STORY, "script.json"), encoding="utf-8"))
+    scenes = script["scenes"]
+
+    # 1) 逐场景（逐句）Qwen3 御姐配音 + G 版重排
+    line_metas = []
+    for i, sc in enumerate(scenes):
+        text = sc["lines"][0]["text"]
+        raw = os.path.join(STORY, f"line_{i:02d}.raw.wav")
+        m24 = os.path.join(STORY, f"line_{i:02d}.24k.wav")
+        out = os.path.join(STORY, f"line_{i:02d}.wav")
+        print(f"[scene {i}] {text[:34]}...", flush=True)
+        ok = qa.generate_qwen3_tts(text, raw, "answer",
+                                   force_emotion=sc["lines"][0].get("emotion"))
+        if not ok:
+            raise SystemExit(f"Qwen3-TTS 合成失败（scene {i}）：按规范不得切云端，需先修链路")
+
+        to_24k_mono(raw, m24)
+        info = g_reshape(m24, out)
+        n_long = trailing_check(out)
+        dur = info["dur"]
+        line_metas.append({"text": text, "path": out, "duration": round(dur, 3),
+                           "voice_start": round(info["voice_start"], 3),
+                           "voice_end": round(info["voice_end"], 3),
+                           "silence_ge_040s": n_long})
+        print(f"  -> {dur:.3f}s  句内静音≥0.40s: {n_long}", flush=True)
+
+    # 2) 场景间停顿定位拼接（段落 1.20s）
+    ws = [wave.open(lm["path"], "rb") for lm in line_metas]
+    sr = ws[0].getframerate()
+    for w in ws:
+        assert w.getframerate() == sr and w.getnchannels() == 1, "G 版要求统一的 24k mono 素材"
+    frames = [np.frombuffer(w.readframes(w.getnframes()), dtype=np.int16).astype(np.float32)
+              for w in ws]
+    for w in ws:
+        w.close()
+
+    chunks, starts, t = [], [], 0.0
+    for k, fr in enumerate(frames):
+        starts.append(t)
+        chunks.append(fr)
+        t += len(fr) / sr
+        if k != len(frames) - 1:
+            gap = PAUSE_PARAGRAPH
+            chunks.append(np.zeros(int(gap * sr), dtype=np.float32))
+            t += gap
+    total_voice = t
+
+    # 尾部留出 0.4s（与 build_html.py 的 DUR = lines[-1].end + 0.4 对齐）
+    chunks.append(np.zeros(int(0.4 * sr), dtype=np.float32))
+    y = np.clip(np.concatenate(chunks), -32768, 32767).astype(np.int16)
+
+    combined = os.path.join(STORY, "audio_combined.wav")
+    with wave.open(combined, "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(sr)
+        w.writeframes(y.tobytes())
+    # narration.wav 供片尾追加器使用
+    with wave.open(os.path.join(STORY, "narration.wav"), "wb") as w:
+        w.setnchannels(1)
+        w.setsampwidth(2)
+        w.setframerate(sr)
+        w.writeframes(y.tobytes())
+
+    print(f"旁白总时长 {total_voice:.2f}s（含尾部静音 {len(y)/sr:.2f}s）-> {combined}")
+
+    # 3) 回填 script.json 时间轴
+    flat_lines = []
+    for i, (sc, lm, st) in enumerate(zip(scenes, line_metas, starts)):
+        sc["_start"] = round(st, 2)
+        sc["_end"] = round(st + lm["duration"], 2)
+        flat_lines.append({"scene_index": i, "text": lm["text"],
+                           "start": round(st, 2), "end": round(st + lm["duration"], 2)})
+    script["scenes"] = scenes
+    script["lines"] = flat_lines
+    script["total_duration"] = round(total_voice, 2)
+    script["tts_params"] = {
+        "version": "G", "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+        "ref_voice": "yujie_thoughtful.wav（慵懒御姐音）",
+        "silence_trim": "-52dB / 0.30s（句内上限）",
+        "lead_silence": 0.12, "tail_silence": 0.08,
+        "pause_comma": PAUSE_COMMA, "pause_period": PAUSE_PERIOD,
+        "pause_paragraph": PAUSE_PARAGRAPH,
+        "sample_rate": sr, "channels": 1,
+        "silence_ge_040s_total": sum(lm["silence_ge_040s"] for lm in line_metas),
+    }
+    json.dump(script, open(os.path.join(STORY, "script.json"), "w", encoding="utf-8"),
+              ensure_ascii=False, indent=2)
+    json.dump(line_metas, open(os.path.join(STORY, "timing.json"), "w", encoding="utf-8"),
+              ensure_ascii=False, indent=2)
+    print("时间轴已回填 script.json")
+
+    bad = [lm for lm in line_metas if lm["silence_ge_040s"] > 0]
+    if bad:
+        print(f"!! 硬指标不达标：{len(bad)} 条素材存在句内静音 ≥0.40s")
+        for lm in bad:
+            print("   ", os.path.basename(lm["path"]), lm["silence_ge_040s"])
+    else:
+        print("硬指标通过：句内静音 ≥0.40s 档位 = 0")
+
+
+if __name__ == "__main__":
+    main()

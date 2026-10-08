@@ -1,0 +1,196 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#6E56CF",
+      "purpose": "紫电主题大数字渐变描边（VIS 数据强调，用主题色）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "title": "一行命令调出全网热搜？这个免费 API 我吹爆",
+  "date": "2026.10.07",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/A Game - Michael Ramir C [mixkit 777].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "voice_desc": "慵懒玉女御姐音（Qwen3-TTS 本地 MLX，单音色：全篇 yujie_thoughtful）",
+  "tts_line": "solo-yujie",
+  "tts_tuning": "G版（短篇压缩·单音色）：-52dB/0.30s 句内静音上限，句首留白0.12s，段落0.80s",
+  "source": "github.com/vikiboss/60s · 官方文档 docs.60s-api.viki.moe（MIT 协议）+ GitHub Search API 实时数据（星标数抓取于 2026-10-07）+ 接口实测",
+  "facts": [
+    "定位：开源免费的 API 集合，一行命令拿新闻、热搜、天气、汇率、金价、油价，MIT 协议",
+    "接口数量：60+ 个端点，我从源码 src/router.ts 读出的完整清单",
+    "热搜覆盖：抖音、微博、知乎、头条、小红书、B站、百度、夸克、懂车帝，国内平台几乎全覆盖",
+    "核心功能：每天 60 秒读懂世界，支持纯文本/图片/JSON 三种输出，可输出 RSS 订阅源",
+    "工具箱：翻译、二维码、IP 信息、域名 whois、哈希、密码生成、随机色板、百度百科、必应每日壁纸",
+    "整活接口：KFC 疯狂星期四文案、摸鱼提示、发病文学、老爸笑话、一言、今日运势",
+    "零成本：公共实例免费但限流；自部署支持 Docker / Deno / Bun / Cloudflare Workers / Node.js，CF Workers 免费层每天 10 万次请求",
+    "实测验证：抖音/微博/知乎/头条热榜 code 200 正常返回；公共实例有 Cloudflare 1015 限流，稳定用建议自部署",
+    "数据机制：GitHub Actions 定时抓取 + 静态 JSON + CDN 缓存，每日更新，非实时"
+  ],
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊。",
+    "emotion": "thoughtful",
+    "gap_before": 0.2,
+    "tail_silence": 0.3,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你会拿它做什么工具？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "chip",
+      "card": {
+        "eyebrow": "开源情报站 · 免费接口",
+        "title": "一行命令，<accent>调出全网热搜</accent>",
+        "subtitle": "60s API · 开源免费 API 集合 · MIT · 可自部署",
+        "stats": [
+          {
+            "k": "Star",
+            "v": "5.8k+"
+          },
+          {
+            "k": "接口",
+            "v": "60+"
+          },
+          {
+            "k": "协议",
+            "v": "MIT"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "想做个热搜工具，数据哪来？这个开源项目叫 60s API，一行命令调出抖音微博知乎热搜，还不要钱。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 10.17
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "都有什么",
+        "title": "热搜只是开始，<accent>它有 60 多个接口</accent>",
+        "subtitle": "新闻 / 天气 / 汇率 / 金价油价 / 翻译 / 二维码 全都有"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "热搜只是基本盘：抖音微博知乎小红书 B 站全覆盖。还有天气、汇率、金价油价、翻译、二维码，60 多个接口，全免费。"
+        }
+      ],
+      "_start": 10.97,
+      "_end": 24.32
+    },
+    {
+      "type": "feature",
+      "visual": "toolcall",
+      "card": {
+        "eyebrow": "怎么用",
+        "title": "一行 curl 就出结果，<accent>注册 key 都不用</accent>",
+        "subtitle": "公共实例直接白嫖 · 自部署四选一 · CF Workers 免费层每天 10 万次"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "用法极其简单，一行 curl 直接出结果，不用注册不用 key。想稳定就自己部署，Docker 和云函数都支持，免费额度个人根本用不完。"
+        }
+      ],
+      "_start": 25.12,
+      "_end": 37.12
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "整活专区",
+        "title": "它还有一些<accent>不太正经的接口</accent>",
+        "subtitle": "KFC 疯四文案 · 摸鱼提示 · 发病文学 · 今日运势"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "好玩的还有：KFC 疯狂星期四文案、每日摸鱼提示、发病文学，做个群聊机器人整活足够了。"
+        }
+      ],
+      "_start": 37.92,
+      "_end": 47.36
+    },
+    {
+      "type": "outro",
+      "visual": "chip",
+      "card": {
+        "title": "关注 jerrychen2001",
+        "cta": "评论区聊聊",
+        "sub": "你会拿它做什么工具？"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "MIT 开源，自己装一个。你会拿它做什么工具？"
+        }
+      ],
+      "_start": 48.16,
+      "_end": 54.0
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "想做个热搜工具，数据哪来？这个开源项目叫 60s API，一行命令调出抖音微博知乎热搜，还不要钱。",
+      "start": 0.0,
+      "end": 10.17
+    },
+    {
+      "scene_index": 1,
+      "text": "热搜只是基本盘：抖音微博知乎小红书 B 站全覆盖。还有天气、汇率、金价油价、翻译、二维码，60 多个接口，全免费。",
+      "start": 10.97,
+      "end": 24.32
+    },
+    {
+      "scene_index": 2,
+      "text": "用法极其简单，一行 curl 直接出结果，不用注册不用 key。想稳定就自己部署，Docker 和云函数都支持，免费额度个人根本用不完。",
+      "start": 25.12,
+      "end": 37.12
+    },
+    {
+      "scene_index": 3,
+      "text": "好玩的还有：KFC 疯狂星期四文案、每日摸鱼提示、发病文学，做个群聊机器人整活足够了。",
+      "start": 37.92,
+      "end": 47.36
+    },
+    {
+      "scene_index": 4,
+      "text": "MIT 开源，自己装一个。你会拿它做什么工具？",
+      "start": 48.16,
+      "end": 54.0
+    }
+  ],
+  "total_duration": 54.0,
+  "tts_params": {
+    "version": "G-short-monovoice",
+    "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+    "ref_voice": "yujie_thoughtful.wav（慵懒御姐音 · 全篇单音色锁死）",
+    "voice_lock": "thoughtful",
+    "silence_trim": "-52dB / 0.30s（句内上限）",
+    "lead_silence": 0.12,
+    "tail_silence": 0.08,
+    "pause_paragraph": 0.8,
+    "note": "60s 硬约束版：段落 0.80s，尾静音 0.3s，单音色锁死含片尾",
+    "sample_rate": 24000,
+    "channels": 1,
+    "silence_ge_040s_total": 0
+  }
+}

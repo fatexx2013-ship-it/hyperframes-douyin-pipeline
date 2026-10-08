@@ -1,0 +1,28 @@
+{
+  "canonicalizer_version": "np-1.1.0",
+  "created_at": "2026-09-26",
+  "author": "file-agent",
+  "source": "AI-Film-Studio 第二条私信 2026-09-26：normalize_point 完整枚举（按执行顺序）",
+  "normalize_point_order": [
+    "STRIP_BOM",
+    "UNIFY_LINE_ENDING",
+    "STRIP_TRAILING_WHITESPACE",
+    "STRIP_LEADING_WHITESPACE",
+    "COLLAPSE_INTERNAL_WHITESPACE",
+    "STRIP_INLINE_COMMENT"
+  ],
+  "explicitly_excluded": [
+    "UNICODE_NORMALIZATION"
+  ],
+  "exclusion_reason": "避免引入 locale 依赖：规范化结果不得随运行环境的语言/地区设置变化",
+  "signature": "06b9cc9e43cfdb0b",
+  "signature_rule": "sha256('|'.join(normalize_point_order))[:16]，枚举顺序本身进签名域",
+  "order_is_signature_domain": true,
+  "order_change_semantics": "改变枚举顺序即视为规范化器换实现，canonicalizer_version 必须同步变更；param_contract 扩展字段 canonicalizer_version 判定为硬停",
+  "inline_comment_rule": "注释起点 = 行首 '#' 或「前置空白字符 + '#'」；'#' 紧邻非空白字符时不是注释，原样保留。本步为枚举最后一步，剥离注释后不再回溯清理新产生的行尾空白——顺序调换会改变输出，这正是顺序进签名域的体现",
+  "applies_to": [
+    "manifest 规范化摘要（frozen_baseline_digest 的重判行）",
+    "config/*.json 与 story/*.json 的文本规范化后签名",
+    "报告与负控留档的文本比对"
+  ]
+}

@@ -1,0 +1,116 @@
+<!doctype html>
+<!-- @dsCard group="ported-htmlvideo" name="Bold Poster (竖屏)" path="index.html" subtitle="编辑海报体：斜置巨字三行 + 单一红点 + 衬线导语" viewport="{width: 1080, height: 1920}" -->
+<!-- 来源：nexu-io/html-video templates/frame-bold-poster（上游 heygen-com/hyperframes registry/examples/bold-poster，Apache-2.0）
+     适配：1920×1080 → 1080×1920 竖屏重排 / 移除 Google Fonts 外链 / 字体回退 PingFang SC / CSS @keyframes → GSAP 可 seek 时间轴 -->
+<html lang="zh-CN" data-composition-variables='[
+  {"id":"figure","type":"string","label":"大号数字","default":"03"},
+  {"id":"line1","type":"string","label":"标题行1","default":"这三件事"},
+  {"id":"line2","type":"string","label":"标题行2(红)","default":"正在重排"},
+  {"id":"line3","type":"string","label":"标题行3","default":"本地 AI 的牌桌"},
+  {"id":"standfirst","type":"string","label":"导语","default":"当推理成本掉到零，真正的门槛从模型转向了工程与习惯。"},
+  {"id":"footer","type":"string","label":"页脚","default":"竖屏海报 · 开场"}
+]'>
+<head>
+<meta charset="UTF-8" />
+<title>Bold Poster · 竖屏编辑海报</title>
+<style>
+  /* 系统字体显式声明：中文 PingFang SC，数字/拉丁 SF Pro Display；杜绝渲染回退不确定 */
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC"), local("PingFangSC-Regular"); font-weight:400; font-display:block; }
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC Semibold"), local("PingFangSC-Semibold"), local("PingFang SC"); font-weight:600 900; font-display:block; }
+  @font-face { font-family:"SF Pro Display"; src:local("SF Pro Display"), local("SFProDisplay-Bold"); font-weight:400 900; font-display:block; }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1080px; height:1920px; overflow:hidden; position:relative;
+    background:#F5F2EF; color:#1C1410;
+    font-family:"PingFang SC","SF Pro Display","Helvetica Neue",Arial,sans-serif;
+  }
+  .sheet { position:absolute; inset:0; background:#F5F2EF; }
+
+  /* 装饰性眉标组（kicker 眉标 + 红规 + 期号）已按 AK-hyperframes-design-bans 的 eyebrow/kicker 禁用项移除 */
+
+  /* 巨号数字 */
+  .figure { position:absolute; top:280px; right:72px; font-size:340px; line-height:0.8; font-weight:900;
+            color:#D8000F; letter-spacing:-8px; }
+
+  /* 三行大字，各自倾斜 */
+  .head { position:absolute; left:88px; top:820px; }
+  .head .ln { display:block; font-size:150px; font-weight:900; line-height:1; letter-spacing:-4px; }
+  .head .ln2 { color:#D8000F; }
+
+  /* 衬线导语 */
+  .standfirst { position:absolute; left:92px; top:1420px; width:820px;
+    font-size:40px; line-height:1.55; color:#3A322C; font-weight:400; }
+
+  /* 页脚 */
+  .footer { position:absolute; left:88px; right:88px; bottom:150px; }
+  .footer .rule { height:2px; background:#1C1410; transform-origin:left center; }
+  .footer .meta { display:flex; justify-content:space-between; margin-top:20px;
+    font-size:22px; font-weight:500; letter-spacing:4px; text-transform:uppercase; color:#1C1410; }
+  .footer .meta .red { color:#D8000F; }
+</style>
+</head>
+<body data-composition-id="bold-poster" data-width="1080" data-height="1920">
+  <div class="sheet"></div>
+
+  <div class="figure" data-var="figure">03</div>
+
+  <div class="head">
+    <span class="ln ln1" data-var="line1">这三件事</span>
+    <span class="ln ln2" data-var="line2">正在重排</span>
+    <span class="ln ln3" data-var="line3">本地 AI 的牌桌</span>
+  </div>
+
+  <div class="standfirst" data-var="standfirst">当推理成本掉到零，真正的门槛从模型转向了工程与习惯。</div>
+
+  <div class="footer">
+    <div class="rule"></div>
+    <div class="meta">
+      <span data-var="footer">竖屏海报 · 开场</span>
+      <span class="red">PSSD · 抖音产线</span>
+    </div>
+  </div>
+
+  <!-- GSAP 3.14.2：优先走 HyperFrames 资产映射 _shared/vendor；直接 file:// 打开时回退到上级 _vendor 副本 -->
+  <script src="_shared/vendor/gsap.min.js"></script>
+  <script>window.gsap||document.write('<script src="../_vendor/gsap.min.js"><\/script>');</script>
+  <script>
+    (function () {
+      // 变量注入：HyperFrames / 平台若提供 __VARS__ 或 URL 参数则覆盖默认文案
+      var params = new URLSearchParams(location.search);
+      document.querySelectorAll('[data-var]').forEach(function (el) {
+        var v = params.get(el.getAttribute('data-var'));
+        if (v) el.textContent = v;
+      });
+
+      var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
+
+      // 0.0s 纸面落定 → 0.7s 巨号旋转下落（原 0.35–0.55s 眉标/红规/期号补间随装饰性眉标组一并移除）
+      tl.from('.sheet',       { opacity: 0, duration: 0.5, ease: 'power2.out' }, 0)
+        // 0.7s 巨号旋转下落
+        .from('.figure', { opacity: 0, y: -90, rotate: -14, duration: 0.9 }, 0.7)
+        .to('.figure',   { rotate: -6, duration: 0.9 }, 0.7)
+        // 1.15s 三行标题依次升起，各自倾角
+        .from('.head .ln1', { opacity: 0, y: 60, duration: 0.7 }, 1.15)
+        .to('.head .ln1',   { rotate: -2, duration: 0.7 }, 1.15)
+        .from('.head .ln2', { opacity: 0, y: 60, duration: 0.7 }, 1.35)
+        .to('.head .ln2',   { rotate: -4, duration: 0.7 }, 1.35)
+        .from('.head .ln3', { opacity: 0, y: 60, duration: 0.7 }, 1.55)
+        .to('.head .ln3',   { rotate: 2, duration: 0.7 }, 1.55)
+        // 1.95s 导语 → 2.15s 页脚
+        .from('.standfirst',    { opacity: 0, y: 28, duration: 0.7, ease: 'power2.out' }, 1.95)
+        .from('.footer .rule',  { scaleX: 0, duration: 0.7 }, 2.15)
+        .from('.footer .meta',  { opacity: 0, duration: 0.6, ease: 'power2.out' }, 2.4);
+
+      if (reduced) tl.progress(1);
+      window.__timelines = window.__timelines || {};
+      window.__timelines['bold-poster'] = tl;
+      window.__timelines['main-comp'] = tl;
+
+      var t = parseFloat(params.get('t'));
+      if (!isNaN(t)) tl.seek(t);   // 供截图/校验定位任意帧
+    })();
+  </script>
+</body>
+</html>

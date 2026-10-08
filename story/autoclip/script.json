@@ -1,0 +1,215 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#7C5CFF",
+      "purpose": "主题大数字渐变描边（VIS 数据强调，用主题紫 #7C5CFF）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "delivery_spec_waiver": [],
+  "title": "9019 星的国产 AI 剪辑：AutoClip",
+  "date": "2026.09.29",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "voice_desc": "慵懒御姐音（Qwen3-TTS 本地 MLX，情绪自动匹配）",
+  "tts_line": "solo-yujie",
+  "tts_tuning": "G版（逐句·对比停顿）：-52dB/0.30s 句内静音上限，句首留白0.12s，句间 逗号0.25s / 句末0.75s / 段落1.20s",
+  "source": "github.com/zhouxiaoka/autoclip · 官方 README（MIT）· GitHub API 2026-09-29 核验 stars/forks",
+  "facts": [
+    "定位：利用 AI 自动提取视频中的精彩片段，一键生成高清短视频的二创工具；免费开源、本地剪辑，支持云端与本地模型",
+    "数据（2026-09-29 核验）：Star 9,019 · Fork 1,660 · 语言 Python · 协议 MIT · 创建于 2025-07-08",
+    "输入：支持本地文件、YouTube 与 B 站链接；可随视频导入 SRT 字幕，没有字幕可配置本地 Whisper 组件转写",
+    "适用：访谈、播客、课程与直播回放；游戏录屏需配置视觉模型并开启游戏分析（云端调用由服务商计费）",
+    "发现高光：根据字幕分析精彩片段，生成标题和话题时间线；剪出片段与合集，可调整起止时间、文字和画幅",
+    "导出与发布：支持竖屏、横屏、字幕和标题卡；自动生成封面，可立即或定时发布，也可只导出到本地",
+    "模型：支持 Qwen、OpenAI、Gemini、DeepSeek 等云端模型，以及 Ollama / LM Studio 本地模型；提供 CLI 与 MCP",
+    "隐私：剪辑与渲染在本机完成；使用云端模型时，字幕分析发送相关文字，视觉分析发送抽样画面",
+    "安装：macOS Apple Silicon 的 .dmg 与 Windows x64 安装包；桌面版内置 Python 和 FFmpeg；Intel Mac / Linux 可用 Docker 或 CLI",
+    "技术栈鸣谢：FastAPI、React、Tauri、FFmpeg、yt-dlp、Whisper；已上榜 Trendshift（repositories/25801）"
+  ],
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你想用 AutoClip 剪哪段视频。",
+    "emotion": "thoughtful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你想先剪哪段视频？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "chip",
+      "card": {
+        "eyebrow": "开源情报站 · AI 剪辑",
+        "title": "9019 星的国产工具，<accent>一键剪出高光</accent>",
+        "subtitle": "AutoClip · AI 高光提取与自动剪辑 · Python / MIT",
+        "stats": [
+          {
+            "k": "Star",
+            "v": "9,019"
+          },
+          {
+            "k": "Fork",
+            "v": "1,660"
+          },
+          {
+            "k": "协议",
+            "v": "MIT"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "text": "GitHub 上有个项目叫 AutoClip，九千多颗星，就干一件事：把长视频里的精彩片段自动挑出来，一键剪成能直接发的高清短视频。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 12.63
+    },
+    {
+      "type": "feature",
+      "visual": "toolcall",
+      "card": {
+        "eyebrow": "它怎么工作",
+        "title": "导入视频，<accent>AI 自己找高光</accent>",
+        "subtitle": "按字幕逐句分析 · 自动生成标题与话题时间线"
+      },
+      "lines": [
+        {
+          "text": "用法很直接：导入一段带字幕的视频，确认制作类型，AI 就按字幕逐句分析精彩片段，自动生成标题和话题时间线，再剪成片段与合集。"
+        }
+      ],
+      "_start": 13.83,
+      "_end": 27.19
+    },
+    {
+      "type": "feature",
+      "visual": "bench",
+      "card": {
+        "eyebrow": "素材与场景",
+        "title": "本地文件、YouTube、B 站，<accent>都能进</accent>",
+        "subtitle": "访谈 / 播客 / 课程 / 直播回放 · 没字幕可挂本地 Whisper"
+      },
+      "lines": [
+        {
+          "text": "它适合访谈、播客、课程和直播回放。视频可以是本地文件，也能直接贴 YouTube 或 B 站的链接；没有字幕也没关系，挂上本地 Whisper 就能转写，现成的字幕可以随视频一起导入。"
+        }
+      ],
+      "_start": 28.39,
+      "_end": 45.67
+    },
+    {
+      "type": "feature",
+      "visual": "cost",
+      "card": {
+        "eyebrow": "模型与隐私",
+        "title": "云端随你接，<accent>剪辑不离开本机</accent>",
+        "subtitle": "Qwen / OpenAI / Gemini / DeepSeek · Ollama / LM Studio"
+      },
+      "lines": [
+        {
+          "text": "模型这块给得很宽：Qwen、OpenAI、Gemini、DeepSeek 这些云端模型都能接，也能连 Ollama 或 LM Studio 跑本地模型。剪辑和渲染全在本机完成，走云端时只发字幕文字和抽样画面。"
+        }
+      ],
+      "_start": 46.87,
+      "_end": 65.45
+    },
+    {
+      "type": "feature",
+      "visual": "usage",
+      "card": {
+        "eyebrow": "入口与自动化",
+        "title": "桌面应用、网页、命令行，<accent>还能给 Agent 用</accent>",
+        "subtitle": "内置 Python 与 FFmpeg · Docker / Web · CLI · MCP"
+      },
+      "lines": [
+        {
+          "text": "入口不止一个：桌面版内置 Python 和 FFmpeg，装完就能用；还有 Docker 网页版、命令行 CLI，以及给 Agent 调用的 MCP。游戏录屏也能识别高光，但要自己配视觉模型。"
+        }
+      ],
+      "_start": 66.65,
+      "_end": 84.41
+    },
+    {
+      "type": "outro",
+      "visual": "outro",
+      "card": {
+        "title": "关注 jerrychen2001",
+        "cta": "评论区聊聊",
+        "sub": "你想先剪哪段视频？"
+      },
+      "lines": [
+        {
+          "text": "项目按 MIT 协议开源，macOS 和 Windows 安装包都在 Releases 里，九千多颗星、一千六百多次 fork，还上过 Trendshift 榜。你想先拿它剪哪段视频？"
+        }
+      ],
+      "_start": 85.61,
+      "_end": 98.89
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "GitHub 上有个项目叫 AutoClip，九千多颗星，就干一件事：把长视频里的精彩片段自动挑出来，一键剪成能直接发的高清短视频。",
+      "start": 0.0,
+      "end": 12.63
+    },
+    {
+      "scene_index": 1,
+      "text": "用法很直接：导入一段带字幕的视频，确认制作类型，AI 就按字幕逐句分析精彩片段，自动生成标题和话题时间线，再剪成片段与合集。",
+      "start": 13.83,
+      "end": 27.19
+    },
+    {
+      "scene_index": 2,
+      "text": "它适合访谈、播客、课程和直播回放。视频可以是本地文件，也能直接贴 YouTube 或 B 站的链接；没有字幕也没关系，挂上本地 Whisper 就能转写，现成的字幕可以随视频一起导入。",
+      "start": 28.39,
+      "end": 45.67
+    },
+    {
+      "scene_index": 3,
+      "text": "模型这块给得很宽：Qwen、OpenAI、Gemini、DeepSeek 这些云端模型都能接，也能连 Ollama 或 LM Studio 跑本地模型。剪辑和渲染全在本机完成，走云端时只发字幕文字和抽样画面。",
+      "start": 46.87,
+      "end": 65.45
+    },
+    {
+      "scene_index": 4,
+      "text": "入口不止一个：桌面版内置 Python 和 FFmpeg，装完就能用；还有 Docker 网页版、命令行 CLI，以及给 Agent 调用的 MCP。游戏录屏也能识别高光，但要自己配视觉模型。",
+      "start": 66.65,
+      "end": 84.41
+    },
+    {
+      "scene_index": 5,
+      "text": "项目按 MIT 协议开源，macOS 和 Windows 安装包都在 Releases 里，九千多颗星、一千六百多次 fork，还上过 Trendshift 榜。你想先拿它剪哪段视频？",
+      "start": 85.61,
+      "end": 98.89
+    }
+  ],
+  "total_duration": 98.89,
+  "tts_params": {
+    "version": "G",
+    "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+    "ref_voice": "yujie_thoughtful.wav（慵懒御姐音）",
+    "silence_trim": "-52dB / 0.30s（句内上限）",
+    "lead_silence": 0.12,
+    "tail_silence": 0.08,
+    "pause_comma": 0.25,
+    "pause_period": 0.75,
+    "pause_paragraph": 1.2,
+    "sample_rate": 24000,
+    "channels": 1,
+    "silence_ge_040s_total": 0
+  }
+}

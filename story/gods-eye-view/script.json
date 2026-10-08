@@ -1,0 +1,169 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#FF5926",
+      "purpose": "赤焰热力主题大数字渐变描边（VIS 数据强调，用主题色）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "title": "浏览器里开出军用驾驶舱，这个开源项目的数据全是真的",
+  "date": "2026.09.22",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "voice_desc": "慵懒玉女御姐音（Qwen3-TTS 本地 MLX，情绪自动匹配）",
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你还想拆哪个项目。",
+    "emotion": "thoughtful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你还想拆哪个项目？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "gif": "hero-open-source-reveal.gif",
+      "card": {
+        "eyebrow": "浏览器里的间谍卫星 · 开源",
+        "title": "上帝视角看地球，<accent>数据全是真的</accent>",
+        "subtitle": "GitHub Trending 日榜周榜双第一 · 4万星",
+        "stats": [
+          {
+            "k": "GitHub Stars",
+            "v": "40,599"
+          },
+          {
+            "k": "实时图层",
+            "v": "15 个"
+          },
+          {
+            "k": "部署",
+            "v": "浏览器即用"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "这玩意儿看起来像被禁止使用的军用驾驶舱，但它其实是个开源项目，浏览器里就能跑，四万颗星。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 8.5
+    },
+    {
+      "type": "stat",
+      "gif": "14-iss-over-ukraine.gif",
+      "card": {
+        "eyebrow": "十五个实时图层",
+        "title": "航班 · 轮船 · 卫星 · 地震",
+        "big": "13/15",
+        "big_label": "免费无需 API Key，打开就能看"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "全球航班的应答机、船舶信标、空间站轨道、地震波，还有街头摄像头，十五个实时图层，十三个免费，打开就能看。"
+        }
+      ],
+      "_start": 8.85,
+      "_end": 20.63
+    },
+    {
+      "type": "feature",
+      "gif": "01-voice-annotate-zilker.gif",
+      "card": {
+        "eyebrow": "直接跟它说话",
+        "title": "28 个语音工具",
+        "subtitle": "「带我去东京」镜头飞过去 ·「画出德州边界」给出真实轮廓"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "更狠的是它能听懂人话。说一句带我去东京，镜头直接飞过去；说画出德州的边界，它真给你画出真实轮廓。"
+        }
+      ],
+      "_start": 20.98,
+      "_end": 31.9
+    },
+    {
+      "type": "feature",
+      "gif": "06-cockpit-ar.gif",
+      "card": {
+        "eyebrow": "坐进航班驾驶舱",
+        "title": "787 · MQ-9 · 热成像",
+        "subtitle": "跟着真实航班落地 · CRT/夜视/FLIR 传感器皮肤"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "你还能坐进一架真实航班的驾驶舱，跟着它一路落地，切换热成像、夜视这些军用视角。"
+        }
+      ],
+      "_start": 32.25,
+      "_end": 40.17
+    },
+    {
+      "type": "outro",
+      "gif": "08-falcon9-replay.gif",
+      "card": {
+        "title": "浏览器里直接玩",
+        "cta": "GitHub 搜 gods-eye-view",
+        "sub": "JavaScript 之父都说酷 · 无需注册账号"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "开源三个月，GitHub 趋势榜日榜周榜双第一，JavaScript 之父都说酷，浏览器打开就能玩。"
+        }
+      ],
+      "_start": 40.52,
+      "_end": 49.44
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "这玩意儿看起来像被禁止使用的军用驾驶舱，但它其实是个开源项目，浏览器里就能跑，四万颗星。",
+      "start": 0.0,
+      "end": 8.5
+    },
+    {
+      "scene_index": 1,
+      "text": "全球航班的应答机、船舶信标、空间站轨道、地震波，还有街头摄像头，十五个实时图层，十三个免费，打开就能看。",
+      "start": 8.85,
+      "end": 20.63
+    },
+    {
+      "scene_index": 2,
+      "text": "更狠的是它能听懂人话。说一句带我去东京，镜头直接飞过去；说画出德州的边界，它真给你画出真实轮廓。",
+      "start": 20.98,
+      "end": 31.9
+    },
+    {
+      "scene_index": 3,
+      "text": "你还能坐进一架真实航班的驾驶舱，跟着它一路落地，切换热成像、夜视这些军用视角。",
+      "start": 32.25,
+      "end": 40.17
+    },
+    {
+      "scene_index": 4,
+      "text": "开源三个月，GitHub 趋势榜日榜周榜双第一，JavaScript 之父都说酷，浏览器打开就能玩。",
+      "start": 40.52,
+      "end": 49.44
+    }
+  ],
+  "total_duration": 49.44
+}

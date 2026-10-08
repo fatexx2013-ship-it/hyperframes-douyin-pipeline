@@ -1,0 +1,13 @@
+今天的GitHub热榜太狠了，3个项目全是大招，看完直接想写代码！
+
+第三名：DeskcommCRM，一天涨469星！
+  Open-source AI sales OS — self-hosted CRM with native AI ...
+
+第二名：iloader，一天涨219星！
+  User friendly sideloader
+
+第一名：Sonarr，一天涨197星！
+  Smart PVR for newsgroup and bittorrent users.
+
+这3个你想试哪个？评论区告诉我！
+关注我，每天盘点GitHub最火开源项目！

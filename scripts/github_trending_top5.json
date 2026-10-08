@@ -1,0 +1,124 @@
+{
+  "title": "本周AI热门项目Top5",
+  "date": "2026.09.16",
+  "bgm": "/Volumes/PSSD/视频/BGM/游京 - .mp3",
+  "watermark": "@大瑞",
+  "header": {
+    "eyebrow": "GitHub Trending · Weekly",
+    "title": "本周 <accent>AI / 机器学习</accent> 热门开源项目",
+    "subtitle": "Trending 周榜 22 个项目，筛出 18 个 AI/ML 相关，按本周新增 Star 排序",
+    "stats": [
+      {"k": "入选项目", "v": "18", "small": "个"},
+      {"k": "本周新增 Star", "v": "68,214"},
+      {"k": "覆盖语言", "v": "6", "small": "种"},
+      {"k": "本期精选", "v": "5", "small": "个"}
+    ]
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "lines": [
+        {"role": "question", "text": "这周 GitHub 上 AI 项目又卷出什么新花样了？"},
+        {"role": "answer", "text": "周榜二十多个，我挑了五个最能打的，一个一个说。"}
+      ]
+    },
+    {
+      "type": "project",
+      "project": {
+        "rank": "01", "owner": "ayghri", "repo": "i-have-adhd", "lang": "Python", "langColor": "#3572A5",
+        "stars": "46,640", "delta": "+17,880",
+        "summary": "一个约束编码助手输出方式的技能，让 AI 别再绕圈子，先把可执行的答案摆到最前面。",
+        "features": [
+          "行动优先：第一句直接给出要跑的指令或要改的文件位置",
+          "编号步骤：把修复过程拆成可逐条执行的清单",
+          "十条硬性规则压制客套话与冗余解释"
+        ],
+        "tags": ["日常编码", "快速排障", "时间紧张的开发者"]
+      },
+      "lines": [
+        {"role": "question", "text": "第一个星数涨得最猛，它是干嘛的？"},
+        {"role": "answer", "text": "专治 AI 绕圈子。逼着助手把能直接跑的答案放第一句，别整那些没用的铺垫，一周涨了近一万八千星。"}
+      ]
+    },
+    {
+      "type": "project",
+      "project": {
+        "rank": "02", "owner": "DietrichGebert", "repo": "ponytail", "lang": "JavaScript", "langColor": "#f1e05a",
+        "stars": "139,945", "delta": "+7,499",
+        "summary": "给 AI 代理装上公司里最资深的懒工程师脑回路：能一行解决就不写五十行，最好的代码是没写的那行。",
+        "features": [
+          "阶梯式决策：先判断能否不写、能否用原生能力、能否复用依赖",
+          "抑制过度构建，常见任务代码量下降八成以上",
+          "实测代码行数减五成、成本降两成，还不牺牲质量"
+        ],
+        "tags": ["前端全栈", "控制成本", "降低技术债"]
+      },
+      "lines": [
+        {"role": "question", "text": "第二个名字挺有意思，它什么思路？"},
+        {"role": "answer", "text": "给 AI 装一个资深懒工程师的脑子，能一行搞定绝不写五十行，实测代码量直接砍一半多。"}
+      ]
+    },
+    {
+      "type": "project",
+      "project": {
+        "rank": "03", "owner": "affaan-m", "repo": "ECC", "lang": "JavaScript", "langColor": "#f1e05a",
+        "stars": "259,752", "delta": "+5,398",
+        "summary": "面向 AI 编码代理的工程系统，把规划、测试、实现、评审、验证、记忆一整套流程固化成可复用能力。",
+        "features": [
+          "能力库：六十多个专业代理加两百多个技能，覆盖规划到安全",
+          "上下文与记忆：会话摘要、持续学习，优化上下文占用",
+          "内置安全扫描，检查配置、权限与密钥"
+        ],
+        "tags": ["团队编码规范", "编码代理用户", "安全审计"]
+      },
+      "lines": [
+        {"role": "question", "text": "第三个总星数最高，它强在哪？"},
+        {"role": "answer", "text": "它把规划、测试、评审、安全一整套工程流程打包成技能，六十多个专业代理随取随用。"}
+      ]
+    },
+    {
+      "type": "project",
+      "project": {
+        "rank": "04", "owner": "alibaba", "repo": "open-code-review", "lang": "Go", "langColor": "#00ADD8",
+        "stars": "30,438", "delta": "+5,169",
+        "summary": "阿里巴巴内部打磨两年后开源的 AI 代码审查命令行工具，读取代码改动并输出行级精度的结构化评审意见。",
+        "features": [
+          "混合架构：确定性流水线加可调工具的大模型代理",
+          "内置多语言规则，覆盖空指针、线程安全、注入等典型缺陷",
+          "同等模型下算力消耗约为通用代理的九分之一"
+        ],
+        "tags": ["代码审查", "大型代码库", "研发效能"]
+      },
+      "lines": [
+        {"role": "question", "text": "这个是阿里开源的？"},
+        {"role": "answer", "text": "对，一个 AI 代码审查命令行工具，读代码改动能给到行级评审意见，算力消耗只要通用代理的九分之一。"}
+      ]
+    },
+    {
+      "type": "project",
+      "project": {
+        "rank": "05", "owner": "obra", "repo": "superpowers", "lang": "Shell", "langColor": "#89e051",
+        "stars": "287,455", "delta": "+4,170",
+        "summary": "一套能让代理真正照做的软件开发方法论，由可组合技能与引导指令构成，把工程流程装进编码代理。",
+        "features": [
+          "技能化方法论：把开发流程拆成代理能发现并调用的组合技能",
+          "多平台适配，十几种主流编码代理都能接入",
+          "附加初始指令，确保代理主动使用这些技能"
+        ],
+        "tags": ["多代理工作流", "可复用规范", "个人开发者"]
+      },
+      "lines": [
+        {"role": "question", "text": "最后一个，它解决什么问题？"},
+        {"role": "answer", "text": "一套让 AI 代理真正照做的开发方法论，十几种编码工具都能接入，把工程规范直接装进代理里。"}
+      ]
+    },
+    {
+      "type": "outro",
+      "outro": {"title": "AI 编码卷成这样了", "cta": "关注大瑞，每周帮你挑好"},
+      "lines": [
+        {"role": "question", "text": "一周看下来，普通人还追得上吗？"},
+        {"role": "answer", "text": "不用追，关注大瑞，每周帮你挑好，躺着涨知识。"}
+      ]
+    }
+  ]
+}

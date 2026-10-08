@@ -1,0 +1,217 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#FF5926",
+      "purpose": "赤焰热力主题大数字渐变描边（VIS 数据强调，用主题色）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "delivery_spec_waiver": [],
+  "title": "8GB 的 Mac，跑 26B 大模型：TurboFieldfare",
+  "date": "2026.09.27",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/A Game - Michael Ramir C [mixkit 777].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "voice_desc": "慵懒御姐音（Qwen3-TTS 本地 MLX，情绪自动匹配）",
+  "tts_line": "solo-yujie",
+  "tts_tuning": "G版（逐句·对比停顿）：-52dB/0.30s 句内静音上限，句首留白0.12s，句间 逗号0.25s / 句末0.75s / 段落1.20s",
+  "source": "github.com/drumih/turbo-fieldfare · 官方 README（Apache-2.0；未引用未核实星标数字）",
+  "facts": [
+    "定位：在约 2GB 内存里跑 Gemma 4 26B-A4B 的 Apple Silicon 本地推理运行时",
+    "模型：Gemma 4 26B-A4B IT，26B 总参数、每 token 约 3.88B 活跃；权重 MLX 4-bit",
+    "架构做法：常驻 1.35GB 共享核心 + FP16 KV cache，专家权重按 token 从 SSD 流式读取",
+    "常驻内存：约 2GB（权重 + 4K KV cache）",
+    "磁盘：文本模型约 14.3GB；可选图像包约 1.1GB；首次安装流式下载约 15GB，不落地整份 checkpoint",
+    "硬件：任意 Apple Silicon Mac，验证目标为 8GB 内存的 M2 MacBook Air；图像输入需 M2 以上",
+    "平台：macOS 26 / Metal 4 / Swift 6.2",
+    "实测解码：M2 为 5.1-6.3 tok/s；M5 Pro（24GB）为 31-35 tok/s",
+    "形态：Mac 应用 + CLI + 仅回环地址的 OpenAI 兼容服务；同一份模型目录同时只允许一个进程",
+    "README 附 103 条实测实验记录",
+    "许可：Apache-2.0；作者 Andrey Mikhaylov，独立研究项目，与 Google 无关",
+    "数据口径：全部取自仓库 README 实测数据"
+  ],
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你还想拆哪个项目。",
+    "emotion": "thoughtful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你会在旧 Mac 上跑哪个模型？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "chip",
+      "card": {
+        "eyebrow": "开源情报站 · 本地推理",
+        "title": "8GB 的 Mac，<accent>跑 26B 大模型</accent>",
+        "subtitle": "TurboFieldfare · 自研 Swift + Metal 运行时 · 内存约 2GB",
+        "stats": [
+          {
+            "k": "参数规模",
+            "v": "26B"
+          },
+          {
+            "k": "运行时内存",
+            "v": "~2GB"
+          },
+          {
+            "k": "协议",
+            "v": "Apache-2.0"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "text": "GitHub 上有个项目叫 TurboFieldfare，干了件反常识的事：让一台 8GB 内存的 Mac，跑起 26B 参数的大模型，内存只占大约 2GB。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 11.68
+    },
+    {
+      "type": "feature",
+      "visual": "toolcall",
+      "card": {
+        "eyebrow": "它是什么",
+        "title": "不用 MLX，<accent>自己写运行时</accent>",
+        "subtitle": "Swift 6.2 + Metal 4 · 常驻 1.35GB 共享核心 · 专家权重走 SSD"
+      },
+      "lines": [
+        {
+          "text": "它没用 MLX，也没包一层 llama.cpp，运行时是作者用 Swift 加 Metal 自己写的：14.3GB 的模型不整个读进内存，只常驻 1.35GB 共享核心和 KV 缓存，专家权重按需从 SSD 流式取。"
+        }
+      ],
+      "_start": 12.88,
+      "_end": 31.76
+    },
+    {
+      "type": "feature",
+      "visual": "bench",
+      "card": {
+        "eyebrow": "实测数据",
+        "title": "8GB 的 M2，<accent>真的跑得动</accent>",
+        "subtitle": "M2 解码 5.1-6.3 tok/s · M5 Pro 31-35 tok/s · macOS 26+"
+      },
+      "lines": [
+        {
+          "text": "验证机型是一台 8GB 内存的 M2 MacBook Air，解码速度 5.1 到 6.3 token 每秒；换到 24GB 的 M5 Pro，能跑到 31 到 35。平台要求 macOS 26、Metal 4 和 Swift 6.2。"
+        }
+      ],
+      "_start": 32.96,
+      "_end": 50.24
+    },
+    {
+      "type": "feature",
+      "visual": "cost",
+      "card": {
+        "eyebrow": "代价与边界",
+        "title": "磁盘留 14.3GB，<accent>换掉 2GB 内存</accent>",
+        "subtitle": "首次安装流式下载约 15GB · 图像包另加约 1.1GB（需 M2+）"
+      },
+      "lines": [
+        {
+          "text": "代价也说得明白：磁盘要留出大约 14.3GB，首次安装流式下载约 15GB，边下边重打包，不落地整份模型；想加图像理解，再装一个约 1.1GB 的视觉包，还要求 M2 以上。"
+        }
+      ],
+      "_start": 51.44,
+      "_end": 70.0
+    },
+    {
+      "type": "feature",
+      "visual": "usage",
+      "card": {
+        "eyebrow": "怎么用",
+        "title": "应用、命令行，<accent>还有本地 API</accent>",
+        "subtitle": "Mac 应用 / CLI / OpenAI 兼容服务，跑在回环地址上"
+      },
+      "lines": [
+        {
+          "text": "用法有三种：原生 Mac 应用、命令行，还有一个跑在回环地址上的 OpenAI 兼容服务，同一份模型目录，同一时间只能跑一个。作者还公开了 103 条实测实验记录。"
+        }
+      ],
+      "_start": 71.2,
+      "_end": 84.89
+    },
+    {
+      "type": "outro",
+      "visual": "outro",
+      "card": {
+        "title": "关注 jerrychen2001",
+        "cta": "评论区聊聊",
+        "sub": "你会在旧 Mac 上跑哪个模型？"
+      },
+      "lines": [
+        {
+          "text": "项目按 Apache 2.0 开源，作者 Andrey Mikhaylov 是独立开发者，和 Google 没有关系。你觉得这种拿磁盘换内存的路子，以后能跑进手机吗？"
+        }
+      ],
+      "_start": 86.09,
+      "_end": 98.25
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "GitHub 上有个项目叫 TurboFieldfare，干了件反常识的事：让一台 8GB 内存的 Mac，跑起 26B 参数的大模型，内存只占大约 2GB。",
+      "start": 0.0,
+      "end": 11.68
+    },
+    {
+      "scene_index": 1,
+      "text": "它没用 MLX，也没包一层 llama.cpp，运行时是作者用 Swift 加 Metal 自己写的：14.3GB 的模型不整个读进内存，只常驻 1.35GB 共享核心和 KV 缓存，专家权重按需从 SSD 流式取。",
+      "start": 12.88,
+      "end": 31.76
+    },
+    {
+      "scene_index": 2,
+      "text": "验证机型是一台 8GB 内存的 M2 MacBook Air，解码速度 5.1 到 6.3 token 每秒；换到 24GB 的 M5 Pro，能跑到 31 到 35。平台要求 macOS 26、Metal 4 和 Swift 6.2。",
+      "start": 32.96,
+      "end": 50.24
+    },
+    {
+      "scene_index": 3,
+      "text": "代价也说得明白：磁盘要留出大约 14.3GB，首次安装流式下载约 15GB，边下边重打包，不落地整份模型；想加图像理解，再装一个约 1.1GB 的视觉包，还要求 M2 以上。",
+      "start": 51.44,
+      "end": 70.0
+    },
+    {
+      "scene_index": 4,
+      "text": "用法有三种：原生 Mac 应用、命令行，还有一个跑在回环地址上的 OpenAI 兼容服务，同一份模型目录，同一时间只能跑一个。作者还公开了 103 条实测实验记录。",
+      "start": 71.2,
+      "end": 84.89
+    },
+    {
+      "scene_index": 5,
+      "text": "项目按 Apache 2.0 开源，作者 Andrey Mikhaylov 是独立开发者，和 Google 没有关系。你觉得这种拿磁盘换内存的路子，以后能跑进手机吗？",
+      "start": 86.09,
+      "end": 98.25
+    }
+  ],
+  "total_duration": 98.25,
+  "tts_params": {
+    "version": "G",
+    "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+    "ref_voice": "yujie_thoughtful.wav（慵懒御姐音）",
+    "silence_trim": "-52dB / 0.30s（句内上限）",
+    "lead_silence": 0.12,
+    "tail_silence": 0.08,
+    "pause_comma": 0.25,
+    "pause_period": 0.75,
+    "pause_paragraph": 1.2,
+    "sample_rate": 24000,
+    "channels": 1,
+    "silence_ge_040s_total": 0
+  }
+}

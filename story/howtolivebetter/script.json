@@ -1,0 +1,170 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#FF5926",
+      "purpose": "赤焰热力主题大数字渐变描边（VIS 数据强调，用主题色）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "title": "GitHub一万三千星：程序员把人生按性价比排了序",
+  "date": "2026.09.23",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "voice_desc": "慵懒玉女御姐音（Qwen3-TTS 本地 MLX，情绪自动匹配）",
+  "source": "GitHub Trending 2026-09-23 · eternity4719/HowToLiveBetter（⭐12.9k）",
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你最想先看哪一类。",
+    "emotion": "thoughtful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你最想先看哪一类？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "hero-repo",
+      "card": {
+        "eyebrow": "GitHub 热门 · 循证生活指南",
+        "title": "一个程序员，<br>把<accent>人生决策按性价比排了序</accent>",
+        "subtitle": "长寿、急救、省钱、法律红线 · 每条都标注证据等级",
+        "stats": [
+          {
+            "k": "GitHub 收藏",
+            "v": "12,900+"
+          },
+          {
+            "k": "覆盖大类",
+            "v": "10 个"
+          },
+          {
+            "k": "引用来源",
+            "v": "只收论文与官方文件"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "GitHub上有个项目悄悄攒了一万三千颗星。一个程序员把长寿防病、急救、省钱理财、法律红线这些人生大事，全按性价比排了序，每一条都写明成本、收益和证据等级。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 14.99
+    },
+    {
+      "type": "feature",
+      "visual": "rank-list",
+      "card": {
+        "eyebrow": "模块一 · 长寿防病",
+        "title": "同样延长寿命，<accent>性价比天差地别</accent>",
+        "subtitle": "成本低、证据硬的排最前 · 花大钱没依据的往后靠"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "拿长寿防病来说，它把每件事的性价比拆开排：有些习惯几乎不花钱、证据又硬，稳坐前排；有些花大钱却证据不足，只能往后靠。你照着清单从上往下做就行。"
+        }
+      ],
+      "_start": 15.34,
+      "_end": 31.04
+    },
+    {
+      "type": "feature",
+      "visual": "shield-law",
+      "card": {
+        "eyebrow": "模块二 · 急救与法律红线",
+        "title": "这些红线踩了，<accent>代价是真金白银</accent>",
+        "subtitle": "海姆立克、心肺复苏 · 失业工伤、医保社保怎么办"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "急救这一块更救命：海姆立克、心肺复苏，写了最省事的学法。还有失业和工伤怎么办、医保社保怎么报、哪些法律红线千万不能踩，每条都给出官方文件的依据。"
+        }
+      ],
+      "_start": 31.39,
+      "_end": 48.17
+    },
+    {
+      "type": "stat",
+      "visual": "ten-domains",
+      "card": {
+        "eyebrow": "模块三 · 十大领域全覆盖",
+        "title": "从婚育到创业，<accent>不灌鸡汤只讲依据</accent>",
+        "big": "10",
+        "big_label": "大类：长寿防病 / 急救 / 理财 / 法律 / 婚育 / 创业合规 / 出国与技能"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "恋爱婚育、怀孕育儿、创业做平台怎么合规、出国和学什么技能，整整十个大类全覆盖。它不灌鸡汤，每条建议都必须写明原始出处，拿不到论文和官方依据的，一律不收。"
+        }
+      ],
+      "_start": 48.52,
+      "_end": 64.96
+    },
+    {
+      "type": "outro",
+      "visual": "compass-map",
+      "card": {
+        "title": "你的人生，值得一张有证据的地图",
+        "cta": "照着清单做，比瞎折腾强",
+        "sub": "GitHub · eternity4719/HowToLiveBetter"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "作者管它叫循证生活指南：按性价比排序，每条都能查到出处。它未必能帮你暴富，但踩坑的概率，一定比你自己摸黑走低得多。"
+        }
+      ],
+      "_start": 65.31,
+      "_end": 76.98
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "GitHub上有个项目悄悄攒了一万三千颗星。一个程序员把长寿防病、急救、省钱理财、法律红线这些人生大事，全按性价比排了序，每一条都写明成本、收益和证据等级。",
+      "start": 0.0,
+      "end": 14.99
+    },
+    {
+      "scene_index": 1,
+      "text": "拿长寿防病来说，它把每件事的性价比拆开排：有些习惯几乎不花钱、证据又硬，稳坐前排；有些花大钱却证据不足，只能往后靠。你照着清单从上往下做就行。",
+      "start": 15.34,
+      "end": 31.04
+    },
+    {
+      "scene_index": 2,
+      "text": "急救这一块更救命：海姆立克、心肺复苏，写了最省事的学法。还有失业和工伤怎么办、医保社保怎么报、哪些法律红线千万不能踩，每条都给出官方文件的依据。",
+      "start": 31.39,
+      "end": 48.17
+    },
+    {
+      "scene_index": 3,
+      "text": "恋爱婚育、怀孕育儿、创业做平台怎么合规、出国和学什么技能，整整十个大类全覆盖。它不灌鸡汤，每条建议都必须写明原始出处，拿不到论文和官方依据的，一律不收。",
+      "start": 48.52,
+      "end": 64.96
+    },
+    {
+      "scene_index": 4,
+      "text": "作者管它叫循证生活指南：按性价比排序，每条都能查到出处。它未必能帮你暴富，但踩坑的概率，一定比你自己摸黑走低得多。",
+      "start": 65.31,
+      "end": 76.98
+    }
+  ],
+  "total_duration": 76.98
+}

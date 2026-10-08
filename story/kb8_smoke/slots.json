@@ -1,0 +1,85 @@
+{
+  "kind": "short-chips",
+  "template_story": "compositor-mac",
+  "description": "短情报卡：3 场景、单点结论、强开场。槽位沿用双脚本路线，需改写 script.json 的 title/scenes/header/outro。",
+  "registry": "/Volumes/PSSD/抖音视频/templates/registry.json",
+  "emitted_at": "2026-10-08 04:05:17",
+  "slot_count": 8,
+  "filled": 5,
+  "todo_required": 1,
+  "slots": [
+    {
+      "path": "script.json",
+      "key": "title",
+      "required": true,
+      "desc": "上屏主标题（≤14 字最佳，封面标题版 A 直接取此处）",
+      "state": "filled",
+      "matched_values": 1,
+      "sample": "Photoshop 太贵？他给自己写了一个开源的"
+    },
+    {
+      "path": "script.json",
+      "key": "date",
+      "required": true,
+      "desc": "发布日期，格式 YYYY.MM.DD",
+      "state": "filled",
+      "matched_values": 1,
+      "sample": "2026.09.24"
+    },
+    {
+      "path": "script.json",
+      "key": "watermark",
+      "required": true,
+      "desc": "水印/品牌名（右上与右下角共用）",
+      "state": "filled",
+      "matched_values": 1,
+      "sample": "jerrychen2001"
+    },
+    {
+      "path": "script.json",
+      "key": "scenes",
+      "required": true,
+      "desc": "场景数组：每项含 visual + lines[]（lines 由 build_audio 回填 start/end）",
+      "state": "placeholder",
+      "matched_values": 6,
+      "sample": null
+    },
+    {
+      "path": "script.json",
+      "key": "scenes[].lines[].text",
+      "required": true,
+      "desc": "逐句口播稿；节奏停顿用 beat 声明（A1），无意义停顿会被 A6 检出",
+      "state": "filled",
+      "matched_values": 6,
+      "sample": "Photoshop 太贵，GIMP 又不够顺手，于是作者干脆自己写了一个：Com"
+    },
+    {
+      "path": "script.json",
+      "key": "scenes[].light",
+      "required": false,
+      "desc": "可选 shot 级光照覆写 {bg_base_lift, glow_gain}（A7，幅度受 anchors.json 约束）",
+      "state": "missing",
+      "matched_values": 0,
+      "sample": null
+    },
+    {
+      "path": "script.json",
+      "key": "source",
+      "required": true,
+      "desc": "数据/情报出处，写入片内出处卡",
+      "state": "filled",
+      "matched_values": 1,
+      "sample": "github.com/robbietilton/Compositor · 官方 "
+    },
+    {
+      "path": "script.json",
+      "key": "epilogue",
+      "required": false,
+      "desc": "片尾文案（append_epilogue 使用）",
+      "state": "placeholder",
+      "matched_values": 1,
+      "sample": null
+    }
+  ],
+  "ready": false
+}

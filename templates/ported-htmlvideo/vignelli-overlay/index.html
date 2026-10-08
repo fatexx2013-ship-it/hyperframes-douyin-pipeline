@@ -1,0 +1,179 @@
+<!doctype html>
+<!-- @dsCard group="ported-htmlvideo" name="Swiss Grid Overlay (竖屏原生)" path="index.html" subtitle="原生 9:16：六列红网格 + 红黑帘幕转场 + 三张数据卡 + 品牌定版" viewport="{width: 1080, height: 1920}" -->
+<!-- 来源：nexu-io/html-video templates/frame-vignelli（Apache-2.0，上游 heygen-com/hyperframes）
+     原生画幅即 1080×1920，是 23 个模板中唯一原生竖屏者。
+     适配动作：
+       1) 合并原 index.html（A-roll 层 + 帘幕转场）与 compositions/overlays.html（3 张数据卡 + 品牌定版）为单文件模板；
+       2) 剔除 A-roll 视频/音频耦合（原 video src=__VIDEO_SRC__ 与 audio 层），改为纯图形模板——本产线成片由 render.sh 合成 A-roll，无需模板内嵌；
+       3) 剔除 compositions/captions.html 的 TRANSCRIPT 硬编码英文时间轴——本产线字幕统一由 json_to_srt.py → SRT → render.sh 烧录，避免双字幕；
+       4) GSAP 由 cdn.jsdelivr.net 改为本地 _shared/vendor 引用（同为 3.14.2）；
+       5) 英文示意文案改为可变量中文，字体回退 PingFang SC / SF Pro Display（原为 Helvetica Neue 栈）。 -->
+<html lang="zh-CN" class="light" data-composition-variables='[
+  {"id":"stat47","type":"string","label":"卡片1 数字","default":"47%"},
+  {"id":"stat47Label","type":"string","label":"卡片1 标签","default":"动态图形"},
+  {"id":"stat62","type":"string","label":"卡片2 数字","default":"62%"},
+  {"id":"stat62Label","type":"string","label":"卡片2 标签","default":"静态内容拖住了注意力"},
+  {"id":"stat34","type":"string","label":"卡片3 强调","default":"3 / 4"},
+  {"id":"stat34Label","type":"string","label":"卡片3 正文","default":"的人说：<br>知道要什么画面，却没有剪辑能力"},
+  {"id":"brand","type":"string","label":"品牌定版","default":"HYPERFRAMES"}
+]'>
+<head>
+<meta charset="UTF-8" />
+<title>Swiss Grid Overlay · 竖屏原生模板</title>
+<style>
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC"), local("PingFangSC-Regular"); font-weight:400; font-display:block; }
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC Semibold"), local("PingFangSC-Semibold"), local("PingFang SC"); font-weight:600 900; font-display:block; }
+  @font-face { font-family:"SF Pro Display"; src:local("SF Pro Display"), local("SFProDisplay-Bold"); font-weight:400 900; font-display:block; }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1080px; height:1920px; overflow:hidden; position:relative; background:#FFFFFF; color:#000;
+    font-family:"PingFang SC","SF Pro Display","Helvetica Neue",Arial,sans-serif;
+  }
+  .overlay-item, .grid { position:absolute; opacity:0; }
+
+  /* 六列参考网格（开发用，默认隐藏；opacity 置 1 可开） */
+  .grid { inset:0; display:grid; grid-template-columns:repeat(6,1fr); z-index:100; pointer-events:none; }
+  .grid .col { border-right:1px solid rgba(204,0,0,0.12); }
+
+  /* 帘幕 */
+  .curtain { position:absolute; top:0; bottom:0; width:100%; z-index:200; pointer-events:none; }
+  #curtain-black { left:-100%; background:#0A0A0A; }
+  #curtain-red   { left:-100%; background:#CC0000; }
+
+  /* 卡片1：47% 动态图形 */
+  #stat-47 { left:0; bottom:300px; width:648px; height:280px; background:#fff; display:flex; align-items:stretch;
+    box-shadow:0 24px 70px rgba(0,0,0,0.10); }
+  #stat-47 .red-bar { width:24px; background:#CC0000; }
+  #stat-47 .content { padding:44px 48px; display:flex; flex-direction:column; justify-content:center; }
+  #stat-47 .number { font-size:132px; font-weight:900; line-height:1; letter-spacing:-3px; }
+  #stat-47 .label { font-size:34px; font-weight:700; letter-spacing:2px; margin-top:12px; }
+
+  /* 卡片2：62% 全画布 */
+  #stat-62 { inset:0; z-index:50; display:flex; }
+  #stat-62 .panel { position:absolute; inset:0; background:#1A1A1A; }
+  #stat-62 .accent { position:absolute; top:0; right:0; width:180px; height:100%; background:#CC0000; }
+  #stat-62 .content { position:relative; width:100%; height:100%; display:flex; flex-direction:column;
+    justify-content:center; padding:0 96px; }
+  #stat-62 .large-number { font-size:360px; font-weight:900; color:#fff; line-height:0.84; letter-spacing:-12px; }
+  #stat-62 .large-label { font-size:62px; font-weight:700; color:#fff; margin-top:28px; max-width:760px; line-height:1.2; }
+
+  /* 卡片3：3/4 右栏 */
+  #stat-3-4 { right:0; top:520px; width:540px; background:#fff; padding:48px;
+    display:flex; flex-direction:row-reverse; box-shadow:0 24px 70px rgba(0,0,0,0.10); }
+  #stat-3-4 .text-block { font-size:48px; font-weight:700; line-height:1.24; text-align:right; }
+  #stat-3-4 .highlight { color:#CC0000; font-size:68px; font-weight:900; }
+  #stat-3-4 .side-bar { width:12px; background:#000; margin-left:24px; }
+
+  /* 品牌定版 */
+  #branding { left:96px; right:96px; bottom:240px; z-index:60; display:flex; justify-content:center; }
+  #branding .logo-container { display:flex; flex-direction:column; align-items:center; }
+  #branding .logo-text { font-size:68px; font-weight:900; letter-spacing:14px; color:#000; }
+  #branding .logo-underline { width:100%; height:10px; background:#CC0000; margin-top:14px; transform-origin:left center; }
+</style>
+</head>
+<body data-composition-id="vignelli-overlay" data-width="1080" data-height="1920" data-duration="16.9">
+  <div class="grid">
+    <div class="col"></div><div class="col"></div><div class="col"></div>
+    <div class="col"></div><div class="col"></div><div class="col"></div>
+  </div>
+
+  <div class="overlay-item" id="stat-47">
+    <div class="red-bar"></div>
+    <div class="content">
+      <div class="number" data-var="stat47">47%</div>
+      <div class="label" data-var="stat47Label">动态图形</div>
+    </div>
+  </div>
+
+  <div class="overlay-item" id="stat-62">
+    <div class="panel"></div>
+    <div class="accent"></div>
+    <div class="content">
+      <div class="large-number" data-var="stat62">62%</div>
+      <div class="large-label" data-var="stat62Label">静态内容拖住了注意力</div>
+    </div>
+  </div>
+
+  <div class="overlay-item" id="stat-3-4">
+    <div class="text-block"><span class="highlight" data-var="stat34">3 / 4</span><br><span data-var="stat34Label">的人说：<br>知道要什么画面，却没有剪辑能力</span></div>
+    <div class="side-bar"></div>
+  </div>
+
+  <div class="overlay-item" id="branding">
+    <div class="logo-container">
+      <div class="logo-text" data-var="brand">HYPERFRAMES</div>
+      <div class="logo-underline"></div>
+    </div>
+  </div>
+
+  <div class="curtain" id="curtain-black"></div>
+  <div class="curtain" id="curtain-red"></div>
+
+  <script src="_shared/vendor/gsap.min.js"></script>
+  <script>window.gsap||document.write('<script src="../_vendor/gsap.min.js"><\/script>');</script>
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      document.querySelectorAll('[data-var]').forEach(function (el) {
+        var v = params.get(el.getAttribute('data-var'));
+        if (v) el.innerHTML = v;
+      });
+
+      var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
+
+      /* 段落 1（0.0–3.8s）：47% 卡片自左推入并停驻 */
+      tl.set('#stat-47', { opacity: 1 }, 0)
+        .fromTo('#stat-47', { x: -648 }, { x: 0, duration: 0.8 }, 0.4)
+        .from('#stat-47 .red-bar', { scaleY: 0, transformOrigin: 'top center', duration: 0.5 }, 0.6)
+        .from('#stat-47 .number, #stat-47 .label', { opacity: 0, y: 20, duration: 0.6, stagger: 0.12, ease: 'power2.out' }, 0.8)
+        .to('#stat-47', { x: -648, duration: 0.6, ease: 'expo.in' }, 3.2)
+        .set('#stat-47', { opacity: 0 }, 3.8);
+
+      /* 帘幕过渡：黑帘扫出 → 红帘扫入，制造 A-roll 切换的节奏位（原版保留的转场骨架） */
+      tl.to('#curtain-black', { left: '0%', duration: 0.22, ease: 'power2.inOut' }, 3.5)
+        .to('#curtain-black', { left: '100%', duration: 0.36, ease: 'power2.inOut' }, 3.8)
+        .set('#curtain-black', { left: '-100%' }, 4.2);
+
+      /* 段落 2（4.2–9.2s）：62% 全画布大字，右侧红列展开 */
+      tl.set('#stat-62', { opacity: 1 }, 4.2)
+        .from('#stat-62 .panel',  { xPercent: 100, duration: 0.8 }, 4.2)
+        .from('#stat-62 .accent', { xPercent: 100, duration: 0.8 }, 4.35)
+        .from('#stat-62 .large-number', { y: 110, opacity: 0, duration: 1 }, 4.6)
+        .from('#stat-62 .large-label',  { y: 50, opacity: 0, duration: 1 }, 4.85)
+        .to('#stat-62', { xPercent: -100, duration: 0.8, ease: 'expo.in' }, 8.4)
+        .set('#stat-62', { opacity: 0 }, 9.2);
+
+      /* 帘幕过渡：红帘扫过 */
+      tl.set('#curtain-red', { left: '-100%' }, 8.9)
+        .to('#curtain-red', { left: '0%', duration: 0.22, ease: 'power2.inOut' }, 8.9)
+        .to('#curtain-red', { left: '100%', duration: 0.36, ease: 'power2.inOut' }, 9.2)
+        .set('#curtain-red', { left: '-100%' }, 9.6);
+
+      /* 段落 3（9.6–14.4s）：3/4 卡片右侧推入 */
+      tl.set('#stat-3-4', { opacity: 1 }, 9.6)
+        .fromTo('#stat-3-4', { x: 540 }, { x: 0, duration: 0.8 }, 9.6)
+        .from('#stat-3-4 .side-bar', { scaleY: 0, transformOrigin: 'top center', duration: 0.5 }, 9.9)
+        .from('#stat-3-4 .text-block .highlight', { opacity: 0, y: 18, duration: 0.6, ease: 'power2.out' }, 10.1)
+        .from('#stat-3-4 .text-block span:last-child', { opacity: 0, y: 16, duration: 0.6, ease: 'power2.out' }, 10.3)
+        .to('#stat-3-4', { x: 540, duration: 0.6, ease: 'expo.in' }, 13.8)
+        .set('#stat-3-4', { opacity: 0 }, 14.4);
+
+      /* 段落 4（14.4–16.9s）：品牌定版 */
+      tl.set('#branding', { opacity: 1 }, 14.5)
+        .from('#branding .logo-text', { y: 26, opacity: 0, duration: 0.7 }, 14.5)
+        .from('#branding .logo-underline', { scaleX: 0, duration: 0.9 }, 14.75)
+        .to('#branding', { opacity: 0, duration: 0.6, ease: 'power2.in' }, 16.3);
+
+      if (reduced) { tl.progress(1); tl.pause(); }
+      window.__timelines = window.__timelines || {};
+      window.__timelines['vignelli-overlay'] = tl;
+      window.__timelines['main-comp'] = tl;
+
+      var t = parseFloat(params.get('t'));
+      if (!isNaN(t)) tl.seek(t);
+    })();
+  </script>
+</body>
+</html>

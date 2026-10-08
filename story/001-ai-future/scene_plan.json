@@ -1,0 +1,37 @@
+{
+  "total_duration": 44,
+  "scenes": [
+    {
+      "id": "scene1",
+      "text": "你知道吗？AI 已经在下围棋、写代码、画画甚至做电影了。\n而这一切，才刚刚开始。",
+      "duration": 11,
+      "visual_theme": "abstract data flow",
+      "camera": "static",
+      "emotion": "urgent"
+    },
+    {
+      "id": "scene2",
+      "text": "2025 年，有五个 AI 方向值得所有人关注。",
+      "duration": 11,
+      "visual_theme": "circuit board macro",
+      "camera": "crane-up",
+      "emotion": "inspiring"
+    },
+    {
+      "id": "scene3",
+      "text": "第一，多模态大模型。不只是文字，AI 现在能看懂图片、听懂声音、理解视频。\n第二，AI Agent。它能自己规划任务、调用工具、完成复杂工作流。\n第三，端侧 AI。手机、电脑本地就能跑大模型，不用联网。\n第四，AI 生成视频。输入一段文字，几秒钟就是一条电影级短片。\n第五，AI 科学发现。从蛋白质折叠到新材料研发，AI 正在改变科学研究的方式。",
+      "duration": 11,
+      "visual_theme": "AI chip close-up",
+      "camera": "tracking-shot",
+      "emotion": "calm"
+    },
+    {
+      "id": "scene4",
+      "text": "未来三年，这些技术会从实验室走向每个人的生活。\n你准备好了吗？. 关注我，获取更多 AI 干货。",
+      "duration": 11,
+      "visual_theme": "slow motion water",
+      "camera": "pan-right",
+      "emotion": "serious"
+    }
+  ]
+}

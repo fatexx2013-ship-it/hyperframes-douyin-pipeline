@@ -1,0 +1,2 @@
+file '/Volumes/PSSD/抖音视频/story/aicomicbuilder/douyin.mp4'
+file '/Volumes/PSSD/抖音视频/story/aicomicbuilder/epilogue/_seg.mp4'

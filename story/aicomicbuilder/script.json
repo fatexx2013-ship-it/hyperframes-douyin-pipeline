@@ -1,0 +1,244 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#FF5926",
+      "purpose": "赤焰热力主题大数字渐变描边（VIS 数据强调，用主题色）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "delivery_spec_waiver": [],
+  "title": "写个剧本它自己拍成动漫？这个开源项目把流水线全包了",
+  "date": "2026.10.05",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "voice_desc": "慵懒玉女御姐音（Qwen3-TTS 本地 MLX，情绪自动匹配）",
+  "tts_line": "solo-yujie",
+  "tts_tuning": "G版（逐句·对比停顿）：-52dB/0.30s 句内静音上限，句首留白0.12s，句间 逗号0.25s / 句末0.75s / 段落1.20s",
+  "source": "github.com/LingyiChen-AI/AIComicBuilder · 官方 README（Apache-2.0）+ GitHub Search API 实时数据（星标数抓取于 2026-10-05）",
+  "facts": [
+    "定位：AI 驱动的漫剧生成器，从剧本到动画视频的全自动流水线，Apache-2.0，TypeScript / Next.js 16",
+    "卖点：扔进去一个剧本文件（TXT/DOCX/PDF 都行），它自己完成解析、提取角色、智能分集，流程全程可视化",
+    "核心能力：为每个角色生成四视图参考图（正面 / 四分之三 / 侧面 / 背面），保证后续每一帧画面里角色长相一致",
+    "核心能力：AI 把剧本拆成专业镜头列表，每个镜头自带构图、灯光、运镜指令，还为每个镜头生成起始帧和结束帧",
+    "工具链：视频提示词由 AI 基于分镜和参考帧自动生成、支持直接编辑；全部片段拼成完整动画，字幕直接烧录",
+    "多模型：OpenAI / Gemini / Kling / Seedance / Veo 多家供应商可按项目配置；支持 16:9 与 9:16 竖屏",
+    "部署：Docker 一条命令起，SQLite 存数据；中文 / English / 日本語 / 한국어 四语言",
+    "门槛：模型能力全部来自外部 API（OpenAI / Gemini / Kling / Seedance / Veo），需自备各家的 key 和额度——不是零成本，文案如实标注不吹"
+  ],
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你会扔个什么剧本进去。",
+    "emotion": "playful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你会扔个什么剧本进去？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "chip",
+      "card": {
+        "eyebrow": "开源情报站 · AI 漫剧",
+        "title": "写个剧本，<accent>它自己拍成动漫</accent>",
+        "subtitle": "AIComicBuilder · 剧本到动画全自动 · Apache-2.0",
+        "stats": [
+          {
+            "k": "Star",
+            "v": "1.9k+"
+          },
+          {
+            "k": "形态",
+            "v": "本地 Web 应用"
+          },
+          {
+            "k": "协议",
+            "v": "Apache-2.0"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "做短视频最费劲的就是画面。今天这个开源项目叫 AIComicBuilder，你把剧本文件扔进去，它自己把剧本拆成镜头、画出每一帧、最后拼成一部动画片。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 12.85
+    },
+    {
+      "type": "feature",
+      "visual": "toolcall",
+      "card": {
+        "eyebrow": "第一步",
+        "title": "扔进去一个文件，<accent>它自己读剧本</accent>",
+        "subtitle": "TXT / DOCX / PDF 全支持 · 自动提取角色 · 智能分集"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "第一步特别省心：剧本不用手动整理格式，TXT、DOCX、PDF 直接上传。它自动解析文本、提取出所有角色、还按剧情智能分集，整个流程可视化，你能看见它在干什么。"
+        }
+      ],
+      "_start": 14.05,
+      "_end": 33.14
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "第二步",
+        "title": "每个角色先出四张图，<accent>保证长相一致</accent>",
+        "subtitle": "正面 / 四分之三 / 侧面 / 背面 · 后续帧严格对齐参考图"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "AI 画视频最大的毛病是角色每帧都换脸。它的办法是先给每个角色生成四视图参考图：正面、四分之三、侧面、背面全画一遍，后面所有帧都对齐这四张图，主角从头到尾都是同一个人。"
+        }
+      ],
+      "_start": 34.34,
+      "_end": 52.1
+    },
+    {
+      "type": "feature",
+      "visual": "ladder",
+      "card": {
+        "eyebrow": "第三步",
+        "title": "剧本拆成镜头，<accent>每帧都带导演指令</accent>",
+        "subtitle": "构图 / 灯光 / 运镜 · 起始帧 + 结束帧逐镜头生成"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "emotion": "thoughtful",
+          "text": "它把剧本拆成专业镜头列表，每个镜头自带构图、灯光、运镜指令。然后为每个镜头生成起始帧和结束帧两张关键画面，中间的动作靠首尾帧插值补出来。"
+        }
+      ],
+      "_start": 53.3,
+      "_end": 67.78
+    },
+    {
+      "type": "feature",
+      "visual": "toolcall",
+      "card": {
+        "eyebrow": "最后",
+        "title": "提示词自动写，<accent>字幕直接烧录</accent>",
+        "subtitle": "OpenAI / Gemini / Kling / Seedance / Veo 按项目配置"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "每个镜头的视频提示词由 AI 基于分镜和参考帧自动生成，你看不顺眼可以直接改。所有片段拼成完整动画，字幕直接烧录进去，支持 16 比 9 和 9 比 16 竖屏。"
+        }
+      ],
+      "_start": 68.98,
+      "_end": 85.06
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "跑起来要什么",
+        "title": "Docker 一条命令，<accent>但模型要花钱</accent>",
+        "subtitle": "部署零门槛 · 能力来自外部 API · 需自备各家 key"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "emotion": "thoughtful",
+          "text": "说说门槛，得诚实：部署确实简单，Docker 一条命令就起来，SQLite 存数据。但它自己不做任何 AI 推理，画图、生成视频全靠 OpenAI、Gemini、Kling 这些外部 API，各家 key 和额度你得自己备好。这不是零成本项目，这点必须讲清楚。"
+        }
+      ],
+      "_start": 86.26,
+      "_end": 107.38
+    },
+    {
+      "type": "outro",
+      "visual": "chip",
+      "card": {
+        "title": "关注 jerrychen2001",
+        "cta": "评论区聊聊",
+        "sub": "你会扔个什么剧本进去？"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "Apache 2.0 开源，代码在 GitHub。你会扔个什么剧本进去，让它拍成你的第一部动漫？"
+        }
+      ],
+      "_start": 108.58,
+      "_end": 116.63
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "做短视频最费劲的就是画面。今天这个开源项目叫 AIComicBuilder，你把剧本文件扔进去，它自己把剧本拆成镜头、画出每一帧、最后拼成一部动画片。",
+      "start": 0.0,
+      "end": 12.85
+    },
+    {
+      "scene_index": 1,
+      "text": "第一步特别省心：剧本不用手动整理格式，TXT、DOCX、PDF 直接上传。它自动解析文本、提取出所有角色、还按剧情智能分集，整个流程可视化，你能看见它在干什么。",
+      "start": 14.05,
+      "end": 33.14
+    },
+    {
+      "scene_index": 2,
+      "text": "AI 画视频最大的毛病是角色每帧都换脸。它的办法是先给每个角色生成四视图参考图：正面、四分之三、侧面、背面全画一遍，后面所有帧都对齐这四张图，主角从头到尾都是同一个人。",
+      "start": 34.34,
+      "end": 52.1
+    },
+    {
+      "scene_index": 3,
+      "text": "它把剧本拆成专业镜头列表，每个镜头自带构图、灯光、运镜指令。然后为每个镜头生成起始帧和结束帧两张关键画面，中间的动作靠首尾帧插值补出来。",
+      "start": 53.3,
+      "end": 67.78
+    },
+    {
+      "scene_index": 4,
+      "text": "每个镜头的视频提示词由 AI 基于分镜和参考帧自动生成，你看不顺眼可以直接改。所有片段拼成完整动画，字幕直接烧录进去，支持 16 比 9 和 9 比 16 竖屏。",
+      "start": 68.98,
+      "end": 85.06
+    },
+    {
+      "scene_index": 5,
+      "text": "说说门槛，得诚实：部署确实简单，Docker 一条命令就起来，SQLite 存数据。但它自己不做任何 AI 推理，画图、生成视频全靠 OpenAI、Gemini、Kling 这些外部 API，各家 key 和额度你得自己备好。这不是零成本项目，这点必须讲清楚。",
+      "start": 86.26,
+      "end": 107.38
+    },
+    {
+      "scene_index": 6,
+      "text": "Apache 2.0 开源，代码在 GitHub。你会扔个什么剧本进去，让它拍成你的第一部动漫？",
+      "start": 108.58,
+      "end": 116.63
+    }
+  ],
+  "total_duration": 116.63,
+  "tts_params": {
+    "version": "G",
+    "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+    "ref_voice": "yujie_thoughtful.wav（慵懒御姐音）",
+    "silence_trim": "-52dB / 0.30s（句内上限）",
+    "lead_silence": 0.12,
+    "tail_silence": 0.08,
+    "pause_comma": 0.25,
+    "pause_period": 0.75,
+    "pause_paragraph": 1.2,
+    "sample_rate": 24000,
+    "channels": 1,
+    "silence_ge_040s_total": 0
+  }
+}

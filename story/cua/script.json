@@ -1,0 +1,474 @@
+{
+  "design_registry": [],
+  "title": "它接过了我的鼠标和键盘：cua 让 AI 直接操作你的电脑",
+  "date": "2026.10.07",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/A Game - Michael Ramir C [mixkit 777].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "tts_emotion": "thoughtful",
+  "tts_emotion_desc": "慵懒御姐音：全片唯一音色来源（yujie_thoughtful.wav），build_audio.py 只认此键，逐句 emotion 已禁用",
+  "voice_desc": "慵懒御姐音（Qwen3-TTS 本地 MLX，句间气口压缩）",
+  "tts_line": "solo-yujie",
+  "tts_tuning": "G版（逐句·短篇压缩）：-52dB/0.30s 句内静音上限，句首留白 0.12s，段落停顿 0.85s",
+  "source": "github.com/trycua/cua · 官方 README 主分支 raw 原文（抓取于 2026-10-07）",
+  "facts": [
+    "定位（README 自述）：Computer-Use 2.0 —— agent 在同一个任务里，在代码、API 与图形界面之间来回切换",
+    "Cua Driver 首个上手任务：让 agent 在计算器里算出 6 × 7，并验证应用上显示的是 42",
+    "Cua Driver：给 agent 工具去操作 macOS / Windows / Linux 的原生 App 与浏览器；接入方式为 CLI / MCP / 类型化 SDK；支持后台投递——平台支持时不移动指针、不抢焦点",
+    "Cua Driver 演示：两路会话在 Omarchy 桌面上分别选中 LibreOffice Calc 单元格与 Inkscape 对象，终端保持前台（50 秒演示）",
+    "Cua Spaces：桌面应用，每个 Space 是一台真桌面（本地 macOS VM，或 Linux / Omarchy 镜像）；可跑在自己 Mac、自己的其它机器，或自己的云账号（AWS / Google Cloud / Modal）；免费自用，Pro 与 Teams 在路上；应用源码可得（FSL-1.1-MIT）",
+    "Spaces 三件事：Teleport（把已登录的 App 搬进 Space 仍保持登录，凭证存 Cua Keyvault 且需你批准）、Multiplayer（你和 agent 在同一桌面各有光标，可随时接管再交回）、镜像内置 cua-spacesd（Space 一启动即可读进程、文件、截图与输入）",
+    "Spaces 安装要求：macOS 26 或更高；curl -fsSL https://cua.ai/install.sh | sh（macOS 默认装 Spaces 应用并附加 cua CLI）",
+    "Lume：用 Apple Virtualization.Framework 在 Apple Silicon 上创建与管理本地 macOS / Linux 虚拟机；示例为从 Apple 恢复镜像建一台原生 macOS Tahoe VM，启动后用 SSH 连入",
+    "SDK 与 CLI：一个 SDK 加一个 cua 命令，同时管本地 VM 与容器；cua sb create ubuntu --name dev / cua sb exec dev uname -a / cua sb screenshot dev / cua sb rm dev",
+    "SDK 语言：Python（pip install cua）、TypeScript（@trycua/cua）、Swift（Cua）、Kotlin（生成绑定）；沙箱内无需安装 agent，就绪判定来自运行时与端口探针",
+    "镜像带 cua-spacesd（端口 3211）时额外提供进程、文件、截图、输入与低延迟音视频流；cua host setup 让本机经 relay 可达，无需端口转发",
+    "CUA-S1：面向 computer-use 的小型专用 System 1 模型家族，做快速、有边界的决策（如某字段该填哪个值、某元素要不要动）；首个研究档聚焦 forms——对结构化界面元素与文档值打分，而非逐 token 生成",
+    "CUA-S1 工程内容：Python 模型代码、合成数据生成、训练与评测；权重托管在 Hugging Face（cua-ai/cua-s1-forms），源码 MIT",
+    "Cua Bench：用来构建 computer-use 任务、评测 agent、导出轨迹用于训练；一个模拟任务不需要 VM、Docker 或模型 API key；首个结果是让评测器给出 reward 1.0"
+  ],
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你敢不敢让 AI 碰你的鼠标。",
+    "emotion": "thoughtful",
+    "gap_before": 0.35,
+    "tail_silence": 0.4,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你真敢让 AI 用你的电脑吗？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "screen",
+      "card": {
+        "eyebrow": "开源情报站 · GitHub 热榜",
+        "title": "它接过了我的<accent>鼠标和键盘</accent>",
+        "subtitle": "cua · 让 AI 直接操作你的电脑 · 装在自己 Mac 上跑",
+        "stats": [
+          {
+            "k": "今日榜位",
+            "v": "第 2 位"
+          },
+          {
+            "k": "GitHub Star",
+            "v": "28k"
+          },
+          {
+            "k": "部署方式",
+            "v": "本机自托管"
+          }
+        ],
+        "vis": {
+          "window_title": "Calculator · 6 × 7",
+          "target": "=",
+          "rows": [
+            [
+              "打开计算器",
+              "完成"
+            ],
+            [
+              "按下 6 × 7",
+              "完成"
+            ],
+            [
+              "验证显示 42",
+              "42"
+            ]
+          ],
+          "side_title": "AI 的动作记录",
+          "foot": "README 首个上手任务：让 agent 在计算器里算 6 × 7，并验证显示 42",
+          "badge": "屏幕 · 鼠标 · 键盘，全程由 AI 驱动"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "如果 AI 能自己动鼠标、自己敲键盘，你电脑里那些重复动作，是不是就有人接了？"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 7.44
+    },
+    {
+      "type": "feature",
+      "visual": "quote",
+      "card": {
+        "eyebrow": "它的定位",
+        "title": "它管这个叫<accent>Computer-Use 2.0</accent>",
+        "subtitle": "同一个任务里，在代码、API 和图形界面之间来回切",
+        "vis": {
+          "quote": "让 agent 在同一个任务里，于代码、API 与图形界面之间来回切换",
+          "accent": "Computer-Use 2.0",
+          "badge": "README · 首屏定义句"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "它给自己的定位叫 Computer-Use 2.0：同一个任务里，代码、接口和图形界面来回切。"
+        }
+      ],
+      "_start": 8.29,
+      "_end": 16.43
+    },
+    {
+      "type": "feature",
+      "visual": "action",
+      "card": {
+        "eyebrow": "它是怎么干活的",
+        "title": "一个动作，拆成<accent>四小步</accent>",
+        "subtitle": "截图 → 定位 → 输入 → 验证 · 每一步都能回放",
+        "vis": {
+          "side_title": "一次点击的完整链路",
+          "steps": [
+            {
+              "n": "01",
+              "act": "看屏幕",
+              "desc": "截下当前界面",
+              "res": "画面"
+            },
+            {
+              "n": "02",
+              "act": "找目标",
+              "desc": "在元素里定位按钮",
+              "res": "坐标"
+            },
+            {
+              "n": "03",
+              "act": "动鼠标",
+              "desc": "把点击真的发出去",
+              "res": "动作"
+            },
+            {
+              "n": "04",
+              "act": "验结果",
+              "desc": "回头确认界面真的变了",
+              "res": "确认"
+            }
+          ],
+          "foot": "Cua Driver · 后台投递：平台支持时不移动指针、不抢焦点",
+          "badge": "动作分解 · 看 / 找 / 点 / 验"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "干活就四步：先看屏幕，再找按钮，然后真的点下去，最后回头验证结果变了没有。"
+        }
+      ],
+      "_start": 17.28,
+      "_end": 26.35
+    },
+    {
+      "type": "feature",
+      "visual": "split",
+      "card": {
+        "eyebrow": "能用到什么程度",
+        "title": "它敢动你的电脑，<accent>但边界写得清楚</accent>",
+        "subtitle": "README 把支持范围与限制都摆在明面上",
+        "vis": {
+          "left_title": "这三种它能干",
+          "left_items": [
+            "操作原生 App 与浏览器",
+            "macOS / Windows / Linux",
+            "CLI、MCP、SDK 三种接入"
+          ],
+          "right_title": "这三条先看清",
+          "right_items": [
+            "Spaces 要求 macOS 26+",
+            "部分能力要放开系统权限",
+            "后台投递有平台边界"
+          ],
+          "verdict": "官方文档：先看平台支持表，再决定放不放权限",
+          "badge": "README · 平台支持与安装要求"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "边界它也写在明面上：三个平台、三种接入都支持，但系统权限和平台能力，得先看清。"
+        }
+      ],
+      "_start": 27.2,
+      "_end": 36.96
+    },
+    {
+      "type": "feature",
+      "visual": "screen",
+      "card": {
+        "eyebrow": "Cua Spaces",
+        "title": "菜单栏里，<accent>养几台真桌面的虚拟机</accent>",
+        "subtitle": "每个 Space 都是一台桌面 · 本地跑，也能挂到自有云账号",
+        "vis": {
+          "window_title": "Space · 本地 macOS 虚拟机",
+          "target": "接管",
+          "rows": [
+            [
+              "Teleport 搬进已登录 App",
+              "登录还在"
+            ],
+            [
+              "你和 AI 各有光标",
+              "随时接管"
+            ],
+            [
+              "Space 一启动",
+              "截图即得"
+            ]
+          ],
+          "side_title": "Space 里的三件事",
+          "foot": "镜像内置 cua-spacesd：Space 一启动就能读进程、文件、截图与输入",
+          "badge": "Spaces · 免费自用 · cua 0.1.0"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "它还能在你菜单栏里养几台虚拟机，每台都是真桌面；已登录的软件搬进去，登录状态还在。"
+        }
+      ],
+      "_start": 37.81,
+      "_end": 47.49
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "虚拟机底层：Lume",
+        "title": "在苹果芯片上，<accent>建一台 macOS 虚拟机</accent>",
+        "subtitle": "Apple Virtualization.Framework · 建完 SSH 直接连",
+        "vis": {
+          "left_who": "你敲的命令",
+          "left_lines": [
+            "curl … /lume/install.sh | bash",
+            "建一台 macOS Tahoe VM",
+            "启动后用 SSH 连进去"
+          ],
+          "right_who": "它给了什么",
+          "right_rows": [
+            [
+              "虚拟化",
+              "Apple Virtualization"
+            ],
+            [
+              "系统镜像",
+              "Apple 恢复镜像"
+            ],
+            [
+              "连接方式",
+              "SSH 直连"
+            ],
+            [
+              "适配机型",
+              "Apple Silicon"
+            ]
+          ],
+          "badge": "README · Lume 章节（本地 macOS / Linux VM）"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "虚拟机工具叫 Lume，在苹果芯片上直接建本地 macOS 系统，装好之后用 SSH 连进去。"
+        }
+      ],
+      "_start": 48.34,
+      "_end": 57.29
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "一条命令的沙箱",
+        "title": "起沙箱、跑命令，<accent>顺手截一张图</accent>",
+        "subtitle": "一个 SDK、一个 cua 命令，管本地 VM 与容器",
+        "vis": {
+          "left_who": "CLI 三条命令",
+          "left_lines": [
+            "cua sb create ubuntu --name dev",
+            "cua sb exec dev uname -a",
+            "cua sb screenshot dev"
+          ],
+          "right_who": "SDK 覆盖",
+          "right_rows": [
+            [
+              "语言",
+              "Python / TS / Swift / Kotlin"
+            ],
+            [
+              "沙箱内",
+              "不用装 agent"
+            ],
+            [
+              "镜像端口",
+              "cua-spacesd · 3211"
+            ],
+            [
+              "接入本机",
+              "cua host setup"
+            ]
+          ],
+          "badge": "pip install cua · @trycua/cua · Cua（Swift）"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "命令行一条 cua 起沙箱，能跑命令、能截图；四种语言都有 SDK，沙箱里不用装 agent。"
+        }
+      ],
+      "_start": 58.14,
+      "_end": 67.5
+    },
+    {
+      "type": "feature",
+      "visual": "stats",
+      "card": {
+        "eyebrow": "还有两件顺手的事",
+        "title": "专做界面决策的<accent>小模型</accent>，加一套打分台",
+        "subtitle": "CUA-S1 权重在 Hugging Face · Cua Bench 模拟任务不需要虚拟机与密钥",
+        "stats": [
+          {
+            "k": "CUA-S1",
+            "v": "System 1 小模型"
+          },
+          {
+            "k": "首个研究档",
+            "v": "forms 打分"
+          },
+          {
+            "k": "Cua Bench",
+            "v": "reward 1.0"
+          },
+          {
+            "k": "许可",
+            "v": "MIT / FSL-1.1-MIT"
+          }
+        ],
+        "vis": {
+          "badge": "README · CUA-S1 与 Cua Bench"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "他们还放了个专做界面决策的小模型，加一套能给任务打分的测试台，先跑起来再说。"
+        }
+      ],
+      "_start": 68.35,
+      "_end": 75.67
+    },
+    {
+      "type": "outro",
+      "visual": "chip",
+      "card": {
+        "title": "关注 jerrychen2001",
+        "cta": "评论区聊聊",
+        "sub": "你真敢让 AI 动你的鼠标吗？",
+        "vis": {
+          "left": "刷到这里",
+          "right": [
+            "点个关注",
+            "下期继续"
+          ],
+          "small": "see you",
+          "footer": "开源情报站",
+          "label": "每周一个开源项目 · 只讲能干的",
+          "badge": "cua · 让 AI 自己用电脑"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "评论区聊聊：你真敢让 AI，动你的鼠标吗？"
+        }
+      ],
+      "_start": 76.52,
+      "_end": 80.96
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "如果 AI 能自己动鼠标、自己敲键盘，你电脑里那些重复动作，是不是就有人接了？",
+      "start": 0.0,
+      "end": 7.44
+    },
+    {
+      "scene_index": 1,
+      "text": "它给自己的定位叫 Computer-Use 2.0：同一个任务里，代码、接口和图形界面来回切。",
+      "start": 8.29,
+      "end": 16.43
+    },
+    {
+      "scene_index": 2,
+      "text": "干活就四步：先看屏幕，再找按钮，然后真的点下去，最后回头验证结果变了没有。",
+      "start": 17.28,
+      "end": 26.35
+    },
+    {
+      "scene_index": 3,
+      "text": "边界它也写在明面上：三个平台、三种接入都支持，但系统权限和平台能力，得先看清。",
+      "start": 27.2,
+      "end": 36.96
+    },
+    {
+      "scene_index": 4,
+      "text": "它还能在你菜单栏里养几台虚拟机，每台都是真桌面；已登录的软件搬进去，登录状态还在。",
+      "start": 37.81,
+      "end": 47.49
+    },
+    {
+      "scene_index": 5,
+      "text": "虚拟机工具叫 Lume，在苹果芯片上直接建本地 macOS 系统，装好之后用 SSH 连进去。",
+      "start": 48.34,
+      "end": 57.29
+    },
+    {
+      "scene_index": 6,
+      "text": "命令行一条 cua 起沙箱，能跑命令、能截图；四种语言都有 SDK，沙箱里不用装 agent。",
+      "start": 58.14,
+      "end": 67.5
+    },
+    {
+      "scene_index": 7,
+      "text": "他们还放了个专做界面决策的小模型，加一套能给任务打分的测试台，先跑起来再说。",
+      "start": 68.35,
+      "end": 75.67
+    },
+    {
+      "scene_index": 8,
+      "text": "评论区聊聊：你真敢让 AI，动你的鼠标吗？",
+      "start": 76.52,
+      "end": 80.96
+    }
+  ],
+  "total_duration": 80.96,
+  "tts_params": {
+    "version": "G-short",
+    "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+    "ref_voice": "yujie_thoughtful.wav（慵懒御姐音）",
+    "emotion": "thoughtful",
+    "voice_role": "answer",
+    "voice_source": "script.json.tts_emotion（全片单一来源，逐句 emotion 已禁用）",
+    "voice_guard": "build_audio.py 启动即校验 voice_role / tts_emotion / 片尾 emotion 三者一致，冲突直接拒绝出片",
+    "silence_trim": "-52dB / 0.30s（句内上限）",
+    "lead_silence": 0.12,
+    "tail_silence": 0.08,
+    "pause_comma": 0.25,
+    "pause_period": 0.75,
+    "pause_paragraph": 0.85,
+    "note": "短篇压缩版：段落停顿 1.20s→0.85s，尾静音 0.4s→0.35s",
+    "sample_rate": 24000,
+    "channels": 1,
+    "silence_ge_040s_total": 0
+  }
+}

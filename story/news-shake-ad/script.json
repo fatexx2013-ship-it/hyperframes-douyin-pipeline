@@ -1,0 +1,174 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#FF5926",
+      "purpose": "赤焰热力主题大数字渐变描边（VIS 数据强调，用主题色）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "delivery_spec_waiver": [],
+  "title": "10次打开软件8次跳转到某平台，摇一摇广告为什么治不住",
+  "date": "2026.09.22",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "voice_desc": "慵懒玉女御姐音（Qwen3-TTS 本地 MLX，情绪自动匹配）",
+  "source": "工人日报 2026-09-22 记者秦亦姝 · 中工网",
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，你被摇一摇跳转过几次？评论区聊聊。",
+    "emotion": "thoughtful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你被跳转过几次？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "shake",
+      "card": {
+        "eyebrow": "今日热搜第1 · 民生痛点",
+        "title": "10次打开软件，<accent>8次跳转到某平台</accent>",
+        "subtitle": "工信部通报26款违规APP · 你肯定被坑过",
+        "stats": [
+          {
+            "k": "热搜榜",
+            "v": "第 1"
+          },
+          {
+            "k": "工信部通报",
+            "v": "26 款"
+          },
+          {
+            "k": "黑猫投诉",
+            "v": "上千条"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "10次打开软件，8次跳转到某平台。今天百度热搜第一，说的就是你手机里那个摇一摇广告。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 9.22
+    },
+    {
+      "type": "story",
+      "visual": "highway",
+      "card": {
+        "eyebrow": "真实案例 · 高速惊魂",
+        "title": "暴雨天开导航，<accent>颠一下跳进电商平台</accent>",
+        "subtitle": "关广告时方向盘偏了，险些出事"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "有网友在暴雨天的高速上语音唤醒导航，车的轻微颠簸触发了摇一摇，导航界面瞬间跳进电商平台，关广告的时候方向盘都偏了，险些出事。"
+        }
+      ],
+      "_start": 9.57,
+      "_end": 21.95
+    },
+    {
+      "type": "reveal",
+      "visual": "sensor",
+      "card": {
+        "eyebrow": "技术揭秘 · 传感器",
+        "title": "国家标准是有的，<accent>但灵敏度被顶到了临界值</accent>",
+        "big": "15m/s² · 35° · 3秒",
+        "big_label": "合规门槛：加速度 / 转角 / 时长三重判定"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "国家标准规定，加速度不低于15、转角不小于35度、操作不少于3秒才能算主动摇。但有些APP把灵敏度直接顶到临界值，走路、坐车的自然晃动，就被判定为你在摇。"
+        }
+      ],
+      "_start": 22.3,
+      "_end": 38.27
+    },
+    {
+      "type": "stat",
+      "visual": "hammer",
+      "card": {
+        "eyebrow": "监管重拳 · 屡禁不止",
+        "title": "26款APP被通报，<accent>投诉超过一千条</accent>",
+        "big": "26款",
+        "big_label": "违规收集 / 强制索权 / 诱导跳转，人民日报说这个传送门该关了"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "工信部最新通报26款APP和软件工具包，黑猫平台上关于摇一摇的投诉超过一千条，开屏广告关不掉、恶意跳转到付款页面。"
+        }
+      ],
+      "_start": 38.62,
+      "_end": 49.04
+    },
+    {
+      "type": "outro",
+      "visual": "scale",
+      "card": {
+        "eyebrow": "为什么治不住",
+        "title": "违法成本，<accent>远低于违法收益</accent>",
+        "subtitle": "律师：已触碰法律红线 · 建议按违规次数和获利倍数处罚",
+        "cta": "你被跳转过几次？",
+        "sub": "评论区聊聊 · 关注 jerrychen2001"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "为什么屡禁不止？开屏广告是免费软件的核心收入，诱导误触的转化收益远高于合规广告，罚款都不够它一天赚的。律师说这已经触碰法律红线，建议按违规次数和获利倍数来处罚。"
+        }
+      ],
+      "_start": 49.39,
+      "_end": 65.47
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "10次打开软件，8次跳转到某平台。今天百度热搜第一，说的就是你手机里那个摇一摇广告。",
+      "start": 0.0,
+      "end": 9.22
+    },
+    {
+      "scene_index": 1,
+      "text": "有网友在暴雨天的高速上语音唤醒导航，车的轻微颠簸触发了摇一摇，导航界面瞬间跳进电商平台，关广告的时候方向盘都偏了，险些出事。",
+      "start": 9.57,
+      "end": 21.95
+    },
+    {
+      "scene_index": 2,
+      "text": "国家标准规定，加速度不低于15、转角不小于35度、操作不少于3秒才能算主动摇。但有些APP把灵敏度直接顶到临界值，走路、坐车的自然晃动，就被判定为你在摇。",
+      "start": 22.3,
+      "end": 38.27
+    },
+    {
+      "scene_index": 3,
+      "text": "工信部最新通报26款APP和软件工具包，黑猫平台上关于摇一摇的投诉超过一千条，开屏广告关不掉、恶意跳转到付款页面。",
+      "start": 38.62,
+      "end": 49.04
+    },
+    {
+      "scene_index": 4,
+      "text": "为什么屡禁不止？开屏广告是免费软件的核心收入，诱导误触的转化收益远高于合规广告，罚款都不够它一天赚的。律师说这已经触碰法律红线，建议按违规次数和获利倍数来处罚。",
+      "start": 49.39,
+      "end": 65.47
+    }
+  ],
+  "total_duration": 65.47
+}

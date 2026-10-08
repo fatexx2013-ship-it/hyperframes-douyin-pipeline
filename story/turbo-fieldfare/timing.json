@@ -1,0 +1,50 @@
+[
+  {
+    "text": "GitHub 上有个项目叫 TurboFieldfare，干了件反常识的事：让一台 8GB 内存的 Mac，跑起 26B 参数的大模型，内存只占大约 2GB。",
+    "path": "/Volumes/PSSD/抖音视频/story/turbo-fieldfare/line_00.wav",
+    "duration": 11.68,
+    "voice_start": 0.11,
+    "voice_end": 11.57,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "它没用 MLX，也没包一层 llama.cpp，运行时是作者用 Swift 加 Metal 自己写的：14.3GB 的模型不整个读进内存，只常驻 1.35GB 共享核心和 KV 缓存，专家权重按需从 SSD 流式取。",
+    "path": "/Volumes/PSSD/抖音视频/story/turbo-fieldfare/line_01.wav",
+    "duration": 18.88,
+    "voice_start": 0.11,
+    "voice_end": 18.77,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "验证机型是一台 8GB 内存的 M2 MacBook Air，解码速度 5.1 到 6.3 token 每秒；换到 24GB 的 M5 Pro，能跑到 31 到 35。平台要求 macOS 26、Metal 4 和 Swift 6.2。",
+    "path": "/Volumes/PSSD/抖音视频/story/turbo-fieldfare/line_02.wav",
+    "duration": 17.28,
+    "voice_start": 0.11,
+    "voice_end": 17.17,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "代价也说得明白：磁盘要留出大约 14.3GB，首次安装流式下载约 15GB，边下边重打包，不落地整份模型；想加图像理解，再装一个约 1.1GB 的视觉包，还要求 M2 以上。",
+    "path": "/Volumes/PSSD/抖音视频/story/turbo-fieldfare/line_03.wav",
+    "duration": 18.56,
+    "voice_start": 0.11,
+    "voice_end": 18.45,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "用法有三种：原生 Mac 应用、命令行，还有一个跑在回环地址上的 OpenAI 兼容服务，同一份模型目录，同一时间只能跑一个。作者还公开了 103 条实测实验记录。",
+    "path": "/Volumes/PSSD/抖音视频/story/turbo-fieldfare/line_04.wav",
+    "duration": 13.69,
+    "voice_start": 0.11,
+    "voice_end": 13.57,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "项目按 Apache 2.0 开源，作者 Andrey Mikhaylov 是独立开发者，和 Google 没有关系。你觉得这种拿磁盘换内存的路子，以后能跑进手机吗？",
+    "path": "/Volumes/PSSD/抖音视频/story/turbo-fieldfare/line_05.wav",
+    "duration": 12.16,
+    "voice_start": 0.11,
+    "voice_end": 12.05,
+    "silence_ge_040s": 0
+  }
+]

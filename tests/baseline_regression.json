@@ -1,0 +1,38 @@
+{
+  "baseline_version": "1.0.0",
+  "created_at": "2026-09-29T07:20:16",
+  "fixture": "tests/fixtures/fixed_input.json",
+  "digest_rule": "sha256(json.dumps({fixture_sha256, params, tools, step_output, locked_files_digest}, sort_keys=True, ensure_ascii=False))；locked_files_digest 由独立进程从磁盘重算锁定文件摘要后得出",
+  "digest": "31415c6c5dda41edba0995f78138ec9f11aee0ad97f78482a09d5095b0c93c7f",
+  "payload": {
+    "fixture_sha256": "c0a6e20e2e4d3dd55b313234f44e1631e0ff6b14dd597fe578fe3302dcd40f5d",
+    "params": {
+      "contract_version": "1.1.0",
+      "fps": 30,
+      "segment_duration": null,
+      "resolution_aspect": "1c3f8668c3d994f1cee5d680ae8b946c88bab892af988c00f3e7835102c2d6fa",
+      "colorspace_gamma": "bt709",
+      "model_weight_version": "baseline_bound",
+      "sampler_steps_cfg_seed": null,
+      "precision_mode": "int8",
+      "vae_version": null,
+      "audio_sample_rate_channels": "9bd70b1bbedaf40901ee7f5ac2485ad3736b96bcba9c1b838ee47f51dc12123f",
+      "chunk_size_auto_downgrade": "ca555eb8faeea2140d544e5db24e66ac8e1e33e1b9ccf94410c76ca7b5c455d2"
+    },
+    "tools": {
+      "python3": "3.11.9",
+      "ffmpeg": "9.0.1",
+      "ffprobe": "9.0.1",
+      "node": "v26.8.1",
+      "opencode": "1.18.31"
+    },
+    "step_output": {
+      "text_chars": 70,
+      "text_lines": 3,
+      "text_sha256": "0c0e903676fc17e963ad27eecea5c5df1d1b29de2e20867401e97439cec8f671",
+      "item_count": 3,
+      "item_ids_sha256": "c534f941e7dc96ec00c3d5bb2c17cc9e619af7ff8e6af2be6b1e35e20b9bd73f"
+    },
+    "locked_files_digest": "7c06bb6f34a668154fead565a2623a0beb8e05a28e6ff8d58e2455dfa24a3036"
+  }
+}

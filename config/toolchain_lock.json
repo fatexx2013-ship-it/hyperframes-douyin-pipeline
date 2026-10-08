@@ -1,0 +1,41 @@
+{
+  "lock_version": "1.1.0",
+  "locked_at": "2026-10-06T15:44:43",
+  "root": "/Volumes/PSSD/抖音视频",
+  "tools": {
+    "python3": "3.11.9",
+    "ffmpeg": "9.0.1",
+    "ffprobe": "9.0.1",
+    "node": "v26.8.1",
+    "opencode": "1.18.31"
+  },
+  "tool_paths": {
+    "python3": "/Users/mac/Library/Application Support/com.tencent.mac.marvis/components/MarvisAgent/Versions/1.0.0.10371/runtime/python311/bin/python3",
+    "ffmpeg": "/opt/homebrew/bin/ffmpeg",
+    "ffprobe": "/opt/homebrew/bin/ffprobe",
+    "node": "/opt/homebrew/bin/node",
+    "opencode": "/opt/homebrew/bin/opencode"
+  },
+  "params": {
+    "contract_version": "1.3.0",
+    "fps": 30,
+    "segment_duration": null,
+    "resolution_aspect": "1c3f8668c3d994f1cee5d680ae8b946c88bab892af988c00f3e7835102c2d6fa",
+    "colorspace_gamma": "bt709",
+    "model_weight_version": "baseline_bound",
+    "sampler_steps_cfg_seed": null,
+    "precision_mode": "int8",
+    "vae_version": null,
+    "audio_sample_rate_channels": "9bd70b1bbedaf40901ee7f5ac2485ad3736b96bcba9c1b838ee47f51dc12123f",
+    "chunk_size_auto_downgrade": "ca555eb8faeea2140d544e5db24e66ac8e1e33e1b9ccf94410c76ca7b5c455d2"
+  },
+  "locked_files": [
+    {
+      "path": "config/param_contract.json",
+      "sha256": "2411bf630447631c5d7b9b071de3421c8f2e996383672e3fa75f8a85446f93de"
+    }
+  ],
+  "fixture": "tests/fixtures/fixed_input.json",
+  "acceptance_version": "1.0.1",
+  "note": "参数与工具版本锁定 + 固定输入基线回归；漂移可回滚（回滚前先备份当前版本）"
+}

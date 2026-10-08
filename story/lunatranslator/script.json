@@ -1,0 +1,194 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#00A2C7",
+      "purpose": "电光青蓝主题大数字渐变描边（VIS 数据强调，用主题色）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "title": "游戏不用等汉化，这个开源翻译器实时翻",
+  "date": "2026.10.06",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/A Game - Michael Ramir C [mixkit 777].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "voice_desc": "慵懒玉女御姐音（Qwen3-TTS 本地 MLX，单音色：全篇 yujie_thoughtful）",
+  "tts_line": "solo-yujie",
+  "tts_tuning": "G版（逐句·对比停顿）：-52dB/0.30s 句内静音上限，句首留白0.12s，句间 逗号0.25s / 句末0.75s / 段落0.85s（短篇压缩）",
+  "source": "github.com/HIllya51/LunaTranslator · 官方文档站 lunatranslator.org（GPL 协议）+ GitHub Search API 实时数据（星标数抓取于 2026-10-06）",
+  "facts": [
+    "定位：视觉小说翻译器，C++ 编写，13.6k stars，GPL 协议，官方文档站 lunatranslator.org",
+    "核心原理：HOOK 注入——把钩子挂进游戏进程，拦截游戏显示文本的函数调用，实时截取原文，不改游戏本体",
+    "三种提取方式：HOOK（内存拦截，主流）、OCR（截图文字识别，万能但慢）、剪贴板（手动复制）",
+    "翻译结果两种显示：软件悬浮窗显示（稳）；内嵌回游戏画面（把原文替换成中文画进去，文档警告不是所有游戏支持、可能导致崩溃）",
+    "模拟器支持：NS（Eden/Citron）、PSP（PPSSPP≥1.15）、PSV（Vita3K）、PS2（PCSX2≥1.7.4473）、PS3（RPCS3）——注意列表内不含 GBA",
+    "翻译引擎可选：本地大模型、在线翻译 API、离线词典（内部词典/Yomitan）；另有 TTS 语音朗读和 Anki 生词同步",
+    "零成本：本地运行，翻译引擎自选，接本地模型时全程零 API 费用"
+  ],
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你想拿它玩哪款游戏。",
+    "emotion": "thoughtful",
+    "gap_before": 0.35,
+    "tail_silence": 0.4,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你想拿它玩哪款游戏？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "chip",
+      "card": {
+        "eyebrow": "开源情报站 · 游戏翻译",
+        "title": "游戏不用等汉化，<accent>它实时给你翻</accent>",
+        "subtitle": "LunaTranslator · 视觉小说翻译器 · GPL · 本地零成本",
+        "stats": [
+          {
+            "k": "Star",
+            "v": "13.6k+"
+          },
+          {
+            "k": "方式",
+            "v": "HOOK/OCR/剪贴板"
+          },
+          {
+            "k": "协议",
+            "v": "GPL"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "好游戏没中文怎么办？这个开源翻译器叫 LunaTranslator，游戏照常跑，它在旁边实时翻译，不改游戏本体。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 10.72
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "核心原理",
+        "title": "HOOK：拦下游戏要显示的字，<accent>翻完再画</accent>",
+        "subtitle": "注入钩子截取文本函数 · 不改游戏文件 · 实时翻译"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "原理叫 HOOK：游戏显示文字时底层会调用一个函数，它把钩子挂上去，游戏每显示一句话就先被截下来，翻成中文再显示。游戏本体一个字节都不用改。"
+        }
+      ],
+      "_start": 11.57,
+      "_end": 26.05
+    },
+    {
+      "type": "feature",
+      "visual": "toolcall",
+      "card": {
+        "eyebrow": "拦不住怎么办",
+        "title": "还有 OCR 兜底：<accent>直接认屏幕上的字</accent>",
+        "subtitle": "HOOK 搞不定时截图识别 · 翻译引擎自选 · 本地大模型零成本"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "拦不住的也有办法：OCR 模式直接对游戏画面截图做文字识别，万能但慢一点。翻译引擎随你选，接本地大模型的话全程零成本。"
+        }
+      ],
+      "_start": 26.9,
+      "_end": 40.42
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "模拟器玩家",
+        "title": "主机游戏也管，<accent>但不含 GBA</accent>",
+        "subtitle": "NS / PSP / PSV / PS2 / PS3 有官方支持列表 · GBA 只能走 OCR"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "模拟器玩家也照顾到了：NS、PSP、PSV、PS2、PS3 都在官方支持列表里。但说清楚，GBA 不在列表，想玩 GBA 只能用 OCR 慢慢认。"
+        }
+      ],
+      "_start": 41.27,
+      "_end": 56.39
+    },
+    {
+      "type": "outro",
+      "visual": "chip",
+      "card": {
+        "title": "关注 jerrychen2001",
+        "cta": "评论区聊聊",
+        "sub": "你想拿它玩哪款游戏？"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "GPL 开源，本地跑。你想拿它玩哪款游戏？"
+        }
+      ],
+      "_start": 57.24,
+      "_end": 63.15
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "好游戏没中文怎么办？这个开源翻译器叫 LunaTranslator，游戏照常跑，它在旁边实时翻译，不改游戏本体。",
+      "start": 0.0,
+      "end": 10.72
+    },
+    {
+      "scene_index": 1,
+      "text": "原理叫 HOOK：游戏显示文字时底层会调用一个函数，它把钩子挂上去，游戏每显示一句话就先被截下来，翻成中文再显示。游戏本体一个字节都不用改。",
+      "start": 11.57,
+      "end": 26.05
+    },
+    {
+      "scene_index": 2,
+      "text": "拦不住的也有办法：OCR 模式直接对游戏画面截图做文字识别，万能但慢一点。翻译引擎随你选，接本地大模型的话全程零成本。",
+      "start": 26.9,
+      "end": 40.42
+    },
+    {
+      "scene_index": 3,
+      "text": "模拟器玩家也照顾到了：NS、PSP、PSV、PS2、PS3 都在官方支持列表里。但说清楚，GBA 不在列表，想玩 GBA 只能用 OCR 慢慢认。",
+      "start": 41.27,
+      "end": 56.39
+    },
+    {
+      "scene_index": 4,
+      "text": "GPL 开源，本地跑。你想拿它玩哪款游戏？",
+      "start": 57.24,
+      "end": 63.15
+    }
+  ],
+  "total_duration": 63.15,
+  "tts_params": {
+    "version": "G-short-monovoice",
+    "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+    "ref_voice": "yujie_thoughtful.wav（慵懒御姐音 · 全篇单音色锁死）",
+    "voice_lock": "thoughtful",
+    "silence_trim": "-52dB / 0.30s（句内上限）",
+    "lead_silence": 0.12,
+    "tail_silence": 0.08,
+    "pause_paragraph": 0.85,
+    "note": "短篇压缩 + 单音色锁死：全篇强制 thoughtful，含片尾，杜绝音色混杂",
+    "sample_rate": 24000,
+    "channels": 1,
+    "silence_ge_040s_total": 0
+  }
+}

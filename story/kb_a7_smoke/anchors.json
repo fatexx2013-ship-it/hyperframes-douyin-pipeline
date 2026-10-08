@@ -1,0 +1,25 @@
+{
+  "version": "A2/v1",
+  "story": "compositor-mac",
+  "note": "外观一致性锚点表：由 build_html.py --emit-anchors 登记当前 composition 实际取值；anchors_check.py 渲染前逐项比对，漂移即告警。未列入本表的取值不参与比对。",
+  "anchors": {
+    "theme": "#FF5926",
+    "theme_deep": "#B03D1A",
+    "theme_mid": "#E85122",
+    "card_bg_rgb": "27,30,36",
+    "card_alpha": 0.94,
+    "vis_base": "#151A20",
+    "grid_px": 72,
+    "font_family": "PingFang SC",
+    "wm_pos": {
+      "right_px": 40,
+      "bottom_px": 104
+    },
+    "resolution": "1080x1920",
+    "fps": 30
+  },
+  "light_thresholds": {
+    "lift_delta_max": 0.04,
+    "gain_delta_max": 0.1
+  }
+}

@@ -1,0 +1,131 @@
+<!doctype html>
+<!-- @dsCard group="ported-htmlvideo" name="Build Minimal (竖屏)" path="index.html" subtitle="高留白：居中单词逐字揭示 + 金色细线 + 呼吸指示器" viewport="{width: 1080, height: 1920}" -->
+<!-- 来源：nexu-io/html-video templates/frame-build-minimal（Apache-2.0）
+     适配：1920×1080 → 1080×1920 竖屏重排 / 移除 Google Fonts（Inter → SF Pro Display + PingFang SC）/ GSAP 时间轴 -->
+<html lang="zh-CN" data-composition-variables='[
+  {"id":"hero","type":"string","label":"主词","default":"Agent"},
+  {"id":"desc","type":"string","label":"说明","default":"每一次使用都是一次进化。<br>从手艺，到协作，再到自我演化。"},
+  {"id":"sideLeft","type":"string","label":"左侧标签","default":"OPEN DESIGN"},
+  {"id":"sideRight","type":"string","label":"右侧标签","default":"SELF-EVOLVING"}
+]'>
+<head>
+<meta charset="UTF-8" />
+<title>Build Minimal · 竖屏高留白</title>
+<style>
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC"), local("PingFangSC-Regular"); font-weight:400; font-display:block; }
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC Semibold"), local("PingFangSC-Semibold"), local("PingFang SC"); font-weight:600 900; font-display:block; }
+  @font-face { font-family:"SF Pro Display"; src:local("SF Pro Display"), local("SFProDisplay-Bold"); font-weight:400 900; font-display:block; }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1080px; height:1920px; overflow:hidden; position:relative;
+    background:#FAFAF8; color:#1A1A18;
+    font-family:"PingFang SC","SF Pro Display","Helvetica Neue",Arial,sans-serif;
+  }
+
+  .wash { position:absolute; inset:0; z-index:0;
+    background:radial-gradient(ellipse 1100px 1200px at 38% 40%, rgba(212,165,116,0.09) 0%, transparent 70%); }
+
+  .corner { position:absolute; z-index:2; }
+  .corner-tl { top:76px; left:76px; }
+  .corner-br { bottom:76px; right:76px; transform:rotate(180deg); }
+
+  .side-label { position:absolute; z-index:2; font-size:20px; font-weight:400; letter-spacing:8px;
+    text-transform:uppercase; color:#CBC7C0; white-space:nowrap; }
+  .side-left  { left:76px;  top:50%; transform:translateY(-50%) rotate(-90deg); transform-origin:center; }
+  .side-right { right:76px; top:50%; transform:translateY(-50%) rotate(90deg);  transform-origin:center; }
+
+  .whisper { position:absolute; top:78px; right:150px; z-index:2; font-size:34px; font-weight:200; color:#D4A574; }
+
+  .center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center;
+    justify-content:center; margin-top:-120px; z-index:1; padding:0 96px; }
+  /* 装饰性 eyebrow 引导小标已按 AK-hyperframes-design-bans 的 eyebrow/kicker 禁用项移除 */
+  .hero { font-size:230px; font-weight:200; letter-spacing:-8px; color:#1A1A18; line-height:1; }
+  .hero .ch { display:inline-block; }
+  .gold-line { width:120px; height:1px; background:#D4A574; margin:64px auto 56px; opacity:0.85; }
+  .desc { font-size:34px; font-weight:300; color:#A8A4A0; letter-spacing:0.5px; line-height:2;
+    max-width:760px; text-align:center; }
+
+  .indicators { position:absolute; bottom:170px; left:50%; transform:translateX(-50%);
+    display:flex; gap:34px; align-items:flex-end; z-index:2; }
+  .ind { width:2px; background:#D8D4CE; transform-origin:bottom; }
+  .ind.gold { background:#D4A574; width:2.5px; opacity:0.85; }
+</style>
+</head>
+<body data-composition-id="build-minimal" data-width="1080" data-height="1920">
+  <div class="wash"></div>
+
+  <svg class="corner corner-tl" width="34" height="34" viewBox="0 0 34 34" fill="none">
+    <path d="M0 0L0 34" stroke="#D4A574" stroke-width="0.8" opacity="0.45"/>
+    <path d="M0 0L34 0" stroke="#D4A574" stroke-width="0.8" opacity="0.45"/>
+  </svg>
+  <svg class="corner corner-br" width="34" height="34" viewBox="0 0 34 34" fill="none">
+    <path d="M0 0L0 34" stroke="#D4A574" stroke-width="0.8" opacity="0.45"/>
+    <path d="M0 0L34 0" stroke="#D4A574" stroke-width="0.8" opacity="0.45"/>
+  </svg>
+
+  <div class="side-label side-left" data-var="sideLeft">OPEN DESIGN</div>
+  <div class="side-label side-right" data-var="sideRight">SELF-EVOLVING</div>
+  <div class="whisper">◇</div>
+
+  <div class="center">
+    <div class="hero" id="hero" data-var="hero">Agent</div>
+    <div class="gold-line"></div>
+    <div class="desc" data-var="desc">每一次使用都是一次进化。<br>从手艺，到协作，再到自我演化。</div>
+  </div>
+
+  <div class="indicators">
+    <div class="ind"      style="height:44px"></div>
+    <div class="ind"      style="height:62px"></div>
+    <div class="ind gold" style="height:82px"></div>
+    <div class="ind"      style="height:52px"></div>
+    <div class="ind"      style="height:70px"></div>
+    <div class="ind gold" style="height:90px"></div>
+    <div class="ind"      style="height:56px"></div>
+  </div>
+
+  <script src="_shared/vendor/gsap.min.js"></script>
+  <script>window.gsap||document.write('<script src="../_vendor/gsap.min.js"><\/script>');</script>
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      document.querySelectorAll('[data-var]').forEach(function (el) {
+        var v = params.get(el.getAttribute('data-var'));
+        if (v) el.innerHTML = v;
+      });
+
+      // 主词拆字，用于逐个揭示
+      var hero = document.getElementById('hero');
+      var text = hero.textContent.trim();
+      hero.textContent = '';
+      for (var i = 0; i < text.length; i++) {
+        var s = document.createElement('span');
+        s.className = 'ch';
+        s.textContent = text[i];
+        hero.appendChild(s);
+      }
+
+      var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
+
+      tl.from('.wash',            { opacity: 0, duration: 1.4, ease: 'power2.out' }, 0)
+        .from('.corner',          { opacity: 0, duration: 0.8, ease: 'power2.out' }, 0.2)
+        .from('.hero .ch',        { opacity: 0, y: 44, duration: 0.7, stagger: 0.08 }, 0.62)
+        .from('.gold-line',       { width: 0, duration: 1 }, 1.9)
+        .from('.desc',            { opacity: 0, y: 26, duration: 1, ease: 'power2.out' }, 2.2)
+        .from('.side-label',      { opacity: 0, duration: 1, ease: 'power2.out' }, 1.8)
+        .from('.whisper',         { opacity: 0, duration: 1.2, ease: 'power2.out' }, 2.6)
+        .from('.ind',             { scaleY: 0, duration: 0.6, stagger: 0.06 }, 2.4)
+        .to('.ind',               { opacity: 0.45, duration: 2, yoyo: true, repeat: -1, ease: 'sine.inOut' }, 3.4);
+
+      if (reduced) { tl.progress(1); tl.pause(); }
+      window.__timelines = window.__timelines || {};
+      window.__timelines['build-minimal'] = tl;
+      window.__timelines['main-comp'] = tl;
+
+      var t = parseFloat(params.get('t'));
+      if (!isNaN(t)) tl.seek(t);
+    })();
+  </script>
+</body>
+</html>

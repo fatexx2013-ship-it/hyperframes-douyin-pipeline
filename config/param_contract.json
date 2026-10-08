@@ -1,0 +1,561 @@
+{
+  "contract_version": "1.3.0",
+  "project": "抖音视频竖屏产线（Python + FFmpeg + HyperFrames）",
+  "contract_scope": "以一次真实产出的成片（含音频轨）为快照对象，逐字段核对参数是否偏离合同口径；漂移检测点设在拼接/交付边界，而非单段出口。",
+  "source": "AI-Film-Studio (qpzRm) 2026-09-24 交换资料：通用参数漂移清单 10 项 + 两级负控执行节奏 + 分阶段峰值记录法；2026-09-26 AI-Film-Studio 第二条私信：通用参数漂移清单 8 字段（七列）+ normalize_point 规范化枚举 + 次级判定三条件 + 两组正交对（已合并为扩展判定层）",
+  "created_at": "2026-09-24",
+  "stability_levels": {
+    "invariant": {
+      "label": "不变量级",
+      "run_policy": "任何一次流水线变更（参数表版本升级）全量跑负控，变更即验证",
+      "on_drift": "FAIL（阻断）",
+      "scope_hint": "时基与取整策略、画幅方向、音频采样率、模型与权重版本"
+    },
+    "exploratory": {
+      "label": "探索级",
+      "run_policy": "按发布节奏抽跑，每周一次全量回归",
+      "on_drift": "WARN（不阻断，进周回归清单）",
+      "scope_hint": "采样器/步数/CFG/精度模式/分块尺寸/色彩空间/片段时长"
+    }
+  },
+  "verdict_rules": {
+    "invariant_drift": "FAIL —— 任一不变量级字段偏离合同口径或与基线 manifest 不一致，判定阻断",
+    "exploratory_drift": "WARN —— 探索级字段偏离，不阻断，但必须登记进周回归清单",
+    "no_reference": "SKIP —— 该字段本次没有对照证据（既无固定期望值，也无基线 manifest），不计入判定，但要在报告里如实列出",
+    "note": "同一字段同时被合同口径与基线对照检视，取更严重的一侧作为最终判定"
+  },
+  "exit_codes": {
+    "OK": 0,
+    "WARN_ONLY": 0,
+    "INVARIANT_FAIL": 2,
+    "USAGE_ERROR": 1
+  },
+  "fields": [
+    {
+      "field": "fps",
+      "list_index": 1,
+      "label": "帧率与取整策略",
+      "unit": "整数 (fps)",
+      "stage": [
+        "render",
+        "deliver"
+      ],
+      "stability": "invariant",
+      "applicability": "applicable",
+      "expected": 30,
+      "allowed": [
+        30
+      ],
+      "tolerance": 0.01,
+      "value_source": "ffprobe:streams[video].r_frame_rate（有理数精确值，避免 avg_frame_rate 的计算抖动）",
+      "pipeline_evidence": [
+        "story/<project>/hyperframes.json:fps",
+        "scripts/render.sh:FPS（默认 30）",
+        "post_process.py:TARGET_FPS（30.0）"
+      ],
+      "drift_symptom": "秒↔帧换算在段落拼接处累积，24↔30 会让音画同步逐镜头漂移",
+      "why_stability": "时基与取整策略属于不变量级：任何变更必须全量跑负控",
+      "remediation": "在渲染入口锁死 fps=30；素材拼接前对每段做 fps 规范化（render.sh 直出模式已含 scale+pad+fps）"
+    },
+    {
+      "field": "segment_duration",
+      "list_index": 2,
+      "label": "片段时长",
+      "unit": "秒 (s)",
+      "stage": [
+        "tts",
+        "compose"
+      ],
+      "stability": "exploratory",
+      "applicability": "applicable",
+      "expected": null,
+      "tolerance_sec": 0.1,
+      "value_source": "ffprobe:format.duration 与 story/<project>/script.json:total_duration 之差",
+      "pipeline_evidence": [
+        "generate_qa_video.py:逐行 TTS 时长累计（每行约 0.35s 句间停顿）",
+        "story/<project>/script.json:total_duration",
+        "story/<project>/timing.json"
+      ],
+      "drift_symptom": "与帧号互转的舍入误差在长段落累计",
+      "judge": "abs(成片时长 - 声明时长) > tolerance_sec 判 WARN；无声明时长参照（散片）则 SKIP",
+      "remediation": "narration 累计时长每 20 行做一次对齐复核；定稿前用 post_process 的时长复核再确认一次"
+    },
+    {
+      "field": "resolution_aspect",
+      "list_index": 3,
+      "label": "分辨率与画幅方向",
+      "unit": "px, 宽x高；画幅比 W:H",
+      "stage": [
+        "render",
+        "deliver"
+      ],
+      "stability": "invariant",
+      "applicability": "applicable",
+      "expected": {
+        "resolution": "1080x1920",
+        "aspect_ratio": "9:16"
+      },
+      "allowed": [
+        {
+          "resolution": "1080x1920",
+          "aspect_ratio": "9:16"
+        }
+      ],
+      "value_source": "ffprobe:streams[video].width/height",
+      "pipeline_evidence": [
+        "story/<project>/hyperframes.json:width/height",
+        "scripts/render.sh:VIDEO_WIDTH/VIDEO_HEIGHT（1080/1920）",
+        "post_process.py:TARGET_WIDTH/TARGET_HEIGHT（1080/1920）"
+      ],
+      "drift_symptom": "中间产物被误判方向后静默裁切或重采样",
+      "why_stability": "画幅方向属于不变量级",
+      "remediation": "任何外部素材进入链路前强制 scale+pad 到 1080x1920 并 setsar=1，在拼接边界复核"
+    },
+    {
+      "field": "colorspace_gamma",
+      "list_index": 4,
+      "label": "色彩空间与 gamma",
+      "unit": "枚举 (bt709 / bt601 / bt470bg / 未标注)",
+      "stage": [
+        "compose",
+        "deliver"
+      ],
+      "stability": "exploratory",
+      "applicability": "applicable",
+      "expected": "bt709",
+      "allowed": [
+        "bt709"
+      ],
+      "value_source": "ffprobe:streams[video].color_space + color_transfer + color_primaries",
+      "drift_symptom": "拼接处亮度与色偏",
+      "judge": "缺失(None)或非 bt709 → WARN（探索级，不阻断）",
+      "remediation": "对来源不确定的素材在编码侧显式指定 -colorspace bt709 -color_primaries bt709 -color_trc bt709",
+      "measured_note": "本产线历史成片中大量存在 color_space 未标注（None）或 bt470bg，说明该字段确实存在静默漂移，这正是需要登记观察的对象"
+    },
+    {
+      "field": "model_weight_version",
+      "list_index": 5,
+      "label": "模型与权重版本（含哈希）",
+      "unit": "字符串 (指纹/哈希)",
+      "stage": [
+        "tts"
+      ],
+      "stability": "invariant",
+      "applicability": "applicable",
+      "expected": "baseline_bound",
+      "value_source": "模型目录快速指纹 sha256(排序后的 relpath|size|mtime_ns 清单)；--deep-hash 时改为逐文件内容 sha256",
+      "pipeline_evidence": [
+        "~/Projects/qwen3-tts-apple-silicon/models/Qwen3-TTS-12Hz-1.7B-Base-8bit",
+        "generate_qa_video.py:QWEN3_DIR",
+        "generate_qa_video.py:load_model(models/Qwen3-TTS-12Hz-1.7B-Base-8bit)"
+      ],
+      "drift_symptom": "权重静默更新，同一段文本+同一参考音复现不出同一条配音",
+      "why_stability": "模型与权重版本属于不变量级",
+      "judge": "版本类字段不与固定值绑定，只做 manifest 对 manifest 的基线对照；基线缺失则记录首见值并标 SKIP",
+      "remediation": "模型目录按只读使用；升级权重必须走 contract_version 变更 + 不变量级负控全量重跑"
+    },
+    {
+      "field": "sampler_steps_cfg_seed",
+      "list_index": 6,
+      "label": "采样器、步数、CFG、随机种子",
+      "unit": "数值 (temperature / top_p / seed …)",
+      "stage": [
+        "tts"
+      ],
+      "stability": "exploratory",
+      "applicability": "partial",
+      "expected": null,
+      "value_source": "generate_qa_video.py:generate_qwen3_tts 的推理调用参数（当前未显式传入）",
+      "applicability_note": "本产线不是扩散视频生成：HyperFrames 是确定性逐帧渲染，没有采样器/步数/CFG；最接近的对应物是本地 TTS（Qwen3-TTS）的推理采样参数。当前实现未显式传入这些参数，等价于使用 mlx_audio 默认值，存在清单所描述『阶段间默认值不一致』的同类风险。",
+      "drift_symptom": "阶段间默认值不一致，音色/韵律特征随之改变",
+      "judge": "explicit=false → WARN（建议显式固定）；显式值与基线不一致 → WARN",
+      "remediation": "在 generate_qwen3_tts 中显式传 temperature/top_p/seed 并登记进 manifest",
+      "probe_expectation": {
+        "explicit_sampling_params": false
+      }
+    },
+    {
+      "field": "precision_mode",
+      "list_index": 7,
+      "label": "精度模式",
+      "unit": "枚举 (fp16 / bf16 / fp8 / int8)",
+      "stage": [
+        "tts"
+      ],
+      "stability": "exploratory",
+      "applicability": "applicable",
+      "expected": "int8",
+      "allowed": [
+        "int8"
+      ],
+      "value_source": "模型目录名后缀（-8bit）在 8bit 量化权重上以 int8 加载",
+      "pipeline_evidence": [
+        "models/Qwen3-TTS-12Hz-1.7B-Base-8bit"
+      ],
+      "drift_symptom": "精度切换引起细节与音色漂移",
+      "judge": "实际精度不在 allowed 列表 → WARN",
+      "remediation": "精度随 contract_version 锁定；换精度需重跑探索级负控"
+    },
+    {
+      "field": "vae_version",
+      "list_index": 8,
+      "label": "VAE 版本",
+      "unit": "字符串",
+      "stage": [
+        "decode"
+      ],
+      "stability": "exploratory",
+      "applicability": "not_applicable",
+      "expected": null,
+      "applicability_note": "本产线链路为「HTML/GSAP 渲染 + 本地 TTS + FFmpeg 合成」，不存在 VAE 解码环节，该字段本身不适用。按等价风险原则改用『解码链工具链版本』替代留档（见 toolchain_pins）。",
+      "substitute": "toolchain_pins.ffmpeg",
+      "drift_symptom": "（原语义）解码差异影响质感；本产线等价风险为 ffmpeg 大版本升级导致缩放/重采样行为变化",
+      "judge": "toolchain_pins.ffmpeg 版本与基线不一致 → WARN"
+    },
+    {
+      "field": "audio_sample_rate_channels",
+      "list_index": 9,
+      "label": "采样率、声道数",
+      "unit": "Hz, ch",
+      "stage": [
+        "tts",
+        "deliver"
+      ],
+      "stability": "invariant",
+      "applicability": "applicable",
+      "expected": {
+        "deliver_sample_rate_hz": 44100,
+        "channels_note": "1（纯配音）或 2（含 BGM 立体声混音）均可接受",
+        "rule": "交付口径固定 44100Hz（post_process.py -ar 44100）；非 44100Hz 视为绕过了统一音频后处理"
+      },
+      "allowed": [
+        {
+          "sample_rate_hz": 24000,
+          "channels": 1,
+          "stage_role": "tts/narration"
+        },
+        {
+          "sample_rate_hz": 44100,
+          "channels": 1,
+          "stage_role": "deliver/aac 纯配音"
+        },
+        {
+          "sample_rate_hz": 44100,
+          "channels": 2,
+          "stage_role": "deliver/aac 含 BGM 立体声混音"
+        }
+      ],
+      "value_source": "ffprobe:streams[audio].sample_rate / channels",
+      "pipeline_evidence": [
+        "generate_qa_video.py:-ar 24000 -ac 1（TTS 出口口径）",
+        "post_process.py:-c:a aac -b:a 128k -ar 44100（交付口径）"
+      ],
+      "drift_symptom": "配音轨被无声重采样，日志无记录",
+      "why_stability": "音频采样率属于不变量级",
+      "judge": "实际 (sample_rate, channels) 不在 allowed 列表内 → FAIL 阻断",
+      "remediation": "TTS 出口统一 24000/mono；终合成与交付统一 44100（纯配音 mono / 含 BGM 立体声）；外部音轨进入前显式 -ar/-ac；已实测一条绕过 post_process 的素材（48000/2ch）被本字段判 FAIL"
+    },
+    {
+      "field": "chunk_size_auto_downgrade",
+      "list_index": 10,
+      "label": "分块尺寸与自动降级开关",
+      "unit": "px, bool",
+      "stage": [
+        "render"
+      ],
+      "stability": "exploratory",
+      "applicability": "partial",
+      "expected": {
+        "render_chunk_mode": "per-scene",
+        "auto_downgrade_allowed": false
+      },
+      "value_source": "story/<project>/hyperframes.json:scenes 数量 + hf/renders 场景产物数量 + 渲染/处理日志中的降级标记",
+      "applicability_note": "Mac M1 无独立显存，不存在显存分块；等价物是 HyperFrames 的逐 scene 渲染分块，以及资源紧张时的自动降级。资源侧由 scripts/resource_peaks.py 分阶段 RSS 峰值监控是否触发降级。",
+      "drift_symptom": "触发降级后细节与耗时同时变化",
+      "judge": "检测到降级标记 → WARN；分块模式与预期不符 → WARN",
+      "remediation": "降级开关显式写入渲染命令，禁止隐式降级"
+    }
+  ],
+  "canonicalization_ref": {
+    "path": "config/canonicalization.json",
+    "canonicalizer_version": "np-1.1.0",
+    "signature": "06b9cc9e43cfdb0b",
+    "note": "normalize_point 六步枚举真源；顺序进签名域，改顺序即视为规范化器换实现（canonicalizer_version 硬停）"
+  },
+  "extended_contract": {
+    "version": "1.1.0-ext",
+    "source": "AI-Film-Studio 第二条私信 2026-09-26：通用参数漂移清单 8 字段（七列口径）+ normalize_point 规范化枚举 + 次级判定三条件 + 两组正交对",
+    "positioning": "跨阶段通用判据扩展层，与上方 10 项产线字段互补；扩展字段不改写核心字段口径，判定结果分通道统计（core / extended），overall 取并集",
+    "verdict_channel": {
+      "core": "fields 的 10 项 → counts",
+      "extended": "本段 8 项 → extended_counts",
+      "overall": "任一通道出现 FAIL → INVARIANT_FAIL（exit 2）"
+    },
+    "fields": [
+      {
+        "field": "render_window_frames",
+        "list_index": 1,
+        "type": "int",
+        "unit": "帧",
+        "domain": ">=1",
+        "zero_semantics": "0=未声明，不等于零帧",
+        "drift_rule": "与冻结基线不同且无变更事件",
+        "action": "硬停（阻断）",
+        "stability": "invariant",
+        "value_source": "round(ffprobe.format.duration × fps)（本产线为确定性渲染，帧数可由时长×帧率派生）",
+        "pipeline_mapping": "对应 hyperframes.json:duration 与 fps 的乘积；捕获「声明时长未变但帧数因取整/时基漂移」的情况",
+        "extra_context": "变更事件通道 manifest.change_events（story/<project>/change_events.json），声明覆盖后方可放行",
+        "judge": "无时长或帧率证据 → SKIP；本批次声明了覆盖该字段的变更事件 → OK；与基线不同且无变更事件 → FAIL"
+      },
+      {
+        "field": "resolution_short_edge",
+        "list_index": 2,
+        "type": "int",
+        "unit": "px",
+        "domain": ">=64",
+        "zero_semantics": "缺省=未声明",
+        "drift_rule": "相对基线偏移超容差带",
+        "action": "降级+人工（WARN）",
+        "stability": "exploratory",
+        "value_source": "min(ffprobe:streams[video].width, height)",
+        "allowed": [
+          1080
+        ],
+        "pipeline_mapping": "核心字段 resolution_aspect 管画幅方向（不变量级阻断），本字段补短边像素维度（探索级降级+人工）",
+        "judge": "无宽高证据 → SKIP；短边不在 allowed → WARN；相对基线偏移 → WARN"
+      },
+      {
+        "field": "peak_vram",
+        "list_index": 3,
+        "type": "float",
+        "unit": "GiB",
+        "domain": ">0",
+        "zero_semantics": "0=未采集，不得读作无占用",
+        "drift_rule": "同配置下超容差带",
+        "action": "降级（仅记录，WARN）",
+        "stability": "exploratory",
+        "value_source": "reports/peaks/render_*.json 的 peak_overall.bytes / 2^30（Mac 统一内存无独立显存，以渲染进程 RSS 峰值近似）",
+        "tolerance_band": 0.2,
+        "pipeline_mapping": "与 scripts/resource_peaks.py 分阶段峰值记录法对接；未采集判 SKIP，绝不读作 0 占用",
+        "judge": "未采集 → SKIP；首见 → OK（登记）；与基线相对差超 20% → WARN"
+      },
+      {
+        "field": "seed",
+        "list_index": 4,
+        "type": "int64",
+        "unit": "-",
+        "domain": "int64 全域",
+        "zero_semantics": "无零值，0 合法",
+        "drift_rule": "与基线不同即漂移",
+        "action": "硬停（不可复算）",
+        "stability": "invariant",
+        "value_source": "story/<project>/script.json:tts.sampling_params.seed（TTS 推理采样参数）",
+        "pipeline_mapping": "与 sampler_steps_cfg_seed 同源但口径更硬：显式固定后与基线不一致即阻断；未显式声明判 SKIP",
+        "remediation": "在 TTS 调用处显式固定 seed 并登记进 manifest",
+        "judge": "未显式声明 → SKIP（并提示显式固定）；首见 → OK（登记）；与基线不同 → FAIL"
+      },
+      {
+        "field": "tolerance_value",
+        "list_index": 5,
+        "type": "float",
+        "unit": "秒（单位必填）",
+        "domain": ">=0",
+        "zero_semantics": "0=严格相等",
+        "drift_rule": "单位缺失即判不可比",
+        "action": "硬停",
+        "stability": "invariant",
+        "value_source": "合同 tolerance_policy.tolerance_value 与 unit（本产线 0.1 秒）",
+        "pipeline_mapping": "驱动 segment_duration 的容差判定；把原先隐式的 tolerance_sec=0.1 显式化为带单位声明",
+        "judge": "单位缺失 → FAIL；未声明取值 → SKIP；取值相对基线变更 → WARN（探索级登记）"
+      },
+      {
+        "field": "canonicalizer_version",
+        "list_index": 6,
+        "type": "string",
+        "unit": "-",
+        "domain": "枚举",
+        "zero_semantics": "空=未版本化",
+        "drift_rule": "版本位变化",
+        "action": "硬停",
+        "stability": "invariant",
+        "value_source": "config/canonicalization.json:signature（normalize_point 顺序签名，前 16 位 hex）",
+        "pipeline_mapping": "为 frozen_baseline_digest 的重判行提供规范化器版本；签名变化视为换实现",
+        "judge": "为空 → FAIL（未版本化）；基线无值 → OK（首见登记）；与基线不同 → FAIL"
+      },
+      {
+        "field": "expected_n",
+        "list_index": 7,
+        "type": "int",
+        "unit": "条",
+        "domain": ">=0",
+        "zero_semantics": "0=期望为空，须显式签发",
+        "drift_rule": "缺失即不可判",
+        "action": "硬停",
+        "stability": "invariant",
+        "value_source": "合同 expected_n_policy.declared 与实际产出判定条目数（len(core fields)+len(extended fields)）",
+        "pipeline_mapping": "防止字段静默丢失：合同声明 18 条（10 核心 + 8 扩展），evaluate 实际产出必须等于 18",
+        "judge": "未显式签发 → SKIP；实际产出条数 ≠ 声明 → FAIL；相等 → OK"
+      },
+      {
+        "field": "frozen_baseline_digest",
+        "list_index": 8,
+        "type": "string",
+        "unit": "-",
+        "domain": "hex",
+        "zero_semantics": "空=未冻结",
+        "drift_rule": "与重判行不一致",
+        "action": "硬停",
+        "stability": "invariant",
+        "value_source": "config/frozen_baseline.json:digest，重判 = sha256(normalize_point(基线 manifest 规范 JSON))",
+        "pipeline_mapping": "校验冻结基线未被篡改：用 normalize_point 重新规范化基线 manifest，与冻结摘要比对",
+        "judge": "未冻结 → SKIP；重判不一致 → FAIL；一致 → OK"
+      }
+    ],
+    "secondary_judgement": {
+      "rule": "「次级」判定三条件须同时成立，缺一即不降级为次级、按主判据处理",
+      "conditions": [
+        {
+          "id": "derivable",
+          "text": "取值可由主判据派生"
+        },
+        {
+          "id": "missing_no_effect",
+          "text": "缺失时不改变终态"
+        },
+        {
+          "id": "same_batch_issuer",
+          "text": "必须与主判据同批次、同签发方"
+        }
+      ],
+      "validator": "scripts/judgement_rules.py:check_secondary",
+      "pipeline_mapping": "本产线落地为字段降级决策（如 segment_duration_rounding 能否降为 segment_duration 的次级判据）"
+    },
+    "orthogonality_pairs": [
+      {
+        "pair": "role×source_tag",
+        "rule": "条目角色与来源标签正交，不得以来源标签替代角色语义"
+      },
+      {
+        "pair": "judge_source×frozen_state",
+        "rule": "判据来源与冻结状态正交；人工判据在冻结窗内不得进自动通过率分母"
+      },
+      {
+        "pair": "issuer×actionability",
+        "rule": "签发方与可动作性正交；执行侧签 false 只进跳过计数，判定侧签 false 进不适配计数"
+      }
+    ],
+    "validator": "scripts/judgement_rules.py（secondary / orthogonality / self-test）"
+  },
+  "tolerance_policy": {
+    "tolerance_value": 0.1,
+    "unit": "秒",
+    "unit_required": true,
+    "zero_semantics": "0=严格相等",
+    "drift_rule": "单位缺失即判不可比",
+    "action": "硬停",
+    "applies_to": [
+      "segment_duration"
+    ],
+    "note": "原字段 segment_duration 的 tolerance_sec=0.1 为隐式无单位；本策略显式化为「秒」，单位缺失即判不可比（硬停）"
+  },
+  "expected_n_policy": {
+    "declared": 18,
+    "unit": "条",
+    "zero_semantics": "0=期望为空，须显式签发",
+    "drift_rule": "缺失即不可判",
+    "action": "硬停",
+    "composition": "10 核心字段 + 8 扩展字段",
+    "note": "evaluate 实际产出判定条目数必须等于 declared，防止字段静默丢失；扩展字段增删须同步更新本值（属硬停口径）"
+  },
+  "frozen_baseline_ref": {
+    "path": "config/frozen_baseline.json",
+    "note": "冻结基线与摘要真源；生成命令 python3 scripts/param_contract.py freeze --manifest <path>",
+    "digest_rule": "digest = 'sha256:' + sha256(normalize_point(json.dumps({label, video_fingerprint.sha256, derived}, sort_keys=True))).hexdigest()"
+  },
+  "toolchain_pins": {
+    "ffmpeg": {
+      "version": "9.0.1",
+      "path": "/opt/homebrew/bin/ffmpeg",
+      "pinned": true,
+      "drift_effect": "WARN"
+    },
+    "ffprobe": {
+      "version": "9.0.1",
+      "path": "/opt/homebrew/bin/ffprobe",
+      "pinned": true,
+      "drift_effect": "WARN"
+    },
+    "hyperframes": {
+      "version": "0.8.13",
+      "path": "/opt/homebrew/bin/hyperframes",
+      "pinned": true,
+      "drift_effect": "WARN"
+    },
+    "node": {
+      "version": "v26.8.1",
+      "pinned": true,
+      "drift_effect": "WARN"
+    },
+    "encoder_chain": {
+      "hardware": "h264_videotoolbox",
+      "software": "libx264",
+      "preset": "medium",
+      "profile": "High",
+      "level": "4.2",
+      "pix_fmt": "yuv420p",
+      "gop_frames": 60,
+      "gop_accept_max_frames": 120,
+      "video_rate_control": "capped-crf",
+      "video_crf": 18,
+      "video_bitrate": "8M",
+      "video_bitrate_role": "ceiling_reference_only",
+      "video_bitrate_target_locked": false,
+      "video_maxrate": "10M",
+      "video_bufsize": "12M",
+      "video_bitrate_max_accept": "11M",
+      "audio_bitrate": "128k",
+      "c5_note": "S3 材料 C5「码率控制策略不一致且 8M 目标无人锁死」显式化（批：体积膨胀与参照漂移修复）：本产线视频编码统一 rate_control=capped-crf —— 质量档由 -crf video_crf 决定，-maxrate/-bufsize 只作瞬时上限；video_bitrate=\"8M\" 降级为历史目标参考，video_bitrate_target_locked=false 声明「不存在必须打到 8M 的锁死目标」。任何链路（post_process.py / append_epilogue.py / render.sh / generate_*.py）不得再以 -b:v 作为编码目标；交付码率判据仍只取 video_bitrate_max_accept=11M。",
+      "s3_note": "S3 方案C：本块为交付编码参数的单一真源（编码器/preset/profile/level/pix_fmt/GOP/码率控制与上限/音频码率），供 scripts/encode_profile.py 读取、三链共享。画幅/帧率/音频采样率与声道口径不在此重复定义，仍以 fields.resolution_aspect / fields.fps / fields.audio_sample_rate_channels 为准。"
+    }
+  },
+  "audit_refs": {
+    "a6b_ref_mib_per_s": 0.115,
+    "a6b_ref_source": "story/ace-step-ui/douyin_epilogue.mp4",
+    "a6b_ref_frozen_at": "2026-10-06",
+    "a6b_ref_provenance": "归一前（2026-10-05 之前）ace-step-ui 成片实测 0.1155 MiB/s（与 proposals/契约_v2.1 用例3 的 7.3× 口径同源）。冻结原因：该参照件自身随 A7 归一被重编码，实测漂移至 0.287 MiB/s（2.5×），导致 A6b（码率 > 5× 参照）在 gods-eye-view 上触发消失、easyvoice-heat 由 7.3× 降至 2.93×，阈值整体失效（方案 B 发现 B）。",
+    "a6b_per_story_baseline": "story/<project>/qc/baseline/bitrate.json",
+    "a6b_note": "A6b 参照读取优先级（frame_audit.run_a6b）：CLI --bitrate-ref > per-story qc/baseline/bitrate.json（本批只留读取路径，未强制写入）> 本字段冻结值 > 旧口径（现场探测 ace-step-ui 参照件，并显式 WARN 告警）。本字段为 A6b 的判据真源，禁止在脚本内另写常数副本。"
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-24",
+      "author": "file-agent",
+      "change": "首版。落地 AI-Film-Studio(qpzRm) 通用参数漂移清单全部 10 项（字段名/单位/默认值/所属阶段/漂移表现/稳定级别），定义不变量级与探索级两级判定口径；登记产线现有工具链版本作为 vae_version 的等价替代留档；标注 3 项在本产线的适用性缺口（sampler_steps_cfg_seed=partial、vae_version=not_applicable、chunk_size_auto_downgrade=partial）。"
+    },
+    {
+      "version": "1.0.1",
+      "date": "2026-09-24",
+      "author": "file-agent",
+      "change": "依据实测校正 audio_sample_rate_channels 的 allowed 集合。首版只允许 44100Hz/1ch，但实测线上产出的成片 story/howtolivebetter/douyin_final.mp4 为 44100Hz/2ch（含 BGM 立体声混音），说明交付口径应为 44100Hz + 1或2声道；若不校正会把正常交付误判为阻断。同时保留对非 44100Hz 的阻断能力（实测 news-dialogue-0817-final.mp4 的 48000Hz/2ch 被判 FAIL，证明该素材未经过 post_process 统一音频后处理）。"
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-09-26",
+      "author": "file-agent",
+      "change": "合并 AI-Film-Studio 第二条私信技术口径，新增扩展判定层（extended_contract，8 字段）：render_window_frames（硬停，帧数可由时长×帧率派生）、resolution_short_edge（降级+人工）、peak_vram（降级仅记录，未采集判 SKIP 不读作 0 占用）、seed（硬停，未显式声明确认 SKIP 并提示固定）、tolerance_value（单位必填，缺单位硬停）、canonicalizer_version（硬停，枚举顺序签名）、expected_n（硬停，防字段静默丢失）、frozen_baseline_digest（硬停，规范化解冻摘要重判）。同步新增 config/canonicalization.json（normalize_point 六步枚举真源，签名 06b9cc9e43cfdb0b）、config/frozen_baseline.json（冻结基线摘要）、scripts/normalize_point.py、scripts/judgement_rules.py；并吸收次级判定三条件与三组正交对计数口径。核心 10 字段口径不变，判定统计分 core/extended 双通道，overall 取并集。"
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-10-05",
+      "author": "file-agent",
+      "change": "S3 批次（方案C，参数真源收敛）：toolchain_pins.encoder_chain 增补 preset / gop_frames / gop_accept_max_frames / video_maxrate / video_bufsize / video_bitrate_max_accept 六项，使交付编码参数（编码器、preset、profile、level、pix_fmt、GOP、码率目标与上限、音频码率）在合同内一次定义，供新增的 scripts/encode_profile.py 读取、三链共享；画幅/帧率/采样率沿用 fields 既有定义，不在本块重复，避免与已审计字段形成可漂移副本。核心 10 字段与扩展 8 字段的口径、取值、期望条目数（expected_n=18）均未改动。同批更新 config/toolchain_lock.json 的 locked_files 摘要与 params.contract_version（参数表版本升级后重新锁定；回滚件见 proposals/s3_batch_backup/）。"
+    },
+    {
+      "version": "1.3.0",
+      "date": "2026-10-06",
+      "author": "file-agent",
+      "change": "体积膨胀与参照漂移修复（方案 B 对 A7 完工回送的裁定，两项缺陷）。缺陷 A：A7 归一后成片体积膨胀 2.3–2.9×（时长 ±1.9% 内、码率 2.40–2.56×，纯码率驱动，命中 S3 材料 §六 止损条款 >30%），根因为 encoder_chain.video_bitrate=\"8M\" + post_process.py 的 libx264 ABR（-b:v 8M）—— 修法：encoder_chain 增 video_rate_control=\"capped-crf\" 与 video_crf=18，编码改为 capped-CRF（-crf 18 -maxrate 10M -bufsize 12M preset medium，去掉 -b:v 目标），交付规格（High/L4.2/44100Hz/[1,2]ch/GOP≤60/≤11Mbps）不变；同批把 S3 材料 C5「8M 目标无人锁死」以 video_bitrate_role / video_bitrate_target_locked=false / c5_note 三处在真源内显式化。缺陷 B：A6b 全局参照件 ace-step-ui/douyin_epilogue.mp4 自身随归一由 0.115 漂至 0.287 MiB/s（2.5×），致 gods-eye-view 的 A6b 触发消失、easyvoice-heat 由 7.3× 降为 2.93×、5× 阈值失效 —— 修法：新增顶层 audit_refs 块，冻结 a6b_ref_mib_per_s=0.115（含来源/冻结日/盘上依据），frame_audit 的 A6b 改为 CLI > per-story qc/baseline/bitrate.json > 冻结值 > 旧口径（并显式 WARN）四级取参照；per-story 基线路径本批只留读取口，不强制写入。同批更新 config/toolchain_lock.json 的 locked_files 摘要与 params.contract_version；回滚件见 proposals/s3_batch_backup/ab_fix_2026-10-06/。"
+    }
+  ]
+}

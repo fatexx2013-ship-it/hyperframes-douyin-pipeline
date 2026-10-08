@@ -1,0 +1,47 @@
+{
+  "cues": 39,
+  "rendered": 39,
+  "dtw_chars": 324,
+  "mismatch": [
+    {
+      "cue": 4,
+      "ratio": 0.944,
+      "srt": "github上爆火的三个开源神技项目",
+      "dtw": "github上爆火的三个开源神机项目"
+    },
+    {
+      "cue": 10,
+      "ratio": 0.774,
+      "srt": "Allama加OpenWebUI",
+      "dtw": "Olema+OpenWebUI"
+    },
+    {
+      "cue": 18,
+      "ratio": 0.8,
+      "srt": "零代码拖拽",
+      "dtw": "领代码拖拽"
+    },
+    {
+      "cue": 32,
+      "ratio": 0.909,
+      "srt": "静静看他把系统写好就行",
+      "dtw": "静静看它把系统写好就行"
+    },
+    {
+      "cue": 35,
+      "ratio": 0.889,
+      "srt": "叫成我已经整理好了",
+      "dtw": "教成我已经整理好了"
+    },
+    {
+      "cue": 37,
+      "ratio": 0.692,
+      "srt": "jerry-chan2001",
+      "dtw": "Jaryshan2001"
+    }
+  ],
+  "max_char_cs": 58,
+  "long_chars": 0,
+  "kf_sum_drift_cs": 6,
+  "min_char_cs": 4
+}

@@ -1,0 +1,116 @@
+{
+  "title": "九成能力一成价格：中国大模型把AI打成白菜价",
+  "date": "2026.09.23",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "voice_mode": "single_narrator",
+  "voice_role": "answer",
+  "total_duration_target": 60,
+  "note": "60秒竖屏1080x1920，卡片式场景（非图片背景），字幕烧录，音画严格同帧，首句必须有画面与字幕。单人独播，所有 lines 的 role 统一为 answer，不切情绪、不问答交替。片尾 CTA 由 outro 场景承载，不追加独立 epilogue。",
+  "epilogue": {
+    "enabled": false
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "duration_hint": 10,
+      "card": {
+        "eyebrow": "中国大模型 · 价格战",
+        "title": "中国大模型正在把<accent>AI打成白菜价</accent>",
+        "subtitle": "AI 竞争的题眼：从「谁更强」变成「谁更划算」",
+        "stats": [
+          {"k": "Step 5 单任务成本", "v": "Claude Opus 5 的 1/8"},
+          {"k": "Kimi K3", "v": "上架 Amazon Bedrock"},
+          {"k": "讯飞 X2.5", "v": "全国产算力全流程"}
+        ]
+      },
+      "lines": [
+        {"role": "answer", "text": "AI竞争的题眼，已经从谁更强，换成了谁更划算。"},
+        {"role": "answer", "text": "中国大模型，正在把AI打成白菜价。"}
+      ]
+    },
+    {
+      "type": "stat",
+      "duration_hint": 12,
+      "card": {
+        "eyebrow": "阶跃星辰 · 9月20日发布",
+        "title": "Step 5 Preview：综合智能全球开源前三",
+        "big": "1/8",
+        "big_label": "单任务成本（对比 Claude Opus 5）",
+        "items": [
+          {"k": "AA 综合智能指数", "v": "跻身全球开源前三"},
+          {"k": "正式开源", "v": "10 月 15 日"}
+        ]
+      },
+      "lines": [
+        {"role": "answer", "text": "阶跃星辰发布Step 5 Preview，智能指数跻身全球开源前三。"},
+        {"role": "answer", "text": "单任务成本只有Claude Opus 5的八分之一，十月十五日正式开源。"}
+      ]
+    },
+    {
+      "type": "stat",
+      "duration_hint": 12,
+      "card": {
+        "eyebrow": "月之暗面 · Kimi K3",
+        "title": "中国模型首次上架 Amazon Bedrock",
+        "big": "首次",
+        "big_label": "以收入分成模式输出全球三大云",
+        "items": [
+          {"k": "同台对手", "v": "Anthropic / OpenAI"},
+          {"k": "输出模式", "v": "收入分成"}
+        ]
+      },
+      "lines": [
+        {"role": "answer", "text": "Kimi K3上架亚马逊云Bedrock，和OpenAI、Anthropic同台。"},
+        {"role": "answer", "text": "这是中国大模型首次以收入分成模式，向全球三大云厂商输出模型能力。"}
+      ]
+    },
+    {
+      "type": "stat",
+      "duration_hint": 10,
+      "card": {
+        "eyebrow": "科大讯飞 · 9月7日发布",
+        "title": "星火 X2.5：全国产算力全流程",
+        "big": "293B",
+        "big_label": "MoE 架构（激活参数 30B）",
+        "items": [
+          {"k": "训练 + 推理", "v": "全国产算力完成"},
+          {"k": "端侧开源", "v": "4B / 1.7B，100万 Token"}
+        ]
+      },
+      "lines": [
+        {"role": "answer", "text": "讯飞星火X2.5，混合专家架构，从训练到推理，全跑在全国产算力上。"}
+      ]
+    },
+    {
+      "type": "compare",
+      "duration_hint": 9,
+      "card": {
+        "eyebrow": "开源侧 · 九月",
+        "title": "开源模型密集落地",
+        "rows": [
+          {"name": "面壁 MiniCPM5-2B", "value": "9月8日", "pct": 40},
+          {"name": "紫东太初 9B 多模态", "value": "9月18日", "pct": 70},
+          {"name": "讯飞 X2.5 端侧 4B/1.7B", "value": "100万 Token", "pct": 100}
+        ],
+        "footnote": "端侧模型已支持 100 万 Token 上下文"
+      },
+      "lines": [
+        {"role": "answer", "text": "开源侧更热闹，面壁、紫东太初接力开源，端侧模型已支持一百万Token。"}
+      ]
+    },
+    {
+      "type": "outro",
+      "duration_hint": 8,
+      "card": {
+        "title": "九成能力，一成价格",
+        "cta": "关注 jerrychen2001",
+        "sub": "评论区聊聊：你用过最香的国产模型是哪款？"
+      },
+      "lines": [
+        {"role": "answer", "text": "九成的能力，一成的价格。"},
+        {"role": "answer", "text": "AI普惠时代，是中国队按下了加速键。"}
+      ]
+    }
+  ]
+}

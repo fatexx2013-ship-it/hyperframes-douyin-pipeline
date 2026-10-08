@@ -1,0 +1,50 @@
+[
+  {
+    "text": "做短视频谁不为 BGM 发愁？Suno 一个月十刀到五十刀，一年小一千。GitHub 上这个项目叫 ACE-Step UI，本地跑、不限量、一分钱不花。",
+    "path": "/Volumes/PSSD/抖音视频/story/ace-step-ui/line_00.wav",
+    "duration": 13.2,
+    "voice_start": 0.11,
+    "voice_end": 13.09,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "差别很直白：Suno 按月收钱，十刀到五十刀，还限队列，商用得加钱。ACE-Step 装在自己电脑上，不限量、断网都能生成，作品全部归你。",
+    "path": "/Volumes/PSSD/抖音视频/story/ace-step-ui/line_01.wav",
+    "duration": 14.16,
+    "voice_start": 0.11,
+    "voice_end": 14.05,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "它生成的不是十几秒的片段，是四分钟以上的完整歌曲，自带人声和歌词。节奏、调号、时长全都能自定义，一次还能批量出好几个版本。",
+    "path": "/Volumes/PSSD/抖音视频/story/ace-step-ui/line_02.wav",
+    "duration": 14.64,
+    "voice_start": 0.11,
+    "voice_end": 14.53,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "不光能生成。它内置 Demucs，一键把人声、鼓点、贝斯分开；内置波形编辑器直接剪；甚至自动配画面，一首歌到一条 MV，一个应用全包了。",
+    "path": "/Volumes/PSSD/抖音视频/story/ace-step-ui/line_03.wav",
+    "duration": 12.7,
+    "voice_start": 0.11,
+    "voice_end": 12.58,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "说说门槛，得诚实：它需要一张英伟达显卡，4G 显存起步。Windows 和 Linux 都有一键安装脚本。Mac 用户暂时不支持 GPU 推理，这点必须讲清楚。",
+    "path": "/Volumes/PSSD/抖音视频/story/ace-step-ui/line_04.wav",
+    "duration": 15.76,
+    "voice_start": 0.11,
+    "voice_end": 15.65,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "MIT 开源，代码和模型都在 GitHub。你会用它生成第一首什么歌？",
+    "path": "/Volumes/PSSD/抖音视频/story/ace-step-ui/line_05.wav",
+    "duration": 6.4,
+    "voice_start": 0.11,
+    "voice_end": 6.29,
+    "silence_ge_040s": 0
+  }
+]

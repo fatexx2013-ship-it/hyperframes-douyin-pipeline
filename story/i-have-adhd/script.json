@@ -1,0 +1,458 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#00A2C7",
+      "purpose": "电光青蓝主题大数字渐变描边（VIS 数据强调，用主题色）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "title": "AI 又把答案埋了？这个开源 skill 只给你下一步",
+  "date": "2026.10.06",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/A Game - Michael Ramir C [mixkit 777].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "tts_emotion": "thoughtful",
+  "tts_emotion_desc": "慵懒御姐音：全片唯一音色来源（yujie_thoughtful.wav），build_audio.py 只认此键，逐句 emotion 已禁用",
+  "voice_desc": "慵懒玉女御姐音（Qwen3-TTS 本地 MLX，句间气口压缩）",
+  "tts_line": "solo-yujie",
+  "tts_tuning": "G版（逐句·短篇压缩）：-52dB/0.30s 句内静音上限，句首留白 0.12s，段落停顿 0.85s",
+  "source": "github.com/ayghri/i-have-adhd · 官方 README（MIT 协议）+ GitHub API 实时数据（Stars 54,215 / Forks 3,114 / 创建于 2026-05-13，核验于 2026-10-06）",
+  "facts": [
+    "定位：给编码助手加一个输出风格约束的 skill（Claude Code 插件形态），让回答行动在前、答案不埋，MIT 协议",
+    "README 原话：Action first. Steps numbered. No Hope this helps —— 并明确 No ADHD diagnosis needed，不需要任何诊断就能用",
+    "README Before/After 对比：原回答先夸一句好问题、铺三段背景、结尾问你还要不要深入；改造后只剩一条命令 + 三步编号 + 一个下一步",
+    "10 条规则：先给下一步行动 / 多步任务编号 / 结尾给一个具体下一步 / 抑制题外话 / 每轮复述状态 / 给具体分钟数 / 让进展可见 / 报错就事论事 / 清单最多 5 条 / 无开场白无总结无客套",
+    "安装方式：README 给出一段可粘贴指令，让你的 CLI 助手自行读取仓库 AGENTS.md 完成安装；也可按 INSTALL.md 手动安装",
+    "可定制：fork 后编辑 skills/i-have-adhd/SKILL.md，再按 README 的四条 marketplace 命令换回自己的副本，重启助手后重新调用",
+    "灵感来源：改编自 J. Russell Ramsay 与 Anthony L. Rostain 的《The Adult ADHD Tool Kit》，但针对的是 LLM 该怎么答，而不是人该怎么安排一天",
+    "仓库数据（GitHub API，2026-10-06 核验）：Stars 54,215 · Forks 3,114 · open issues 79 · 创建于 2026-05-13 · MIT · 语言 Python · topics 含 adhd / claude-skills / claude-code-plugin / developer-tools"
+  ],
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你最想让 AI 删掉的那句废话。",
+    "emotion": "thoughtful",
+    "gap_before": 0.35,
+    "tail_silence": 0.4,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你最想让 AI 的哪句废话消失？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "chip",
+      "card": {
+        "eyebrow": "开源情报站 · AI 编程助手",
+        "title": "AI 又把答案埋了？<accent>它只给下一步</accent>",
+        "subtitle": "i-have-adhd · 让编码助手不再藏答案 · MIT 开源",
+        "stats": [
+          {
+            "k": "GitHub Star",
+            "v": "54,215"
+          },
+          {
+            "k": "Fork",
+            "v": "3,114"
+          },
+          {
+            "k": "协议",
+            "v": "MIT"
+          }
+        ],
+        "vis": {
+          "left": "你问 AI",
+          "right": [
+            "答案",
+            "第一行"
+          ],
+          "small": "1st line",
+          "footer": "action => first",
+          "label": "行动在前 · 步骤编号 · 不写客套",
+          "badge": "数据核验 2026-10-06"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "AI 一开口就是好问题，答案永远埋在第三段。这个开源项目，专治这个毛病。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 8.24
+    },
+    {
+      "type": "feature",
+      "visual": "quote",
+      "card": {
+        "eyebrow": "它的自述",
+        "title": "三句话讲完<accent>全部回答规范</accent>",
+        "subtitle": "README 原话 · 官网首屏就这两行",
+        "vis": {
+          "quote": "先给动作，步骤编号",
+          "accent": "Action first. Steps numbered.",
+          "badge": "README · What it does"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "它自述三句话：先给动作，步骤编号，不说希望这有帮助。"
+        }
+      ],
+      "_start": 9.09,
+      "_end": 15.97
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "同一个问题，两种回答",
+        "title": "左边客套三段，<accent>右边只留三步</accent>",
+        "subtitle": "README 原文 Before / After 对比",
+        "vis": {
+          "left_who": "以前的回答",
+          "left_lines": [
+            "好问题！让我想想…",
+            "再铺三段背景分析",
+            "希望这有帮助！"
+          ],
+          "right_who": "它的回答",
+          "right_rows": [
+            [
+              "1 步",
+              "装最新版 jsonwebtoken"
+            ],
+            [
+              "2 步",
+              "改 src/auth.ts:42"
+            ],
+            [
+              "3 步",
+              "跑一遍 auth 测试"
+            ],
+            [
+              "下一步",
+              "失败就贴第一行报错"
+            ]
+          ],
+          "badge": "答案从第一行开始 · 不用翻到最后"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "README 的对比更狠：左边客套三段，右边一行命令加三步操作。"
+        }
+      ],
+      "_start": 16.82,
+      "_end": 24.22
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "它凭什么这么答",
+        "title": "10 条规则，<accent>把废话删干净</accent>",
+        "subtitle": "SKILL.md 全文公开 · 看不顺眼就改",
+        "vis": {
+          "left_who": "规则写死",
+          "left_lines": [
+            "先给下一步行动",
+            "多步任务必须编号",
+            "每轮复述当前状态"
+          ],
+          "right_who": "还有这些",
+          "right_rows": [
+            [
+              "清单",
+              "最多 5 项"
+            ],
+            [
+              "估时",
+              "给到具体分钟数"
+            ],
+            [
+              "报错",
+              "就事论事不铺垫"
+            ],
+            [
+              "结尾",
+              "只给一个下一步"
+            ]
+          ],
+          "badge": "共 10 条规则 · 全文在 SKILL.md"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "十条规则写死在文件里：答案从第一行开始，多步必须编号，清单最多五条。",
+          "emotion": null
+        }
+      ],
+      "_start": 25.07,
+      "_end": 33.87
+    },
+    {
+      "type": "feature",
+      "visual": "quote",
+      "card": {
+        "eyebrow": "最狠的一条",
+        "title": "<accent>无开场白 · 无总结 · 无客套</accent>",
+        "subtitle": "规则 10 · 原文 No preamble. No recap. No closers.",
+        "vis": {
+          "quote": "不许写开场白，不许写总结",
+          "accent": "No preamble. No recap. No closers.",
+          "badge": "规则 10 · SKILL.md"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "最狠的一条是禁止客套：不写开场白，不写总结，也不问你要不要继续。"
+        }
+      ],
+      "_start": 34.72,
+      "_end": 42.48
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "看不顺眼就自己改",
+        "title": "fork 一份，<accent>规则随你删</accent>",
+        "subtitle": "改完按 README 四条命令换回自己的副本",
+        "vis": {
+          "left_who": "原版 skill",
+          "left_lines": [
+            "SKILL.md 十条规则",
+            "不喜欢哪条就删"
+          ],
+          "right_who": "换回自己的副本",
+          "right_rows": [
+            [
+              "1",
+              "卸载原插件"
+            ],
+            [
+              "2",
+              "移除 marketplace"
+            ],
+            [
+              "3",
+              "添加你 fork 的仓库"
+            ],
+            [
+              "4",
+              "重装 重启助手"
+            ]
+          ],
+          "badge": "改完重启助手 · 重新调用即生效"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "看不顺眼就 fork 一份，十条规则写在 SKILL.md 里，删掉哪条都随你。"
+        }
+      ],
+      "_start": 43.33,
+      "_end": 49.89
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "怎么装上",
+        "title": "不用装软件，<accent>一句话丢给你的 AI</accent>",
+        "subtitle": "README 的安装方式 · 也可按 INSTALL.md 手动装",
+        "vis": {
+          "left_who": "你只需要",
+          "left_lines": [
+            "复制一行仓库地址",
+            "发给你的 AI 助手"
+          ],
+          "right_who": "它自己完成",
+          "right_rows": [
+            [
+              "1",
+              "读 AGENTS.md 装好"
+            ],
+            [
+              "2",
+              "skill 已挂进插件"
+            ],
+            [
+              "3",
+              "重启你的助手"
+            ],
+            [
+              "4",
+              "再提问 输出已经变了"
+            ]
+          ],
+          "badge": "Claude Code / Cursor / Codex · 纯本地运行"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "装它不用装软件，把仓库地址丢给你的 AI 助手就行，纯本地跑。"
+        }
+      ],
+      "_start": 50.74,
+      "_end": 57.14
+    },
+    {
+      "type": "feature",
+      "visual": "stats",
+      "card": {
+        "eyebrow": "为什么它能火",
+        "title": "五个月，<accent>54,215 星</accent>",
+        "subtitle": "MIT 协议 · Python · 2026 年 5 月开源",
+        "stats": [
+          {
+            "k": "GitHub Star",
+            "v": "54,215"
+          },
+          {
+            "k": "Fork",
+            "v": "3,114"
+          },
+          {
+            "k": "开源时间",
+            "v": "2026-05"
+          },
+          {
+            "k": "协议",
+            "v": "MIT"
+          }
+        ],
+        "vis": {
+          "badge": "上屏数据来源：GitHub API · 2026-10-06 核验"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "五个月，五万四千星，三千多个 fork，纯 Python 写的 MIT 协议。"
+        }
+      ],
+      "_start": 57.99,
+      "_end": 65.03
+    },
+    {
+      "type": "outro",
+      "visual": "chip",
+      "card": {
+        "title": "关注 jerrychen2001",
+        "cta": "评论区聊聊",
+        "sub": "你最想让 AI 的哪句废话消失？",
+        "vis": {
+          "left": "刷到这里",
+          "right": [
+            "点个关注",
+            "下期继续"
+          ],
+          "small": "see you",
+          "footer": "开源情报站",
+          "label": "每周一个开源项目 · 只讲能用的",
+          "badge": "MIT 开源 · 本地免费"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "评论区聊聊：你最想让 AI 删掉哪句废话？"
+        }
+      ],
+      "_start": 65.88,
+      "_end": 70.84
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "AI 一开口就是好问题，答案永远埋在第三段。这个开源项目，专治这个毛病。",
+      "start": 0.0,
+      "end": 8.24
+    },
+    {
+      "scene_index": 1,
+      "text": "它自述三句话：先给动作，步骤编号，不说希望这有帮助。",
+      "start": 9.09,
+      "end": 15.97
+    },
+    {
+      "scene_index": 2,
+      "text": "README 的对比更狠：左边客套三段，右边一行命令加三步操作。",
+      "start": 16.82,
+      "end": 24.22
+    },
+    {
+      "scene_index": 3,
+      "text": "十条规则写死在文件里：答案从第一行开始，多步必须编号，清单最多五条。",
+      "start": 25.07,
+      "end": 33.87
+    },
+    {
+      "scene_index": 4,
+      "text": "最狠的一条是禁止客套：不写开场白，不写总结，也不问你要不要继续。",
+      "start": 34.72,
+      "end": 42.48
+    },
+    {
+      "scene_index": 5,
+      "text": "看不顺眼就 fork 一份，十条规则写在 SKILL.md 里，删掉哪条都随你。",
+      "start": 43.33,
+      "end": 49.89
+    },
+    {
+      "scene_index": 6,
+      "text": "装它不用装软件，把仓库地址丢给你的 AI 助手就行，纯本地跑。",
+      "start": 50.74,
+      "end": 57.14
+    },
+    {
+      "scene_index": 7,
+      "text": "五个月，五万四千星，三千多个 fork，纯 Python 写的 MIT 协议。",
+      "start": 57.99,
+      "end": 65.03
+    },
+    {
+      "scene_index": 8,
+      "text": "评论区聊聊：你最想让 AI 删掉哪句废话？",
+      "start": 65.88,
+      "end": 70.84
+    }
+  ],
+  "total_duration": 70.84,
+  "tts_params": {
+    "version": "G-short",
+    "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+    "ref_voice": "yujie_thoughtful.wav（慵懒御姐音）",
+    "emotion": "thoughtful",
+    "voice_role": "answer",
+    "voice_source": "script.json.tts_emotion（全片单一来源，逐句 emotion 已禁用）",
+    "voice_guard": "build_audio.py 启动即校验 voice_role / tts_emotion / 片尾 emotion 三者一致，冲突直接拒绝出片",
+    "silence_trim": "-52dB / 0.30s（句内上限）",
+    "lead_silence": 0.12,
+    "tail_silence": 0.08,
+    "pause_comma": 0.25,
+    "pause_period": 0.75,
+    "pause_paragraph": 0.85,
+    "note": "短篇压缩版：段落停顿 1.20s→0.85s，尾静音 0.4s→0.35s",
+    "sample_rate": 24000,
+    "channels": 1,
+    "silence_ge_040s_total": 0
+  }
+}

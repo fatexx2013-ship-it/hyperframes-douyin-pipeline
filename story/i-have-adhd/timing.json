@@ -1,0 +1,74 @@
+[
+  {
+    "text": "AI 一开口就是好问题，答案永远埋在第三段。这个开源项目，专治这个毛病。",
+    "path": "/Volumes/PSSD/抖音视频/story/i-have-adhd/line_00.wav",
+    "duration": 8.24,
+    "voice_start": 0.11,
+    "voice_end": 8.13,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "它自述三句话：先给动作，步骤编号，不说希望这有帮助。",
+    "path": "/Volumes/PSSD/抖音视频/story/i-have-adhd/line_01.wav",
+    "duration": 6.88,
+    "voice_start": 0.11,
+    "voice_end": 6.77,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "README 的对比更狠：左边客套三段，右边一行命令加三步操作。",
+    "path": "/Volumes/PSSD/抖音视频/story/i-have-adhd/line_02.wav",
+    "duration": 7.4,
+    "voice_start": 0.12,
+    "voice_end": 7.29,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "十条规则写死在文件里：答案从第一行开始，多步必须编号，清单最多五条。",
+    "path": "/Volumes/PSSD/抖音视频/story/i-have-adhd/line_03.wav",
+    "duration": 8.8,
+    "voice_start": 0.11,
+    "voice_end": 8.69,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "最狠的一条是禁止客套：不写开场白，不写总结，也不问你要不要继续。",
+    "path": "/Volumes/PSSD/抖音视频/story/i-have-adhd/line_04.wav",
+    "duration": 7.76,
+    "voice_start": 0.11,
+    "voice_end": 7.65,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "看不顺眼就 fork 一份，十条规则写在 SKILL.md 里，删掉哪条都随你。",
+    "path": "/Volumes/PSSD/抖音视频/story/i-have-adhd/line_05.wav",
+    "duration": 6.56,
+    "voice_start": 0.11,
+    "voice_end": 6.45,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "装它不用装软件，把仓库地址丢给你的 AI 助手就行，纯本地跑。",
+    "path": "/Volumes/PSSD/抖音视频/story/i-have-adhd/line_06.wav",
+    "duration": 6.4,
+    "voice_start": 0.11,
+    "voice_end": 6.29,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "五个月，五万四千星，三千多个 fork，纯 Python 写的 MIT 协议。",
+    "path": "/Volumes/PSSD/抖音视频/story/i-have-adhd/line_07.wav",
+    "duration": 7.04,
+    "voice_start": 0.11,
+    "voice_end": 6.93,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "评论区聊聊：你最想让 AI 删掉哪句废话？",
+    "path": "/Volumes/PSSD/抖音视频/story/i-have-adhd/line_08.wav",
+    "duration": 4.96,
+    "voice_start": 0.11,
+    "voice_end": 4.85,
+    "silence_ge_040s": 0
+  }
+]

@@ -1,0 +1,171 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#FF5926",
+      "purpose": "赤焰热力主题大数字渐变描边（VIS 数据强调，用主题色）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "delivery_spec_waiver": [],
+  "title": "手机手表单片机都能跑的AI，Needle一个模型8MB",
+  "date": "2026.09.22",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "voice_desc": "慵懒玉女御姐音（Qwen3-TTS 本地 MLX，情绪自动匹配）",
+  "source": "github.com/cactus-compute/needle · README + 官网 cactuscompute.com/needle",
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你还想拆哪个项目。",
+    "emotion": "thoughtful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你还想拆哪个项目？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "chip",
+      "card": {
+        "eyebrow": "GitHub 1.2 万星 · 边缘 AI 基础模型",
+        "title": "8MB 的 AI 模型，<accent>装进任何小设备</accent>",
+        "subtitle": "手机 · 手表 · 机器人 · 汽车 · 单片机都能跑",
+        "stats": [
+          {
+            "k": "GitHub Stars",
+            "v": "12,109"
+          },
+          {
+            "k": "模型体积",
+            "v": "8–29 MB"
+          },
+          {
+            "k": "精度",
+            "v": "2-bit"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "8MB能干什么？一个叫Needle的开源模型，8到29兆的体积，却能干翻比自己大十倍的模型，手机、手表、甚至单片机都能跑。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 11.38
+    },
+    {
+      "type": "feature",
+      "visual": "toolcall",
+      "card": {
+        "eyebrow": "核心能力 · 函数调用",
+        "title": "它不聊天，<accent>它直接帮你调函数</accent>",
+        "subtitle": "说两句指令，它自己选对工具、填好参数，一次返回结果"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "它不跟你闲聊。你给它几个函数，它听懂你的话，自己选对工具、填好参数、把活干了，干完还告诉你它有多大把握。"
+        }
+      ],
+      "_start": 11.73,
+      "_end": 23.44
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "核心能力 · 结构化提取",
+        "title": "乱七八糟的文本，<accent>秒变发票和订单</accent>",
+        "subtitle": "声明格式 → 丢进文本 → 返回带类型的结果，解析保证不出错"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "它还能干结构化提取。你声明一个格式，把乱七八糟的文本丢进去，它还你一张发票、一个订单、一条通知，格式保证能解析。"
+        }
+      ],
+      "_start": 23.79,
+      "_end": 35.79
+    },
+    {
+      "type": "stat",
+      "visual": "ladder",
+      "card": {
+        "eyebrow": "架构 · 阶梯式深度",
+        "title": "2 层到 20 层，<accent>每一档都是完整模型</accent>",
+        "big": "18–36",
+        "big_label": "微调后各档子网络精度提升点数；4 层 29M 参数即可超越 DeepSeek V4 Flash"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "它的参数像阶梯一样，2层到20层，每一档都是能直接部署的完整模型。微调之后，4层、2900万参数的小号，就能超过 DeepSeek V4 Flash。"
+        }
+      ],
+      "_start": 36.14,
+      "_end": 49.46
+    },
+    {
+      "type": "outro",
+      "visual": "deploy",
+      "card": {
+        "title": "pip 一装就能用",
+        "cta": "GitHub 搜 cactus-compute/needle",
+        "sub": "12,109 星 · Apache 开源 · 浏览器里就能试"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "一行 pip install 装好，权重在 HuggingFace，浏览器里还能直接试。一万两千颗星，Apache 协议开源，这就是边缘 AI 的新卷法。"
+        }
+      ],
+      "_start": 49.81,
+      "_end": 62.34
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "8MB能干什么？一个叫Needle的开源模型，8到29兆的体积，却能干翻比自己大十倍的模型，手机、手表、甚至单片机都能跑。",
+      "start": 0.0,
+      "end": 11.38
+    },
+    {
+      "scene_index": 1,
+      "text": "它不跟你闲聊。你给它几个函数，它听懂你的话，自己选对工具、填好参数、把活干了，干完还告诉你它有多大把握。",
+      "start": 11.73,
+      "end": 23.44
+    },
+    {
+      "scene_index": 2,
+      "text": "它还能干结构化提取。你声明一个格式，把乱七八糟的文本丢进去，它还你一张发票、一个订单、一条通知，格式保证能解析。",
+      "start": 23.79,
+      "end": 35.79
+    },
+    {
+      "scene_index": 3,
+      "text": "它的参数像阶梯一样，2层到20层，每一档都是能直接部署的完整模型。微调之后，4层、2900万参数的小号，就能超过 DeepSeek V4 Flash。",
+      "start": 36.14,
+      "end": 49.46
+    },
+    {
+      "scene_index": 4,
+      "text": "一行 pip install 装好，权重在 HuggingFace，浏览器里还能直接试。一万两千颗星，Apache 协议开源，这就是边缘 AI 的新卷法。",
+      "start": 49.81,
+      "end": 62.34
+    }
+  ],
+  "total_duration": 62.34
+}

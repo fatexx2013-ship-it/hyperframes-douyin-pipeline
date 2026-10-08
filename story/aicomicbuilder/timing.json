@@ -1,0 +1,58 @@
+[
+  {
+    "text": "做短视频最费劲的就是画面。今天这个开源项目叫 AIComicBuilder，你把剧本文件扔进去，它自己把剧本拆成镜头、画出每一帧、最后拼成一部动画片。",
+    "path": "/Volumes/PSSD/抖音视频/story/aicomicbuilder/line_00.wav",
+    "duration": 12.85,
+    "voice_start": 0.11,
+    "voice_end": 12.73,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "第一步特别省心：剧本不用手动整理格式，TXT、DOCX、PDF 直接上传。它自动解析文本、提取出所有角色、还按剧情智能分集，整个流程可视化，你能看见它在干什么。",
+    "path": "/Volumes/PSSD/抖音视频/story/aicomicbuilder/line_01.wav",
+    "duration": 19.09,
+    "voice_start": 0.11,
+    "voice_end": 18.97,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "AI 画视频最大的毛病是角色每帧都换脸。它的办法是先给每个角色生成四视图参考图：正面、四分之三、侧面、背面全画一遍，后面所有帧都对齐这四张图，主角从头到尾都是同一个人。",
+    "path": "/Volumes/PSSD/抖音视频/story/aicomicbuilder/line_02.wav",
+    "duration": 17.76,
+    "voice_start": 0.11,
+    "voice_end": 17.65,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "它把剧本拆成专业镜头列表，每个镜头自带构图、灯光、运镜指令。然后为每个镜头生成起始帧和结束帧两张关键画面，中间的动作靠首尾帧插值补出来。",
+    "path": "/Volumes/PSSD/抖音视频/story/aicomicbuilder/line_03.wav",
+    "duration": 14.48,
+    "voice_start": 0.11,
+    "voice_end": 14.37,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "每个镜头的视频提示词由 AI 基于分镜和参考帧自动生成，你看不顺眼可以直接改。所有片段拼成完整动画，字幕直接烧录进去，支持 16 比 9 和 9 比 16 竖屏。",
+    "path": "/Volumes/PSSD/抖音视频/story/aicomicbuilder/line_04.wav",
+    "duration": 16.08,
+    "voice_start": 0.11,
+    "voice_end": 15.97,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "说说门槛，得诚实：部署确实简单，Docker 一条命令就起来，SQLite 存数据。但它自己不做任何 AI 推理，画图、生成视频全靠 OpenAI、Gemini、Kling 这些外部 API，各家 key 和额度你得自己备好。这不是零成本项目，这点必须讲清楚。",
+    "path": "/Volumes/PSSD/抖音视频/story/aicomicbuilder/line_05.wav",
+    "duration": 21.12,
+    "voice_start": 0.11,
+    "voice_end": 21.01,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "Apache 2.0 开源，代码在 GitHub。你会扔个什么剧本进去，让它拍成你的第一部动漫？",
+    "path": "/Volumes/PSSD/抖音视频/story/aicomicbuilder/line_06.wav",
+    "duration": 8.05,
+    "voice_start": 0.11,
+    "voice_end": 7.93,
+    "silence_ge_040s": 0
+  }
+]

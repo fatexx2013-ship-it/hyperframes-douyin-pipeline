@@ -1,0 +1,82 @@
+/* ============================================================================
+ * 主题：赤焰热力 / Heat Red   —— 可选主题（非默认，不覆盖现有主题）
+ * ----------------------------------------------------------------------------
+ * 色标来源（真实代码参数，非人工调色）：
+ *   temp/build_compare.py 生成 P0/P1 差异热力图的逻辑：
+ *     diff = ImageChops.difference(a, b).convert("L")
+ *     diff = diff.point(lambda v: min(255, int(v * 2.6)))       # 差异强度
+ *     heat = Image.merge("RGB", (diff, diff*0.35, diff*0.15))   # R=1.0 / G=0.35 / B=0.15
+ *     画布底色 = (18, 18, 20)
+ *   → 通道系数 (1.000, 0.350, 0.150)，色相恒定 14.1°，满强度色 #FF5926（饱和度 85.1%）
+ *   → 下列 --heat-1..12 由该系数按 12 档强度（26/40/56/76/98/122/148/176/205/232/245/255）逐一推导
+ *
+ * 基础层：
+ *   --heat-bg 直接取自热力图画布底色 rgb(18, 18, 20)
+ *   --heat-surface / --heat-surface-2 / --heat-border 由 --heat-bg 等量提亮派生（+8 / +17 / +31）
+ *
+ * 中性层：文字色沿用现有 radix-slate-dark 变量（带十六进制兜底），不新增中性色板
+ * 许可：全部由自有代码参数推导，无第三方资产
+ * 用法：在 <html> 或 <body> 上加 class="theme-heat"；不加 class 时保持默认主题，两者互不影响
+ * ========================================================================== */
+
+html.theme-heat,
+body.theme-heat {
+  /* ── 热力色阶（严格由 R/G/B = 1 / 0.35 / 0.15 推导） ── */
+  --heat-1:  #1A0903;
+  --heat-2:  #280E06;
+  --heat-3:  #381308;
+  --heat-4:  #4C1A0B;
+  --heat-5:  #62220E;
+  --heat-6:  #7A2A12;
+  --heat-7:  #943316;
+  --heat-8:  #B03D1A;
+  --heat-9:  #CD471E;
+  --heat-10: #E85122;
+  --heat-11: #F55524;
+  --heat-12: #FF5926;   /* 热力图满强度色 */
+
+  /* ── 基础层（底色取自热力图画布，其余为其等量提亮派生） ── */
+  --heat-bg:        #121214;   /* rgb(18,18,20) 热力图画布底色 */
+  --heat-surface:   #1A1A1E;   /* bg +8 */
+  --heat-surface-2: #23232A;   /* bg +17 */
+  --heat-border:    #35353E;   /* bg +31 */
+
+  /* ── 热力专属装饰 ── */
+  --heat-grad-hot: linear-gradient(90deg, var(--heat-8) 0%, var(--heat-12) 100%);   /* 红 → 橘红 */
+  --heat-grad-soft: linear-gradient(180deg, color-mix(in oklab, var(--heat-12) 22%, transparent) 0%, transparent 100%);
+  --heat-glow: 0 0 64px color-mix(in oklab, var(--heat-12) 30%, transparent);
+
+  /* ── 语义层（与默认主题同名，仅在本 class 作用域内生效） ── */
+  --bg-app: var(--heat-bg);
+  --card: var(--heat-surface);
+  --border-subtle: var(--heat-border);
+  --text-primary: var(--slate-12, #F2F2F5);
+  --text-secondary: var(--slate-11, #9A9AA3);
+  --primary: var(--heat-12);
+  --primary-muted: var(--heat-10);
+  --primary-deep: var(--heat-8);
+  --background: var(--bg-app);
+  --foreground: var(--text-primary);
+  --muted-foreground: var(--text-secondary);
+  --border: var(--border-subtle);
+  --shadow-color: 12 40% 3%;
+  --shadow-strength: 42%;
+
+  /* ── AIGC 显式标识（合规角标；"清晰可辨 + 不抢眼"） ──
+   * 【默认关闭 2026-09-20】画面内角标默认不渲染（.aigc-label 默认 display:none；
+   *   交付平台侧已有强制 AIGC 标识，重复叠加影响观感）。以下 token 仅在渲染变量
+   *   aigcEnabled=true 时生效，保留以便随时启用；数值与约束均未改动。
+   * 取值约束：文字峰值不透明度 ≤ 0.72；实测在 --heat-bg #121214 上的对比度
+   *   方案 B 文字 0.72 白 → 合成 #B3B4B5，对比度 8.9:1
+   *   方案 A/C/D 文字 0.52 白 → 合成 #86868A，对比度 5.1:1（≥ WCAG AA 4.5:1 小字下限）
+   * 色相不外扩：仅复用文字色（slate-12）与热力画布底色，不新增彩色 */
+  --aigc-fg-strong: rgba(242, 242, 245, 0.72);   /* 胶囊主字色（方案 B） */
+  --aigc-fg-soft:   rgba(242, 242, 245, 0.52);   /* 无底字色（方案 A / C / D） */
+  --aigc-dot:       color-mix(in oklab, var(--heat-12) 34%, transparent);  /* 方案 C 指示点 */
+  --aigc-surface:   rgba(8, 8, 10, 0.72);        /* 胶囊底：比画布更深一档，形成轻微凹陷感 */
+  --aigc-border:    rgba(255, 255, 255, 0.14);
+  --aigc-size:      20px;
+  --aigc-tracking:  0.06em;
+  --aigc-inset-x:   88px;
+  --aigc-inset-y:   96px;
+}

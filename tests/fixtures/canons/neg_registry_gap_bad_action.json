@@ -1,0 +1,2579 @@
+{
+  "canons_version": "1.7.0",
+  "created_at": "2026-09-29",
+  "root": "/Volumes/PSSD/抖音视频",
+  "positioning": "对等交换工程口径吸纳层。声明式真源 + 校验器 scripts/canon_guard.py。原则：只补缺口、不推翻存量；存量真源仍以 param_contract.json / canonicalization.json / frozen_baseline.json / observability_rules.json / negcontrol_cases.json 为准，本文件只在缺口语义上做补充与归一，冲突时以存量真源为准。",
+  "sources": [
+    "Hermes721：挂起与判据账本",
+    "EigenFlux01：缓存键漂移五格",
+    "废物龙虾：硬停与降级分层",
+    "LUXIN：零值语义与断言绑定",
+    "AI-Film-Studio：漂移字段与翻案率",
+    "glann：清单规范与回执",
+    "AI-Film-Studio（续）：静默改写判定 / 判据三格与版本换代出桶 / 未声明≠默认 / 挂起年龄分布 / 翻案率分母",
+    "EigenFlux01（续）：依赖版本三段 / 时基三格 / 降级由产物侧判定",
+    "砚书：分页第三态与合并判空去重 / 轮数未取尽出口 / gate 三数同行 / 跳过发起侧记账",
+    "巡灯：独立检查共享故障域反例",
+    "LUXIN（续）：失败域四段分桶",
+    "wwwwwlmr 的废物龙虾：可携带判据最小三件与私有证据出桶",
+    "Zoe Talmadge（EigenFlux）：画质修复链路顺序不可交换与分块融合接缝口径",
+    "Noteknot / Tiki（EigenFlux）：长视频分段 ASR 静默失败与句边界完整性口径",
+    "pbakaus/impeccable（GitHub，Apache-2.0）：竖屏画面包装设计口径——禁用项登记 / 文字节奏地板 / 动效署名与可达性 / 颜色角色与深度分层",
+    "DeepSeek Harness / Marvis（便利贴）/ Yugo（EigenFlux 2026-10-02 私信对拍）：参数溯源三态不可比 / 归一动作落账 / 快照寿命与回收前提同源",
+    "AI-Film-Studio（EigenFlux 2026-10-03 广播）：验证锚点落链外与发布期冻结清单 / 期望集版本化签发与取数路径进签名域"
+  ],
+  "principles": [
+    "不推翻存量：存量判定链（param_contract / judgement_rules / observability_anchors / negcontrol）行为与真源不做破坏性修改",
+    "只补缺口：新增口径落在本文件与 scripts/canon_guard.py，存量已覆盖部分只登记引用，不重复实现",
+    "不引入外部内部取值：只吸纳通用工程口径，不携带外部任何内部数值、路径、密钥、账号或私有枚举",
+    "可回滚：变更前留 *.bak-<日期> 或 output/backup/ 副本；本文件为纯新增",
+    "缺口可证伪：每条口径附负例，负例必须判红，否则视为检测器失效"
+  ],
+  "adoption_map": [
+    {
+      "id": "A1-pending-ledger",
+      "source": "Hermes721",
+      "title": "挂起与判据账本",
+      "status": "new",
+      "existing_coverage": "存量无挂起概念（PENDING/挂起/suspend 全库无命中）；判据签发方字段已有（param_contract issuer / judgement_rules canonical_issuer）",
+      "gap": "挂起原因未绑定到约束、无同组织布尔、处置与变更触发未强制分列",
+      "landing": [
+        "engineering_canons.json#pending_ledger"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_pending_ledger"
+      ]
+    },
+    {
+      "id": "B2-cache-key-grid",
+      "source": "EigenFlux01",
+      "title": "缓存键漂移五格",
+      "status": "new",
+      "existing_coverage": "存量有规范化器版本（canonicalization.json 签名）与冻结基线摘要（frozen_baseline.json），但无缓存键契约",
+      "gap": "五类漂移未登记、每格五维未声明、降级产物命名不可覆盖未约定",
+      "landing": [
+        "engineering_canons.json#cache_key_grid"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_cache_key_grid"
+      ]
+    },
+    {
+      "id": "C3-stop-degrade-tiers",
+      "source": "废物龙虾",
+      "title": "硬停与降级分层",
+      "status": "partial",
+      "existing_coverage": "存量字段级已有 action（硬停（阻断）/降级+人工(WARN)/降级(仅记录,WARN)）与 stability 分层；judgement_rules 已有降级前置三条件",
+      "gap": "硬停四类/降级三类分类枚举、降级结果隔离标记、回落显式标记及其不可回落性未约定",
+      "landing": [
+        "engineering_canons.json#stop_degrade_tiers"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_stop_degrade_tiers"
+      ]
+    },
+    {
+      "id": "D4-zero-semantics-assertion",
+      "source": "LUXIN",
+      "title": "零值语义与断言绑定",
+      "status": "partial",
+      "existing_coverage": "存量扩展字段有 zero_semantics 自由文本（8 条）；observability_rules 有 UNSET/EMPTY 计量状态",
+      "gap": "零值三态未枚举归一；音频流数缺失被判 SKIP（param_contract._judge_audio 返回『无音频流数据』），未按失败处理；断言未强制绑定失败动作",
+      "landing": [
+        "engineering_canons.json#zero_semantics",
+        "engineering_canons.json#field_registry"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_zero_semantics",
+        "canon_guard.py:overlay_manifest"
+      ]
+    },
+    {
+      "id": "E5-drift-fieldset-overturn",
+      "source": "AI-Film-Studio",
+      "title": "漂移字段与翻案率",
+      "status": "partial",
+      "existing_coverage": "存量有字段级 drift_rule/drift_symptom 与 expected_n 口径、canonicalizer 版本签名",
+      "gap": "最易漂字段集未成清单；翻案率无任何实现（overturn 全库无命中）；降级原因码与来源未强制；清单版签未强制",
+      "landing": [
+        "engineering_canons.json#drift_fieldset"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_drift_fieldset"
+      ]
+    },
+    {
+      "id": "F6-manifest-receipt",
+      "source": "glann",
+      "title": "清单规范与回执",
+      "status": "partial",
+      "existing_coverage": "存量扩展字段近似四列（field/type/domain/zero_semantics + action）；清单带 contract_version",
+      "gap": "五列未强制填满、容器形状与空数组/空未声明之分未声明、清单未记录适用签发方版本、回执 observed_at 未强制",
+      "landing": [
+        "engineering_canons.json#manifest_columns",
+        "engineering_canons.json#receipt_policy"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_manifest_columns",
+        "canon_guard.py:chk_receipt"
+      ]
+    },
+    {
+      "id": "G7-silent-rewrite",
+      "source": "AI-Film-Studio",
+      "title": "静默改写判定",
+      "status": "new",
+      "existing_coverage": "存量 extended_contract 仅有 action 分层（硬停/降级），无「显式指定 vs 静默改写」判别",
+      "gap": "「未指定被升级静默改写」与「显式改档」在账上同形，归口处置相同",
+      "landing": [
+        "engineering_canons.json#silent_rewrite"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_silent_rewrite"
+      ]
+    },
+    {
+      "id": "H8-criteria-identity",
+      "source": "AI-Film-Studio",
+      "title": "判据三格与版本换代出桶",
+      "status": "partial",
+      "existing_coverage": "存量 param_contract 有 contract_version、judgement_rules 有 canonical_issuer；drift_fieldset 已登记 judgement_version_issuer",
+      "gap": "缺「生效起点 effective_from」；版本换代事件未单独出桶；未规定 rule_id ⊕ version 分组",
+      "landing": [
+        "engineering_canons.json#criteria_identity"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_criteria_identity"
+      ]
+    },
+    {
+      "id": "I9-zero-declared-default",
+      "source": "AI-Film-Studio",
+      "title": "未声明≠默认",
+      "status": "new",
+      "existing_coverage": "存量 zero_semantics 三态管「观测是否到位」，不管「参数是否被显式声明」",
+      "gap": "「未声明」与「显式指定为默认档」被合并为同一取值",
+      "landing": [
+        "engineering_canons.json#zero_declared_vs_default"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_zero_declared_vs_default"
+      ]
+    },
+    {
+      "id": "J10-pending-age",
+      "source": "AI-Film-Studio",
+      "title": "挂起年龄分布",
+      "status": "new",
+      "existing_coverage": "存量 pending_ledger 有挂起列，但无年龄与成本档维度",
+      "gap": "只数挂起条数、不报年龄分布分位；阈值基数口径未定",
+      "landing": [
+        "engineering_canons.json#pending_age_distribution"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_pending_age_distribution"
+      ]
+    },
+    {
+      "id": "K11-overturn-denominator",
+      "source": "AI-Film-Studio",
+      "title": "翻案率分母口径",
+      "status": "new",
+      "existing_coverage": "存量 drift_fieldset.overturn_rate 只规定了按规则版本分组，未规定分母",
+      "gap": "分母未限定为「已人工复核过的拒绝」，未复核挂起项会混入分母",
+      "landing": [
+        "engineering_canons.json#overturn_denominator"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_overturn_denominator"
+      ]
+    },
+    {
+      "id": "L12-dependency-triple",
+      "source": "EigenFlux01",
+      "title": "依赖版本三段",
+      "status": "new",
+      "existing_coverage": "存量 drift_fieldset 已登记 dependency_tool_triple，但未定义三段的判别语义",
+      "gap": "「版本一致」只看来源，不区分已加载版本；只锁路径不锁版本等于没锁",
+      "landing": [
+        "engineering_canons.json#dependency_version_triple",
+        "engineering_canons.json#drift_fieldset"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_dependency_version_triple"
+      ]
+    },
+    {
+      "id": "M13-timebase-triple",
+      "source": "EigenFlux01",
+      "title": "时基三格",
+      "status": "new",
+      "existing_coverage": "存量 drift_fieldset 有 timebase_unit、cache_key_grid 有 unit_dimension / clock_watermark",
+      "gap": "缺「取整时机 rounding_moment」；缺则按时基单位不一致处理",
+      "landing": [
+        "engineering_canons.json#timebase_triple",
+        "engineering_canons.json#drift_fieldset"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_timebase_triple"
+      ]
+    },
+    {
+      "id": "N14-pagination",
+      "source": "砚书",
+      "title": "分页完整性与终止分账",
+      "status": "new",
+      "existing_coverage": "存量 observability_rules 有 UNSET/EMPTY 计量状态，但无分页完整性第三态",
+      "gap": "「声明为真、凭据不可达」被折叠进「已取尽」；缺去重断言与未取尽出口",
+      "landing": [
+        "engineering_canons.json#pagination_completeness"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_pagination_completeness"
+      ]
+    },
+    {
+      "id": "O15-gate-three-numbers",
+      "source": "砚书",
+      "title": "gate 三数同行与跳过发起侧记账",
+      "status": "new",
+      "existing_coverage": "存量 observability_anchors 有指标锚点，但无「分子/分母/显式跳过数」同行约束",
+      "gap": "只报通过率，分母悄悄缩（N/A 占比上升）读数反而变好；跳过在应答侧去重后记",
+      "landing": [
+        "engineering_canons.json#gate_three_numbers"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_gate_three_numbers"
+      ]
+    },
+    {
+      "id": "P16-degrade-product-side",
+      "source": "EigenFlux01",
+      "title": "降级由产物侧判定",
+      "status": "new",
+      "existing_coverage": "存量 stop_degrade_tiers 有降级隔离标记，但「是否走降级」的判定方未约定",
+      "gap": "链路自报路径被当健康信号；降级事件缺签发方与签发时刻",
+      "landing": [
+        "engineering_canons.json#degrade_product_side"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_degrade_product_side"
+      ]
+    },
+    {
+      "id": "Q17-failure-domain-buckets",
+      "source": "LUXIN",
+      "title": "失败域四段分桶",
+      "status": "new",
+      "existing_coverage": "存量无失败域分桶概念",
+      "gap": "四段（前置素材/渲染/编码/合成）各自的漂移项形状未登记；断言集缺「本应不存在」",
+      "landing": [
+        "engineering_canons.json#failure_domain_buckets"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_failure_domain_buckets"
+      ]
+    },
+    {
+      "id": "R18-shared-fault-domain",
+      "source": "巡灯",
+      "title": "共享故障域反例",
+      "status": "new",
+      "existing_coverage": "存量无独立性判定口径（负控夹具只覆盖字段级）",
+      "gap": "共用上游源 / 同体签发方 / 共用去重表三类合并故障域未登记",
+      "landing": [
+        "engineering_canons.json#shared_fault_domain"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_shared_fault_domain"
+      ]
+    },
+    {
+      "id": "S19-portable-evidence",
+      "source": "wwwwwlmr 的废物龙虾",
+      "title": "可携带判据与私有证据出桶",
+      "status": "new",
+      "existing_coverage": "存量有 frozen_baseline digest 等可机检锚点，但无「对外可交 vs 本机自用」两笔账",
+      "gap": "缺失件结论仍混进对外结论分母；环境线绿被当判据线绿",
+      "landing": [
+        "engineering_canons.json#portable_evidence"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_portable_evidence"
+      ]
+    },
+    {
+      "id": "T20-defect-coverage",
+      "source": "本产线（吸纳层覆盖度自检）",
+      "title": "缺陷类覆盖清单",
+      "status": "new",
+      "existing_coverage": "存量无缺陷类覆盖度声明（存量真源以字段/规则为主，不声明检测覆盖）",
+      "gap": "吸纳层自身可能漏检一类缺陷而无处发现",
+      "landing": [
+        "engineering_canons.json#defect_coverage"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_defect_coverage"
+      ]
+    },
+    {
+      "id": "U21-repair-matrix",
+      "source": "本产线（吸纳层覆盖度自检）",
+      "title": "工序 × 缺陷覆盖矩阵",
+      "status": "new",
+      "existing_coverage": "存量无跨工序覆盖矩阵；交付侧检测链为此轮新增",
+      "gap": "某道工序可能整体无检测点（空列）而不报错",
+      "landing": [
+        "engineering_canons.json#repair_matrix"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_repair_matrix"
+      ]
+    },
+    {
+      "id": "X1-restoration-chain-order",
+      "source": "Zoe Talmadge（EigenFlux / LTX 2.5 Restore·Refine）",
+      "title": "画质修复链路顺序不可交换 + 生成式重建声明",
+      "status": "new",
+      "existing_coverage": "存量有工序与参数合同（param_contract）、失败域四段分桶（failure_domain_buckets 已含 render/encode），但无「工序顺序」与「修复类产物须标注为重建」口径",
+      "gap": "顺序倒置（先修细节后修复）、进 guide 前去噪/锐化、修复产物被当素材原貌、增益超限无警告、采样器族与分块融合误配均无判据",
+      "landing": [
+        "engineering_canons.json#restoration_chain_order",
+        "docs/产线规范.md#工程口径吸纳层v1.5.0"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_restoration_chain_order"
+      ]
+    },
+    {
+      "id": "Y1-tile-seam-integrity",
+      "source": "Zoe Talmadge（EigenFlux / LTX 2.5 分块融合）",
+      "title": "分块产物的接缝/闪烁「本应不存在」断言",
+      "status": "new",
+      "existing_coverage": "存量 S-failure-domain 要求断言集至少留一条「本应不存在」，但没有落到分块产物这一具体工序，也无训练桶尺寸约束",
+      "gap": "以「渲染无报错」冒充产物合格、块尺寸越桶编造纹理、guide 用空间 tiled 编码把网格印进条件，均无判据",
+      "landing": [
+        "engineering_canons.json#tile_seam_integrity",
+        "docs/产线规范.md#工程口径吸纳层v1.5.0"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_tile_seam_integrity"
+      ]
+    },
+    {
+      "id": "Z1-asr-segment-silence",
+      "source": "Noteknot / Tiki（EigenFlux 长视频 ASR 三步法）",
+      "title": "分段转写静默失败三数与句边界完整性",
+      "status": "new",
+      "existing_coverage": "存量有 gate 三数（分子/分母/显式跳过）、分页第三态、时基三格，但转写（ASR）工序的静默失败与句截断无专条判据",
+      "gap": "只报分段条数不报覆盖三数、边界不可回溯仍声明完整、句尾截断无断言、双引擎共用解码上游记 independent，均无判据",
+      "landing": [
+        "engineering_canons.json#asr_segment_silence",
+        "docs/产线规范.md#工程口径吸纳层v1.5.0"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_asr_segment_silence"
+      ]
+    },
+    {
+      "id": "AA-degrade-double-write",
+      "source": "AI-Film-Studio",
+      "title": "降级态双写（命名层 + 账本层）与账本缺失硬停",
+      "status": "partial",
+      "existing_coverage": "cache_key_grid 第五格已约定『降级命名不可覆盖正常命名』（命名层）；降级概念已入 stop_degrade_tiers",
+      "gap": "降级态只要求一处可见，未要求命名层与账本层双写同源；账本字段缺失时缺硬停判定，存在按命名层反推降级态的回落后门",
+      "landing": [
+        "engineering_canons.json#degrade_double_write"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_degrade_double_write"
+      ]
+    },
+    {
+      "id": "AB-version-overlap-ambiguous",
+      "source": "AI-Film-Studio",
+      "title": "版本交叠判 AMBIGUOUS 交人工",
+      "status": "new",
+      "existing_coverage": "criteria_identity 已要求判据三格（version / issuer / effective_from）",
+      "gap": "两版在交叠区间同时生效时无消歧规则；缺少对『后签发者优先』等自动消歧的显式禁止项",
+      "landing": [
+        "engineering_canons.json#version_overlap_ambiguous"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_version_overlap_ambiguous"
+      ]
+    },
+    {
+      "id": "AC-loaded-version-attestation",
+      "source": "布鲁斯 Bruce",
+      "title": "已加载版本由运行侧按产物指纹反推（带 load_at）",
+      "status": "partial",
+      "existing_coverage": "dependency_version_triple 已有『已加载版本』段",
+      "gap": "未约定该段的判定方与指纹形态：可被签发方自报填账，且加载指纹无时间锚、先后不可判",
+      "landing": [
+        "engineering_canons.json#loaded_version_attestation"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_loaded_version_attestation"
+      ]
+    },
+    {
+      "id": "AD-impl-suspect-branch",
+      "source": "CatKing_Muse",
+      "title": "IMPL_SUSPECT 第三分支与 UNABLE_TO_COMPARE 联签",
+      "status": "new",
+      "existing_coverage": "canonicalization.json 有规范化器签名；cache_key_grid 第一格含 canonicalization_rule_version",
+      "gap": "摘要不一致且版本一致时无第三分支，会被并入行集分歧；UNABLE_TO_COMPARE 行缺联签要求（消费方自签即可入账）",
+      "landing": [
+        "engineering_canons.json#impl_suspect_branch"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_impl_suspect_branch"
+      ]
+    },
+    {
+      "id": "AE-cross-shot-anchor-consistency",
+      "source": "分镜与视频制作助手（WorkBuddy）",
+      "title": "跨镜头一致性：固定锚点 + 硬/软特征解耦 + 分级回滚与回滚前快照校验",
+      "status": "new",
+      "existing_coverage": "存量修复/工序层口径（X 修复链路顺序、Y 分块接缝）覆盖单条产物的工序顺序与接缝，无跨镜头/跨条目的漂移控制口径；param_contract 无锚点与特征分档容差概念",
+      "gap": "顺序比对被当作基准（无固定锚点）、硬软特征共用单一容差导致过度滤波、回滚范围不分级、回滚前不检快照存在导致静默失败",
+      "landing": [
+        "engineering_canons.json#cross_shot_anchor_consistency"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_cross_shot_anchor_consistency"
+      ]
+    },
+    {
+      "id": "AF-truncation-threshold-indeterminate",
+      "source": "污鱼的agent",
+      "title": "截断阈值对齐判不定 + 二次投票跨周期冷读",
+      "status": "new",
+      "existing_coverage": "存量有 zero_semantics 三态（CONFIRMED_ZERO/UNOBSERVED/NOT_APPLICABLE）与 §V 缺陷类『未观测当零』，无『读数恰等于截断阈值』的边界判据；无二次投票故障域隔离口径",
+      "gap": "长度恰等于阈值时被当作合法读数直接判过；第二票在同周期同路径重读，故障域未隔离，两票同错仍判过",
+      "landing": [
+        "engineering_canons.json#truncation_threshold_indeterminate"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_truncation_threshold_indeterminate"
+      ]
+    },
+    {
+      "id": "AG-producer-set-rank-conflict",
+      "source": "布鲁斯 Bruce",
+      "title": "来源计数按唯一生产者集合 + 同源异内容判冲突 + must-fail 负向用例",
+      "status": "new",
+      "existing_coverage": "存量 §R 共享故障域反例、§T 私有证据出桶涉及来源独立性；§E 漂移字段与清单计数以字段为单位，无『按生产者集合基数计来源』口径，也无『同源异内容=冲突』判定",
+      "gap": "来源数按消息量统计（多副本冒充多来源）；同源异内容被静默去重（掩盖传输/渲染失败）；两规则无 must-fail 负例与显式事件码",
+      "landing": [
+        "engineering_canons.json#producer_set_rank_conflict"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_producer_set_rank_conflict"
+      ]
+    },
+    {
+      "id": "AH-evaluator-computed-digest",
+      "source": "OpenClaw量化助手",
+      "title": "回执摘要哈希评估者计算结果（不哈希声称期望值）",
+      "status": "new",
+      "existing_coverage": "存量 §AC 已加载版本由运行侧按产物指纹反推、§F 回执策略要求 observed_at；缺『回执摘要的输入域』口径——现有回执未规定摘要哈希的是谁的计算结果",
+      "gap": "回执摘要哈希的是被检方声称的期望值，回执不可独立复算，验证退化为信任声明方",
+      "landing": [
+        "engineering_canons.json#evaluator_computed_digest"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_evaluator_computed_digest"
+      ]
+    },
+    {
+      "id": "AI-unattested-state",
+      "source": "WorkBuddy · 内容研究助手",
+      "title": "UNATTESTED 第五态 + 证据源因果/行政独立 + 外部签名时间戳",
+      "status": "new",
+      "existing_coverage": "存量 §T 共享故障域反例、§U 私有证据出桶、§K 未声明≠默认；缺『中间态』本身与其证据独立性的枚举，缺第五态，时间戳仍允许墙钟自断言",
+      "gap": "中间态被静默二值坍缩；校验方与被校验方同源即可自证；UNATTESTED 被折叠；时间戳用墙钟自断言",
+      "landing": [
+        "engineering_canons.json#unattested_state"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_unattested_state"
+      ]
+    },
+    {
+      "id": "AJ-semantic-window-default-drift",
+      "source": "A股短线研究助手（WorkBuddy）",
+      "title": "语义窗口：默认值静默漂移 + 展开前内容寻址摘要 + 穷尽性三元绑定",
+      "status": "new",
+      "existing_coverage": "存量 §B 缓存键漂移五格有 input_snapshot_digest 维、§G 静默改写管参数档位、§E 漂移字段集；但快照比对仅到参数哈希层，未覆盖『上游默认值展开』这一不在参数表内的漂移维度",
+      "gap": "参数哈希不变即判快照等价（漏掉默认值展开带来的语义窗口变化）；无展开前默认值的内容寻址摘要；穷尽性结论未绑定 as_of 与规则版本，陈旧验证会被继承",
+      "landing": [
+        "engineering_canons.json#semantic_window_default_drift"
+      ],
+      "enforced_by": [
+        "canon_guard.py:chk_semantic_window_default_drift"
+      ]
+    },
+    {
+      "id": "AK-hyperframes-design-bans",
+      "source": "pbakaus/impeccable（GitHub，Apache-2.0，本地 clone commit 4adabaf2c2bd3148f162d35aaa6acd7025343649）",
+      "title": "画面包装 HTML 禁用项登记制 + 正则自证 + 只读扫描对账",
+      "status": "new",
+      "existing_coverage": "产线规范 v1.7.0 只约束编码/字幕/素材侧；HyperFrames 画面包装 HTML 无任何禁用项口径，母版与单镜可任意引入装饰性反模式",
+      "gap": "反模式已在存量单镜中实际出现：渐变文字 18 处、>1px 侧边条纹 66 处、零偏移色晕 7 处、玻璃拟态 7 处、字符代图标 2 处、系统显示字体 1 处；此前无登记、无闸门、无欠账清单",
+      "landing": "config/engineering_canons.json :: hyperframes_design_bans；scripts/canon_guard.py :: CHECKS AK；docs/产线规范.md 设计口径吸纳层（v1.8.0）",
+      "enforced_by": "canon_guard.py :: chk_hyperframes_design_bans（14 条禁用项正则自证 + 只读扫描对账；母版阻断制 / 单镜登记制）"
+    },
+    {
+      "id": "AL-hyperframes-type-rhythm-floor",
+      "source": "pbakaus/impeccable（GitHub，Apache-2.0，本地 clone commit 4adabaf2c2bd3148f162d35aaa6acd7025343649）",
+      "title": "画面文字节奏地板（五角色字号 / 步进 ≥1.25 / 字距下限 / 平台安全区）",
+      "status": "new",
+      "existing_coverage": "v1.7.0 无画面排版口径；单镜字号、行高、字距全凭手感，曾出现为塞进一行而收紧字距",
+      "gap": "上游 typeset.md 的 1rem 地板与 45–75ch 行宽是桌面阅读口径，竖屏 1080×1920、观看 30–40cm、停留 1.2s 需重新折算，原样照搬会得到不可执行的判据",
+      "landing": "config/engineering_canons.json :: hyperframes_type_rhythm_floor（含 local_derivation 折算依据）；scripts/canon_guard.py :: CHECKS AL",
+      "enforced_by": "canon_guard.py :: chk_hyperframes_type_rhythm_floor（角色集/地板/步进/字距/深底补偿/安全区逐项断言）"
+    },
+    {
+      "id": "AM-hyperframes-motion-authorship",
+      "source": "pbakaus/impeccable（GitHub，Apache-2.0，本地 clone commit 4adabaf2c2bd3148f162d35aaa6acd7025343649）",
+      "title": "画面动效署名与可达性（一镜一署名时刻 / 缓动分档 / reduced-motion）",
+      "status": "new",
+      "existing_coverage": "v1.7.0 无 GSAP 动效口径；动效数量、缓动族、可动属性、脚本失败兜底均无约束",
+      "gap": "单镜常堆叠标题上浮 + 数字计数 + 卡片依次弹入，动 layout 属性掉帧、脚本报错即白屏、无 prefers-reduced-motion 降级",
+      "landing": "config/engineering_canons.json :: hyperframes_motion_authorship；scripts/canon_guard.py :: CHECKS AM",
+      "enforced_by": "canon_guard.py :: chk_hyperframes_motion_authorship（署名时刻上限/缓动禁用族/四档时长不重叠/默认可见/可动属性白名单/reduced-motion）"
+    },
+    {
+      "id": "AN-hyperframes-color-depth-roles",
+      "source": "pbakaus/impeccable（GitHub，Apache-2.0，本地 clone commit 4adabaf2c2bd3148f162d35aaa6acd7025343649）",
+      "title": "画面颜色角色与深度分层（WCAG AA 逐帧对比 / 禁零偏移色晕与硬偏移阴影）",
+      "status": "new",
+      "existing_coverage": "v1.7.0 无画面色彩口径；对比度、语义色分工、渐变使用边界均未登记",
+      "gap": "零偏移色晕与硬偏移阴影被当作「科技感/立体感」使用（单镜 7 处、母版 2 处），文字对比在压缩外发后进一步劣化",
+      "landing": "config/engineering_canons.json :: hyperframes_color_depth_roles；scripts/canon_guard.py :: CHECKS AN",
+      "enforced_by": "canon_guard.py :: chk_hyperframes_color_depth_roles（四色角色/对比地板逐帧/OKLCH 优先/深度四轴与禁用手段/渐变与强调色预算）"
+    },
+    {
+      "id": "AO-param-provenance-incomparable",
+      "source": "DeepSeek Harness（EigenFlux 私信对拍 2026-10-02）",
+      "title": "参数溯源三态独立 + absent 与显式默认判不可比 + 处置档按归因能力",
+      "status": "new",
+      "existing_coverage": "存量 K 只约束『未声明 ≠ 显式默认』两取值不得合并；I 只约束静默改写升硬停；absent 作为独立状态、跨状态不可比、unknown 处置边界均无口径",
+      "gap": "absent 被当作取值参与数值比对时，absent-run 与显式默认-run 会被静默合并，行为 diff 归因错误",
+      "landing": "config/engineering_canons.json :: param_provenance_incomparable；scripts/canon_guard.py :: CHECKS AO；docs/产线规范.md 工程口径吸纳层（v1.9.0）",
+      "enforced_by": "canon_guard.py :: chk_param_provenance_incomparable（三态集合 + absent_is_value=false + INCOMPARABLE + 处置档档位）"
+    },
+    {
+      "id": "AP-normalization-act-ledger",
+      "source": "Marvis（便利贴）（EigenFlux 私信对拍 2026-10-02）",
+      "title": "漂移形态→归一动作成表 + 归一动作落账 + 三版本随键 + 表示四态不互归",
+      "status": "new",
+      "existing_coverage": "存量 B 仅登记缓存键五格；AJ 只管展开前默认值摘要；『归一动作本身落账』与随键三版本（别名表/契约/canonicalizer）无口径",
+      "gap": "归一动作不落账时，同一语义的两次调用与两次不同语义的调用不可区分；表示四态互归会吞掉形态差异",
+      "landing": "config/engineering_canons.json :: normalization_act_ledger；scripts/canon_guard.py :: CHECKS AP；docs/产线规范.md 工程口径吸纳层（v1.9.0）",
+      "enforced_by": "canon_guard.py :: chk_normalization_act_ledger（5 形态逐对 + ledger_entry/ledger_key_versions + 四态集合 + REJECT 判定）"
+    },
+    {
+      "id": "AQ-snapshot-lifetime-alignment",
+      "source": "Yugo（EigenFlux 私信对拍 2026-10-02）",
+      "title": "快照签发方与自签不计证据 + 只认 as_of 读数 + 留存期与回收前提同源",
+      "status": "new",
+      "existing_coverage": "存量 F 管回执观测时刻、AJ 管 per_as_of 三元组、AI 管证据源独立；快照留存期与回收前提同源（寿命对齐）无口径",
+      "gap": "快照留存期短于回收前提判定窗口时，锚在用到之前被回收而账上一切正常，属不可见缺陷",
+      "landing": "config/engineering_canons.json :: snapshot_lifetime_alignment；scripts/canon_guard.py :: CHECKS AQ；docs/产线规范.md 工程口径吸纳层（v1.9.0）",
+      "enforced_by": "canon_guard.py :: chk_snapshot_lifetime_alignment（签发方必填 + 自签 NOT_EVIDENCE + as_of_only + 同源留存 + REJECT）"
+    },
+    {
+      "id": "AS-verify-anchor-outside-chain",
+      "source": "AI-Film-Studio（EigenFlux 2026-10-03 广播）",
+      "title": "验证锚点落链外 + 发布期冻结清单随产物落盘 + 恢复侧按差集判定 + 内容段/结构段分离",
+      "status": "new",
+      "existing_coverage": "存量 F 管清单五列与回执、U 管可携带判据最小三件、AI 管证据源双重独立；『验证锚点与被检数据同侧导致静默误过』及发布期冻结期望清单与产物同批落盘无口径",
+      "gap": "锚点与待检数据同源自证时校验静默判过（silent false pass），缺陷在账面上不可见；内容段与结构段混合后套用转义机制会破坏解析器",
+      "landing": "config/engineering_canons.json :: verify_anchor_outside_chain；scripts/canon_guard.py :: CHECKS AS；docs/产线规范.md 工程口径吸纳层（v1.10.0）",
+      "enforced_by": "canon_guard.py :: chk_verify_anchor_outside_chain（锚点异侧 + 冻结且随产物落盘 + 差集判定 + 自证 NOT_EVIDENCE + 段分离）"
+    },
+    {
+      "id": "AT-expectation-set-signing-event",
+      "source": "AI-Film-Studio（EigenFlux 2026-10-03 广播）",
+      "title": "期望集非常量 + 变更作版本化签发事件入账 + 取数路径连同内容哈希进签名域冻结",
+      "status": "new",
+      "existing_coverage": "存量 J 管判据身份三格与版本换代出桶、AP 管归一动作落账、AJ 管语义窗口默认值漂移；『期望集本身会变、其变更须版本化签发入账』与『取数路径进签名域冻结』无口径",
+      "gap": "强制键升级 / 取数来源静默替换使期望集在运行中变化，校验侧一切正常，形成隐式标准漂移",
+      "landing": "config/engineering_canons.json :: expectation_set_signing_event；scripts/canon_guard.py :: CHECKS AT；docs/产线规范.md 工程口径吸纳层（v1.10.0）",
+      "enforced_by": "canon_guard.py :: chk_expectation_set_signing_event（非常量 + 签发事件 + 三字段账本 + 静默变更 REJECT + 路径绑定 path/content_hash）"
+    }
+  ],
+  "pending_ledger": {
+    "version": "1.0.0",
+    "source": "Hermes721",
+    "rule": "挂起项必须记『挂起原因落到哪条约束』，不允许只写 PENDING",
+    "columns": [
+      "suspension_id",
+      "subject",
+      "pending_reason",
+      "constraint_binding",
+      "discovered_at",
+      "observed_at",
+      "disposition",
+      "change_trigger"
+    ],
+    "constraint_binding": {
+      "required_dimensions": [
+        "rule_id",
+        "platform",
+        "field"
+      ],
+      "empty_binding_verdict": "UNDECLARED",
+      "rule": "三者缺一即视为『挂起原因未落约束』，不得只写 PENDING"
+    },
+    "column_separation": {
+      "must_be_separate": [
+        "disposition",
+        "change_trigger"
+      ],
+      "merged_verdict": "REJECT",
+      "rule": "『发现之后做什么』（处置）与『怎么发现的』（变更触发）必须分列，不可合并"
+    },
+    "issuer_scope": {
+      "field": "issuer_same_org_as_deliverer",
+      "type": "bool",
+      "rule": "判据签发者必须增加一位布尔值：签发方与交付方是否同一组织",
+      "unknown_handling": "缺失即 UNKNOWN，不得默认 true，也不得默认 false",
+      "effect": "同一组织=true 的判据在冻结窗内不进自动通过率分母（与 judgement_rules 正交对口径一致）"
+    }
+  },
+  "cache_key_grid": {
+    "version": "1.0.0",
+    "source": "EigenFlux01",
+    "rule": "凡是参与缓存键或命中判定的量，必须按五格登记；每格必须记五维",
+    "five_dimensions": [
+      "field_name",
+      "type",
+      "domain",
+      "drift_trigger",
+      "consequence"
+    ],
+    "consequence_enum": [
+      "silent_stale_hit",
+      "explicit_failure",
+      "degraded_naming_no_overwrite"
+    ],
+    "facets": [
+      {
+        "id": "canonicalization_rule_version",
+        "label": "规范化规则版本",
+        "field_name": "canonicalizer_signature",
+        "type": "string",
+        "domain": "枚举（本产线由 canonicalization.json 签发）",
+        "drift_trigger": "normalize_point 六步枚举或顺序变更",
+        "consequence": "silent_stale_hit",
+        "issuer_version_required": true,
+        "current_source": "config/canonicalization.json#signature"
+      },
+      {
+        "id": "input_snapshot_digest",
+        "label": "输入快照摘要",
+        "field_name": "frozen_baseline_digest",
+        "type": "string",
+        "domain": "hex（sha256）",
+        "drift_trigger": "锁定文件或固定输入摘要变化",
+        "consequence": "explicit_failure",
+        "issuer_version_required": true,
+        "current_source": "config/frozen_baseline.json#digest"
+      },
+      {
+        "id": "clock_watermark",
+        "label": "时钟与水位",
+        "field_name": "clock_watermark",
+        "type": "object",
+        "domain": "issuer: string / offset: int(秒，可负) / as_of: ISO8601 本地时间",
+        "drift_trigger": "签发方时钟偏移、offset 变更或 as_of 陈旧",
+        "consequence": "explicit_failure",
+        "issuer_version_required": true,
+        "subfields": [
+          "issuer",
+          "offset",
+          "as_of"
+        ]
+      },
+      {
+        "id": "unit_dimension",
+        "label": "单位与量纲",
+        "field_name": "unit_dimension",
+        "type": "string",
+        "domain": "枚举（如 秒 / 帧 / px / Hz / GiB）",
+        "drift_trigger": "同名字段单位或量纲变更（如秒↔帧、px↔比例）",
+        "consequence": "explicit_failure",
+        "issuer_version_required": true,
+        "current_source": "config/param_contract.json#tolerance_policy（单位须显式声明）"
+      },
+      {
+        "id": "invalidation",
+        "label": "失效条件",
+        "field_name": "invalidation",
+        "type": "object",
+        "domain": "ttl: number / swr_window: number / negative_ttl: number",
+        "drift_trigger": "ttl / swr_window / negative_ttl 取值变更",
+        "consequence": "degraded_naming_no_overwrite",
+        "issuer_version_required": false,
+        "subfields": [
+          "ttl",
+          "swr_window",
+          "negative_ttl"
+        ],
+        "naming_rule": "第五格必须让降级产物在命名上不可覆盖：降级产物文件名须带降级标记与失效水位，禁止与正常结果同名（禁止原地覆盖）"
+      }
+    ],
+    "key_policy": {
+      "first_four_must_carry_issuer_and_version": true,
+      "rule": "前四格只要参与缓存键或命中判定，必须带签发方与版本",
+      "fifth_must_make_degraded_uncollidable": true
+    }
+  },
+  "stop_degrade_tiers": {
+    "version": "1.0.0",
+    "source": "废物龙虾",
+    "hardstop_classes": [
+      {
+        "id": "denominator_definition",
+        "label": "改变分母定义",
+        "examples": [
+          "权重",
+          "去重规则",
+          "终止理由",
+          "声明基数"
+        ]
+      },
+      {
+        "id": "identity_or_scope",
+        "label": "改变身份或范围",
+        "examples": [
+          "分区数",
+          "命名空间",
+          "时间窗口边界"
+        ]
+      },
+      {
+        "id": "failure_definition",
+        "label": "改变失败判定本身",
+        "examples": [
+          "阈值",
+          "枚举值",
+          "原因码集合"
+        ]
+      },
+      {
+        "id": "external_dependency",
+        "label": "外部依赖",
+        "examples": [
+          "版本",
+          "可用性"
+        ]
+      }
+    ],
+    "degrade_classes": [
+      {
+        "id": "performance_concurrency",
+        "label": "性能与并发类"
+      },
+      {
+        "id": "sampling_batch",
+        "label": "采样率与批量大小"
+      },
+      {
+        "id": "presentation_order",
+        "label": "纯展示与排序参数"
+      }
+    ],
+    "degrade_isolation": {
+      "marker": "degraded",
+      "rule": "降级期间结果必须单独标记，不与新参数结果混统计",
+      "forbidden": "并入同一自动通过率分母 / 与正常结果合并求率",
+      "must_carry": [
+        "reason_code",
+        "source"
+      ]
+    },
+    "fallback_marker": {
+      "token": "[fallback-applied]",
+      "rule": "所有回落必须带『我已回落』显式标记",
+      "marker_itself_not_reversible": true,
+      "note": "标记自身不可被回落掉：二次回落不得清除或覆盖既有标记，只能追加"
+    },
+    "tier_switch_rule": "命中硬停四类之一 → 硬停（阻断，exit!=0）；属降级三类之一 → 降级并隔离标记，禁止静默回退"
+  },
+  "zero_semantics": {
+    "version": "1.0.0",
+    "source": "LUXIN",
+    "states": [
+      {
+        "id": "CONFIRMED_ZERO",
+        "label": "确认零",
+        "meaning": "观测到位且值确为 0"
+      },
+      {
+        "id": "UNOBSERVED",
+        "label": "未观测",
+        "meaning": "没拿到观测，不得读作 0，也不得读作通过"
+      },
+      {
+        "id": "NOT_APPLICABLE",
+        "label": "不适用",
+        "meaning": "该字段在本次链路中不适用，须显式声明理由"
+      }
+    ],
+    "must_declare_per_field": true,
+    "audio_stream_missing": {
+      "verdict": "FAIL",
+      "rule": "音频流数缺失按失败处理而非按 0",
+      "reason": "无音轨与静音常共用分支，会静默产出无声视频仍过检",
+      "distinguish": "无音轨（未观测/缺失）必须与静音（确认零音量）分开判定"
+    },
+    "assertion_binding": {
+      "actions": [
+        "hardstop",
+        "degrade",
+        "record_only"
+      ],
+      "rule": "每条断言必须绑显式失败动作（硬停/降级/仅记录），没绑动作的断言等于注释",
+      "unbound_verdict": "REJECT_CONFIG",
+      "note": "仅绑定动作的断言才允许进入配置面；未绑定者不得进入清单"
+    }
+  },
+  "drift_fieldset": {
+    "version": "1.0.0",
+    "source": "AI-Film-Studio",
+    "easiest_drift_fields": [
+      {
+        "id": "sampler_scheduler_identity",
+        "label": "采样器与调度器标识",
+        "pipeline_mapping": "param_contract#sampler_steps_cfg_seed"
+      },
+      {
+        "id": "weight_hash",
+        "label": "权重哈希",
+        "pipeline_mapping": "param_contract#model_weight_version"
+      },
+      {
+        "id": "precision_quantization",
+        "label": "精度与量化档",
+        "pipeline_mapping": "param_contract#precision_mode"
+      },
+      {
+        "id": "resolution_chunk_granularity",
+        "label": "分辨率与分块粒度",
+        "pipeline_mapping": "param_contract#resolution_aspect, extended#resolution_short_edge"
+      },
+      {
+        "id": "text_normalizer_version",
+        "label": "文本规范化器版本",
+        "pipeline_mapping": "canonicalization.json#signature, extended#canonicalizer_version"
+      },
+      {
+        "id": "timebase_framerate",
+        "label": "时间基与帧率",
+        "pipeline_mapping": "param_contract#fps, extended#render_window_frames"
+      },
+      {
+        "id": "generation_params_loadpoint",
+        "label": "生成参数含加载点",
+        "pipeline_mapping": "param_contract#sampler_steps_cfg_seed, extended#seed"
+      },
+      {
+        "id": "preprocess_normalize",
+        "label": "预处理与归一化",
+        "pipeline_mapping": "normalize_point 六步枚举"
+      },
+      {
+        "id": "prompt_template_version",
+        "label": "提示词模板版本",
+        "pipeline_mapping": "产线叙述模板/旁白模板（story 配置）"
+      },
+      {
+        "id": "dependency_tool_triple",
+        "label": "依赖与工具版本三元组",
+        "pipeline_mapping": "config/toolchain_lock.json#tools"
+      },
+      {
+        "id": "random_source_chain",
+        "label": "随机源派生链",
+        "pipeline_mapping": "extended#seed（可复算性）"
+      },
+      {
+        "id": "judgement_version_issuer",
+        "label": "判据版本及签发方",
+        "pipeline_mapping": "param_contract#contract_version + judgement_rules#canonical_issuer"
+      },
+      {
+        "id": "path_naming_template",
+        "label": "路径与命名模板",
+        "pipeline_mapping": "render/post_process 产物命名模板"
+      },
+      {
+        "id": "timebase_unit",
+        "label": "时基单位",
+        "pipeline_mapping": "cache_key_grid#unit_dimension"
+      },
+      {
+        "id": "timebase_rounding_moment",
+        "label": "时基取整时机",
+        "pipeline_mapping": "engineering_canons#timebase_triple"
+      }
+    ],
+    "hardstop_triggers": [
+      {
+        "id": "field_missing_or_unknown_source",
+        "label": "字段缺失或来源不明"
+      },
+      {
+        "id": "issuer_missing",
+        "label": "判据签发方缺失"
+      },
+      {
+        "id": "timebase_unit_inconsistent",
+        "label": "时基单位不一致"
+      }
+    ],
+    "degrade_triggers": [
+      {
+        "id": "param_value_changed_traceable",
+        "label": "参数值变化但来源可追"
+      },
+      {
+        "id": "dependency_set_changed_recomputable",
+        "label": "依赖集变化但可复算"
+      },
+      {
+        "id": "noncritical_default_changed",
+        "label": "非关键路径默认值变化"
+      }
+    ],
+    "degrade_must_carry": [
+      "reason_code",
+      "source"
+    ],
+    "degrade_silent_rollback_forbidden": true,
+    "reason_codes": [
+      "PARAM_VALUE_CHANGED_TRACEABLE",
+      "DEPENDENCY_CHANGED_RECOMPUTABLE",
+      "NONCRITICAL_DEFAULT_CHANGED",
+      "PERF_CONCURRENCY_LIMIT",
+      "SAMPLING_BATCH_LIMIT",
+      "PRESENTATION_ORDER_ONLY"
+    ],
+    "overturn_rate": {
+      "unit": "每条规则一行",
+      "grouping": "按规则版本分组",
+      "group_fields": [
+        "rule_id",
+        "rule_version"
+      ],
+      "no_cross_version_sum": true,
+      "fields": [
+        "rule_id",
+        "rule_version",
+        "overturns",
+        "evaluations",
+        "rate",
+        "group_id"
+      ],
+      "rule": "翻案率按『每条规则一行』记，且必须按规则版本分组、不跨版本求和"
+    },
+    "manifest_versioning": {
+      "requires_version": true,
+      "requires_issuer_version": true,
+      "rule": "清单本身须带版本号与签发方"
+    }
+  },
+  "manifest_columns": {
+    "version": "1.0.0",
+    "source": "glann",
+    "columns": [
+      "field_name",
+      "type",
+      "domain",
+      "zero_semantics",
+      "disposition"
+    ],
+    "must_fill_all": true,
+    "missing_column_verdict": "UNDECLARED",
+    "column_rules": {
+      "field_name": "以服务端签发方为准",
+      "type": "含容器形状；『空数组合法』与『空等价于未声明』必须区分",
+      "domain": "闭集给全集，开集给边界算例",
+      "zero_semantics": "零值三态之一（CONFIRMED_ZERO / UNOBSERVED / NOT_APPLICABLE）",
+      "disposition": "绑定失败动作（hardstop / degrade / record_only），未绑定的不进配置面"
+    },
+    "container_shape_rule": "字段类型必须声明容器形状（scalar / list / object 及其元素类型），并显式说明空数组是合法值还是等价于未声明"
+  },
+  "receipt_policy": {
+    "version": "1.0.0",
+    "source": "glann",
+    "observed_at_required": true,
+    "rule": "回执必须带观测时刻，否则『还剩 N 个』会被当成当前值参与下一轮计算",
+    "fields": [
+      "observed_at",
+      "remaining_count",
+      "issuer",
+      "issuer_version"
+    ],
+    "stale_handling": "缺 observed_at 的回执判 UNDECLARED，不得参与下一轮计算"
+  },
+  "silent_rewrite": {
+    "version": "1.0.0",
+    "source": "AI-Film-Studio + 杰瑞的马维斯（对拍）",
+    "rule": "同一字段取值变化，归口判据不是『改了什么』而是『是不是被静默改写』：调用方显式指定 → 可降级；未指定而被升级/默认值静默改写 → 升格硬停",
+    "field_scope": [
+      "sampler_scheduler_identity",
+      "precision_quantization",
+      "text_normalizer_version"
+    ],
+    "explicit_change": {
+      "verdict": "degrade",
+      "must_carry": [
+        "reason_code",
+        "source"
+      ]
+    },
+    "silent_rewrite": {
+      "verdict": "hardstop",
+      "reason": "未指定被改写后产物可复现性断链，而账面仍显示同一参数集"
+    },
+    "detect": "对比『调用方显式指定值集合』与『实际生效值』：实际生效值存在、而显式集合中无对应键 → 判静默改写",
+    "negative_case": "把 precision_quantization 的显式值删除、由默认档补齐（实际生效值∈枚举但不在显式集合）→ 必须判红（升 hardstop），不得只记降级"
+  },
+  "criteria_identity": {
+    "version": "1.0.0",
+    "source": "AI-Film-Studio + 杰瑞的马维斯（对拍）",
+    "rule": "闸门判据必须带三格：版本 version + 签发方 issuer + 生效起点 effective_from",
+    "required_triple": [
+      "version",
+      "issuer",
+      "effective_from"
+    ],
+    "missing_effective_from_verdict": "UNCOMPARABLE_ACROSS_CYCLES",
+    "version_generation_event": {
+      "rule": "版本换代本身记一条独立事件、单独出桶，不并进漂移计数",
+      "reason": "否则一次规则换代会让当期漂移读数整体跳一次，形似系统性劣化",
+      "bucket": "version_generation",
+      "excluded_from": [
+        "drift_count"
+      ]
+    },
+    "grouping": "按 rule_id ⊕ version 分组：rule_id 作分组主键、version 作内层维度，跨版本不求和；要跨版本比较时只出『版本切换点前后两段』",
+    "negative_case": "判据只有 rule_id+version 而无 effective_from → 必须判红（UNCOMPARABLE_ACROSS_CYCLES）；版本换代事件被并进 drift_count → 必须判红"
+  },
+  "zero_declared_vs_default": {
+    "version": "1.0.0",
+    "source": "AI-Film-Studio + 杰瑞的马维斯（对拍）",
+    "rule": "『未声明』与『显式指定为默认档』是两个取值，不允许合并",
+    "states": [
+      "UNDECLARED",
+      "EXPLICIT_DEFAULT"
+    ],
+    "merged_verdict": "REJECT",
+    "reason": "合并后『升级把未指定静默改写为另一档』这一档就查不出来",
+    "orthogonal_to": "zero_semantics（零值三态管观测是否到位；本口径管参数是否被显式声明）",
+    "negative_case": "把 UNDECLARED 与 EXPLICIT_DEFAULT 折叠为同一枚举值 → 必须判红"
+  },
+  "pending_age_distribution": {
+    "version": "1.0.0",
+    "source": "AI-Film-Studio + 杰瑞的马维斯（对拍）",
+    "rule": "每条挂起项必须绑『挂起起始时刻 + 重跑成本档』，看年龄分布而非只数条数",
+    "required_fields": [
+      "suspension_started_at",
+      "rerun_cost_tier"
+    ],
+    "report": {
+      "quantiles": [
+        "P50",
+        "P90",
+        "P99"
+      ]
+    },
+    "threshold_base": {
+      "denominator": "本轮新增挂起数",
+      "stock_bucket": "存量挂起单独出桶，不进阈值分母"
+    },
+    "reason": "存量随时间自然老化，用存量做分母会让读数随积压变老而自动变好，把积压这个真实问题洗掉",
+    "negative_case": "年龄分布改用存量挂起做分母、不单列存量桶 → 必须判红"
+  },
+  "overturn_denominator": {
+    "version": "1.0.0",
+    "source": "AI-Film-Studio + 杰瑞的马维斯（对拍）",
+    "rule": "翻案率分母只算『已人工复核过的拒绝』",
+    "denominator": "human_reviewed_rejections",
+    "unreviewed_bucket": "未复核的挂起项单独出桶、不进分母",
+    "reason": "否则翻案率会随积压量漂移，积压越多读数越健康",
+    "negative_case": "分母含未复核挂起项（或使用全部拒绝）→ 必须判红"
+  },
+  "dependency_version_triple": {
+    "version": "1.0.0",
+    "source": "EigenFlux01",
+    "rule": "『版本』必须拆成可判别的三段：来源版本 + 内容摘要 + 已加载版本",
+    "segments": [
+      "source_version",
+      "content_hash",
+      "loaded_version"
+    ],
+    "danger": "三者只对得上两段时最危险——来源变了但实际加载的还是旧的，账面上『版本一致』，产出口径已不同",
+    "extra_rule": "只锁路径不锁版本等于没锁：来源只是寻址，不构成判据",
+    "negative_case": "只登记 source_version 与 content_hash、不登记 loaded_version（三段缺一）→ 必须判红"
+  },
+  "timebase_triple": {
+    "version": "1.0.0",
+    "source": "EigenFlux01",
+    "rule": "时基字段必须同时声明三格：单位 unit + 时钟域 clock_domain + 取整时机 rounding_moment",
+    "required_triple": [
+      "unit",
+      "clock_domain",
+      "rounding_moment"
+    ],
+    "rounding_moment_enum": [
+      "on_write",
+      "on_read"
+    ],
+    "missing_rounding_verdict": "TIMEBASE_UNIT_INCONSISTENT",
+    "reason": "同一数值被两段各自取整一次，每段单看都合法，累积差只在成片对齐时才暴露",
+    "extra_rule": "有理数（如帧率）要连『化简形式』一起冻结，否则等值不同写法会被当成两次漂移",
+    "negative_case": "时基只声明 unit+clock_domain、缺 rounding_moment → 必须按『时基单位不一致』判红"
+  },
+  "pagination_completeness": {
+    "version": "1.0.0",
+    "source": "砚书",
+    "rule": "has_more 是声明，不是凭据：完整性声明与游标签发必须同源",
+    "third_state": {
+      "id": "unreachable",
+      "condition": "flag=true 而 continuation 缺失",
+      "verdict": "阻断并单独记账",
+      "forbidden": "不得折叠进『已取尽』参与最终记账"
+    },
+    "dedup_assertion": "后续轮条目键必须与既有轮无重叠，有重叠即判『未推进』而非『已取尽』",
+    "termination_reasons": [
+      "drained",
+      "round_cap_reached"
+    ],
+    "round_cap_rule": "轮数上限必须配『未取尽』出口；到顶报未取尽，不允许报『取尽』",
+    "negative_case": "把『flag=true 但 continuation 缺失』折叠为『已取尽』；或第二轮与第一轮条目键重叠仍判『取尽』→ 必须判红"
+  },
+  "gate_three_numbers": {
+    "version": "1.0.0",
+    "source": "砚书",
+    "rule": "所有 gate 指标三个数同行落盘：分子 / 分母 / 显式跳过数（跳过必须带原因码）",
+    "must_be_same_row": [
+      "numerator",
+      "denominator",
+      "skipped",
+      "skip_reason_code"
+    ],
+    "missing_any_verdict": "UNKNOWN",
+    "ratio_split": "比值类指标一律拆成分子、分母两条独立序列各自告警",
+    "skip_accounting_side": "initiator",
+    "skip_reason": "应答侧去重后，被吞掉的失败在出口回执上仍是 0",
+    "negative_case": "gate 只落盘通过率而缺显式跳过数；或跳过在应答侧记账 → 必须判红"
+  },
+  "degrade_product_side": {
+    "version": "1.0.0",
+    "source": "EigenFlux01",
+    "rule": "『有没有走降级』由产物侧判，不由链路自述",
+    "method": "期望产物清单减实际落盘产物，非空即记降级",
+    "self_report_handling": "链路的自报路径、自报 as_of 一律降级为未观测，不单独充当健康信号",
+    "principle": "凡被测方自己签的、关于自己处于哪条路径的记录，都不能单独充当路径判据",
+    "degrade_event_signature": [
+      "degrade_type",
+      "issuer",
+      "issued_at"
+    ],
+    "issuer_constraint": "降级事件签发方必须落在被测链路之外",
+    "negative_case": "以链路自报『我走了正常路径』作为健康信号（未经产物侧差分）→ 必须判红"
+  },
+  "failure_domain_buckets": {
+    "version": "1.0.0",
+    "source": "LUXIN",
+    "rule": "失败域按四段分桶，段内漂移项形状各自登记",
+    "buckets": [
+      {
+        "id": "pre_asset",
+        "label": "前置素材",
+        "shape": "输入契约没钉死：帧率、时长、字幕时间码在同一素材的两次读取间不一致且不报错；缓存冷热状态由运行方自报"
+      },
+      {
+        "id": "render",
+        "label": "渲染",
+        "shape": "非确定段边界没声明：含 GPU 或随机种子的步骤被默认算进『可复现』；只锁路径不锁版本"
+      },
+      {
+        "id": "encode",
+        "label": "编码",
+        "shape": "容器的代理被当成内容的证据：帧数与文件存在性只是代理，结构合法但被截断的产物按完整产物通过"
+      },
+      {
+        "id": "compose",
+        "label": "合成",
+        "shape": "随机源不可注入种子 → 整段划入非确定段；超集产物（多一轨音轨/字幕）能通过全部『应存在』型断言"
+      }
+    ],
+    "assertion_requirement": "断言集里至少留一条『本应不存在』断言",
+    "negative_case": "失败域只按单一维度分桶、或断言集全为『应存在』型（无『本应不存在』）→ 必须判红"
+  },
+  "shared_fault_domain": {
+    "version": "1.0.0",
+    "source": "巡灯",
+    "rule": "独立检查必须证明不共享故障域；共享即降级为 unverified，不得写 independent",
+    "counter_examples": [
+      {
+        "id": "probe_shares_upstream",
+        "shape": "探针与被测共用同一上游源（配置/时钟/证书由同一条流水线签发）",
+        "criterion": "刻意回滚目标必须让探针失败；负样本注入失败的探针等于没有探针"
+      },
+      {
+        "id": "external_id_same_issuer",
+        "shape": "外部 cycle ID 名义外部、签发方与被测同体",
+        "criterion": "签发方需满足 issuer ≠ executor 且故障域不同"
+      },
+      {
+        "id": "ack_shares_dedup_table",
+        "shape": "传输 ack 与业务完成共用同一去重表或重试队列",
+        "criterion": "上游重放会被下游读成『已完成』"
+      }
+    ],
+    "verdict_when_shared": "unverified",
+    "zero_match_rule": "零匹配也要作为显式状态处理，不能落成『无数据』",
+    "negative_case": "探针与被测共用签发源仍记 independent → 必须判红"
+  },
+  "portable_evidence": {
+    "version": "1.0.0",
+    "source": "wwwwwlmr 的废物龙虾",
+    "rule": "对外结论必须可携带：最小三件齐备",
+    "min_pieces": [
+      "input_manifest（能独立重放的输入标识）",
+      "artifact_fingerprint（内容哈希与大小，不带路径）",
+      "criteria_expression（能脱离本机环境复算）"
+    ],
+    "missing_any_verdict": "PRIVATE_EVIDENCE",
+    "private_evidence_bucket": "不可移交的证据单独出桶并计数，否则会混进对外结论分母",
+    "env_vs_criteria": "环境固化与判据可携带是两笔账，不能对冲：环境线只进『本机可自用』，判据线才进『对外可交』",
+    "negative_case": "结论缺 artifact_fingerprint 仍计入对外结论分母 → 必须判红"
+  },
+  "defect_coverage": {
+    "version": "1.0.0",
+    "source": "本产线（吸纳层覆盖度自检）",
+    "rule": "吸纳层必须无遗漏覆盖下列 8 类缺陷；每类给出检测入口，且入口须真实存在于校验器 CHECKS",
+    "classes": [
+      {
+        "id": "silent_rewrite",
+        "label": "静默改写",
+        "detector": "chk_silent_rewrite",
+        "shape": "未指定被升级/默认值悄悄改写，账面参数集不变"
+      },
+      {
+        "id": "denominator_shrink",
+        "label": "分母萎缩",
+        "detector": "chk_gate_three_numbers",
+        "shape": "跳过/N-A 占比上升，通过率反而好看"
+      },
+      {
+        "id": "declaration_as_credential",
+        "label": "声明当凭据",
+        "detector": "chk_pagination_completeness",
+        "shape": "has_more=true 即被当成『还有更多』的证据"
+      },
+      {
+        "id": "unobserved_as_zero",
+        "label": "未观测当零",
+        "detector": "chk_zero_semantics",
+        "shape": "没拿到观测被读成 0 或读成通过"
+      },
+      {
+        "id": "self_report_as_evidence",
+        "label": "自报当证据",
+        "detector": "chk_degrade_product_side",
+        "shape": "链路自报路径/健康信号被当成判据"
+      },
+      {
+        "id": "shared_fault_domain",
+        "label": "共享故障域",
+        "detector": "chk_shared_fault_domain",
+        "shape": "多个『独立』信号实为同一次观测的多次读数"
+      },
+      {
+        "id": "unknown_version",
+        "label": "版本不可判",
+        "detector": "chk_criteria_identity",
+        "shape": "判据/依赖版本对不上或跨周期不可比"
+      },
+      {
+        "id": "invisible_degrade",
+        "label": "降级不可见",
+        "detector": "chk_drift_fieldset",
+        "shape": "降级产物在盘上与被替换前同形，事后无法反查"
+      }
+    ],
+    "class_rule": "缺任一类、或某类 detector 指向不存在的检查项 → 必须判红",
+    "negative_case": "从 classes 中删除『自报当证据』一项（或把 detector 改成 chk_not_exist）→ 必须判红"
+  },
+  "repair_matrix": {
+    "version": "1.0.0",
+    "source": "本产线（吸纳层覆盖度自检）",
+    "rule": "8 类缺陷 × 5 道工序的覆盖矩阵不得有空洞：任一类空行、任一工序空列即判红",
+    "stages": [
+      "pre_asset",
+      "render",
+      "encode",
+      "compose",
+      "delivery"
+    ],
+    "matrix": {
+      "silent_rewrite": [
+        "pre_asset",
+        "render",
+        "encode"
+      ],
+      "denominator_shrink": [
+        "delivery"
+      ],
+      "declaration_as_credential": [
+        "pre_asset",
+        "delivery"
+      ],
+      "unobserved_as_zero": [
+        "pre_asset",
+        "encode"
+      ],
+      "self_report_as_evidence": [
+        "render",
+        "encode",
+        "compose"
+      ],
+      "shared_fault_domain": [
+        "pre_asset",
+        "render",
+        "delivery"
+      ],
+      "unknown_version": [
+        "pre_asset",
+        "render",
+        "compose"
+      ],
+      "invisible_degrade": [
+        "render",
+        "compose",
+        "delivery"
+      ]
+    },
+    "negative_case": "删除某一工序在矩阵中的全部出现（形成空列），或删除某一缺陷类的全部工序（形成空行）→ 必须判红"
+  },
+  "field_registry": {
+    "version": "1.0.0",
+    "source": "LUXIN + glann",
+    "note": "对存量 18 字段（10 核心 + 8 扩展）的零值三态归一与断言动作绑定。只登记引用，不修改存量定义；与存量冲突时以存量真源为准。",
+    "fields": [
+      {
+        "field": "fps",
+        "zero_semantics": "NOT_APPLICABLE",
+        "missing_verdict": "FAIL",
+        "assertion_action": "hardstop",
+        "derived_from": "stability=invariant"
+      },
+      {
+        "field": "segment_duration",
+        "zero_semantics": "NOT_APPLICABLE",
+        "missing_verdict": "UNOBSERVED",
+        "assertion_action": "degrade",
+        "derived_from": "stability=exploratory + tolerance_policy"
+      },
+      {
+        "field": "resolution_aspect",
+        "zero_semantics": "NOT_APPLICABLE",
+        "missing_verdict": "FAIL",
+        "assertion_action": "hardstop",
+        "derived_from": "stability=invariant"
+      },
+      {
+        "field": "colorspace_gamma",
+        "zero_semantics": "NOT_APPLICABLE",
+        "missing_verdict": "UNOBSERVED",
+        "assertion_action": "unknown_action",
+        "derived_from": "stability=exploratory"
+      },
+      {
+        "field": "model_weight_version",
+        "zero_semantics": "UNOBSERVED",
+        "missing_verdict": "FAIL",
+        "assertion_action": "hardstop",
+        "derived_from": "stability=invariant"
+      },
+      {
+        "field": "sampler_steps_cfg_seed",
+        "zero_semantics": "UNOBSERVED",
+        "missing_verdict": "UNOBSERVED",
+        "assertion_action": "degrade",
+        "derived_from": "stability=exploratory + applicability=partial"
+      },
+      {
+        "field": "precision_mode",
+        "zero_semantics": "UNOBSERVED",
+        "missing_verdict": "UNOBSERVED",
+        "assertion_action": "degrade",
+        "derived_from": "stability=exploratory"
+      },
+      {
+        "field": "vae_version",
+        "zero_semantics": "NOT_APPLICABLE",
+        "missing_verdict": "UNOBSERVED",
+        "assertion_action": "record_only",
+        "derived_from": "applicability=not_applicable（本链路无 VAE 解码）"
+      },
+      {
+        "field": "chunk_size_auto_downgrade",
+        "zero_semantics": "UNOBSERVED",
+        "missing_verdict": "UNOBSERVED",
+        "assertion_action": "degrade",
+        "derived_from": "stability=exploratory + applicability=partial"
+      },
+      {
+        "field": "render_window_frames",
+        "zero_semantics": "UNOBSERVED",
+        "missing_verdict": "FAIL",
+        "assertion_action": "hardstop",
+        "derived_from": "extended action=硬停（阻断）"
+      },
+      {
+        "field": "resolution_short_edge",
+        "zero_semantics": "UNOBSERVED",
+        "missing_verdict": "UNOBSERVED",
+        "assertion_action": "degrade",
+        "derived_from": "extended action=降级+人工（WARN）"
+      },
+      {
+        "field": "peak_vram",
+        "zero_semantics": "UNOBSERVED",
+        "missing_verdict": "UNOBSERVED",
+        "assertion_action": "record_only",
+        "derived_from": "extended action=降级（仅记录，WARN）"
+      },
+      {
+        "field": "seed",
+        "zero_semantics": "CONFIRMED_ZERO",
+        "missing_verdict": "FAIL",
+        "assertion_action": "hardstop",
+        "derived_from": "extended zero_semantics=无零值，0 合法"
+      },
+      {
+        "field": "tolerance_value",
+        "zero_semantics": "CONFIRMED_ZERO",
+        "missing_verdict": "FAIL",
+        "assertion_action": "hardstop",
+        "derived_from": "extended zero_semantics=0=严格相等"
+      },
+      {
+        "field": "canonicalizer_version",
+        "zero_semantics": "UNOBSERVED",
+        "missing_verdict": "FAIL",
+        "assertion_action": "hardstop",
+        "derived_from": "extended zero_semantics=空=未版本化"
+      },
+      {
+        "field": "expected_n",
+        "zero_semantics": "CONFIRMED_ZERO",
+        "missing_verdict": "FAIL",
+        "assertion_action": "hardstop",
+        "derived_from": "extended zero_semantics=0=期望为空，须显式签发"
+      },
+      {
+        "field": "frozen_baseline_digest",
+        "zero_semantics": "UNOBSERVED",
+        "missing_verdict": "FAIL",
+        "assertion_action": "hardstop",
+        "derived_from": "extended zero_semantics=空=未冻结"
+      }
+    ]
+  },
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-29",
+      "changes": [
+        "首次落地 6 组对等交换工程口径：挂起与判据账本、缓存键漂移五格、硬停/降级分层、零值语义与断言绑定、漂移字段与翻案率、清单规范与回执",
+        "补 18 字段零值三态归一与断言动作绑定（field_registry）",
+        "纯新增文件，未修改任何存量真源"
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-09-29",
+      "changes": [
+        "第二轮吸纳 13 条对等交换口径：静默改写判定、判据三格与版本换代出桶、未声明≠默认、挂起年龄分布、翻案率分母、依赖版本三段、时基三格、分页完整性与终止分账、gate 三数同行与跳过发起侧记账、降级由产物侧判定、失败域四段分桶、共享故障域反例、可携带判据与私有证据出桶",
+        "drift_fieldset 增补『时基取整时机』（15 项，MIN_DRIFT_FIELDS 同步提升）",
+        "新增吸纳层覆盖度自检：defect_coverage（8 类缺陷 + 检测入口交叉校验）、repair_matrix（8 类 × 5 工序无空洞）",
+        "纯新增：未修改任何存量真源，既有 6 组口径节点字节级未动"
+      ]
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-09-30",
+      "changes": [
+        "第三轮吸纳 3 组工序层口径（来源 EigenFlux 2026-09-30 增量广播，20 条项目/工具类条目中甄别）：画质修复链路顺序不可交换与生成式重建声明（restoration_chain_order）、分块产物接缝/闪烁「本应不存在」断言与训练桶约束（tile_seam_integrity）、分段转写静默失败三数与句边界完整性（asr_segment_silence）",
+        "adoption_map 21 → 24 条；canon_guard.py CHECKS 23 → 26 项（新增 X/Y/Z）；负例夹具 23 → 26",
+        "纯新增：未修改任何存量真源，既有 21 组口径节点与 param_contract / canonicalization / frozen_baseline / observability_rules / negcontrol_cases 字节级未动"
+      ]
+    },
+    {
+      "version": "1.3.0",
+      "date": "2026-09-30",
+      "changes": [
+        "第四轮吸纳 3 组对等交换判据层口径（EigenFlux 2026-09-30 私信对拍）：降级态双写两层键与账本缺失硬停（degrade_double_write）、版本交叠判 AMBIGUOUS 交人工（version_overlap_ambiguous）、已加载版本由运行侧按产物指纹反推并带 load_at（loaded_version_attestation）、IMPL_SUSPECT 第三分支与 UNABLE_TO_COMPARE 联签（impl_suspect_branch）",
+        "adoption_map 24 → 28 条；canon_guard.py CHECKS 26 → 30 项（新增 AA / AB / AC / AD）；负例夹具 26 → 30",
+        "纯新增：未修改任何存量真源，既有 24 组口径节点与 param_contract / canonicalization / frozen_baseline / observability_rules / negcontrol_cases 字节级未动"
+      ]
+    },
+    {
+      "version": "1.4.0",
+      "date": "2026-10-02",
+      "changes": [
+        "第五轮吸纳 6 组口径（来源 EigenFlux 2026-10-02 广播增量）：跨镜头一致性（固定锚点/硬软特征解耦/分级回滚/回滚前快照校验）、截断阈值对齐判不定与二次投票跨周期冷读、来源计数按唯一生产者集合与同源异内容判冲突、回执摘要哈希评估者计算结果、UNATTESTED 第五态与证据源双重独立及外部签名时间戳、语义窗口默认值漂移与展开前内容寻址摘要",
+        "adoption_map 28 → 34 条；canon_guard.py CHECKS 30（A–AD）→ 36（A–AJ），负例 m31–m36",
+        "纯新增：未修改任何存量真源（param_contract / canonicalization / frozen_baseline / observability_rules / negcontrol_cases）"
+      ]
+    },
+    {
+      "version": "1.5.0",
+      "date": "2026-10-02",
+      "changes": [
+        "第六轮吸纳 4 组「竖屏画面包装设计口径」（上游 pbakaus/impeccable，Apache-2.0，本地 clone commit 4adabaf2c2bd3148f162d35aaa6acd7025343649，重点 reference/craft-floor.md、animate.md、typeset.md、colorize.md、layout.md）：画面包装 HTML 禁用项登记制（hyperframes_design_bans）、画面文字节奏地板（hyperframes_type_rhythm_floor）、画面动效署名与可达性（hyperframes_motion_authorship）、画面颜色角色与深度分层（hyperframes_color_depth_roles）",
+        "adoption_map 34 → 38 条；canon_guard.py CHECKS 36 → 40 项（新增 AK / AL / AM / AN）；负例夹具 36 → 40",
+        "AK 对真实素材只读扫描：composition 8 个 HTML + templates 7 个 HTML（扫描面少于登记下限即判红）；templates 阻断制、composition 登记制，存量命中计入 legacy_inventory 欠账清单，quantity 只降不升",
+        "AL 属折算吸纳：上游桌面阅读口径按竖屏 1080×1920 / 观看 30–40cm / 停留 1.2s 折算为物理像素地板与安全区行宽，折算依据登记于 local_derivation，非原样照搬",
+        "纯新增：未修改任何存量真源，既有 34 组口径节点与 param_contract / canonicalization / frozen_baseline / observability_rules / negcontrol_cases 字节级未动；未改动任何 composition / templates 画面产物"
+      ]
+    },
+    {
+      "version": "1.6.0",
+      "date": "2026-10-02",
+      "changes": [
+        "第七轮吸纳 3 组口径（来源 EigenFlux 2026-10-02 私信对拍增量：DeepSeek Harness / Marvis（便利贴）/ Yugo）：参数溯源三态独立与跨状态判不可比、处置档按归因能力（unknown 不得静默升基准）、漂移形态→归一动作成表且归一动作落账（含别名表/契约/canonicalizer 三版本随键、表示四态不互归）、快照签发方与自签不计证据、只认 as_of 读数、留存期与回收前提同源",
+        "adoption_map 38 → 41 条；canon_guard.py CHECKS 40（A–AN）→ 43（A–AQ），负例 m41–m43",
+        "纯新增：未修改任何存量真源（param_contract / canonicalization / frozen_baseline / observability_rules / negcontrol_cases）"
+      ]
+    },
+    {
+      "version": "1.7.0",
+      "date": "2026-10-03",
+      "changes": [
+        "第八轮吸纳 2 组口径（来源 EigenFlux 2026-10-03 广播增量，AI-Film-Studio）：验证锚点落链外 + 发布期冻结清单随产物落盘 + 恢复侧差集判定 + 内容段/结构段分离（verify_anchor_outside_chain）、期望集非常量与变更版本化签发入账 + 取数路径连同内容哈希进签名域冻结（expectation_set_signing_event）",
+        "adoption_map 41 → 43 条；canon_guard.py CHECKS 43（A–AQ）→ 45（A–AS / AT），负例 m44–m45",
+        "纯新增：未修改任何存量真源（param_contract / canonicalization / frozen_baseline / observability_rules / negcontrol_cases），既有 41 组口径节点字节级未动"
+      ]
+    }
+  ],
+  "restoration_chain_order": {
+    "version": "1.0.0",
+    "source": "Zoe Talmadge（EigenFlux 广播 item_id 363370951368245248，LTX 2.5 Restore / Refine 两门控 LoRA）",
+    "rule": "画质修复是单向阶梯：去隔行 → 修复（去块/去模糊/上色/补时间）→ 细节重建，顺序不可交换；进 guide 之前禁止去噪/锐化等「前置增强」，否则损伤被先锐化、颜色推断被压低",
+    "ordered_stages": [
+      "deinterlace",
+      "restore",
+      "refine_details"
+    ],
+    "order_immutable": true,
+    "preprocess_forbidden_before_guide": [
+      "denoise",
+      "sharpen",
+      "mixed_deinterlace"
+    ],
+    "generative_declaration": {
+      "required": true,
+      "label": "AI 重建，非历史记录",
+      "reason": "修复类产物合成「合理」的颜色与细节，重建出的文字/人脸/物体属解释性产物，不得当作素材原貌"
+    },
+    "gain_ceiling": {
+      "metric": "linear_upscale_factor",
+      "peak": 9.0,
+      "basis": "480 线扫描素材约 9×（≈5760×4352）增益达峰，再高反效",
+      "exceed_verdict": "WARN"
+    },
+    "sampler_family_constraint": {
+      "allowed": [
+        "euler",
+        "heun",
+        "dpm_2"
+      ],
+      "forbidden": [
+        "dpmpp_2m",
+        "lms",
+        "adaptive",
+        "ancestral"
+      ],
+      "reason": "历史方法丢多步记忆、自适应采样器无法融合、祖先法逐块独立加噪必生接缝",
+      "violation_verdict": "hardstop"
+    },
+    "negative_case": "把 refine 排到 restore 之前（或未去隔行直接进 guide、对禁用采样器族放行）→ 必须判红"
+  },
+  "tile_seam_integrity": {
+    "version": "1.0.0",
+    "source": "Zoe Talmadge（EigenFlux 广播 item_id 363370951368245248，LTX 2.5 分块融合）",
+    "rule": "分块（tiled）产物的通过判据不是「渲染无报错」，而是产物侧必须带一条「接缝/逐块闪烁本应不存在」的负向断言；块尺寸须落在训练桶内，越桶即视为编造纹理",
+    "tile_bucket": {
+      "restore": [
+        960,
+        544
+      ],
+      "refine": [
+        1024,
+        576
+      ],
+      "overlap": 0.5,
+      "blend_var": 0.05
+    },
+    "oversize_verdict": "FAIL",
+    "forbidden_assertion_set": [
+      "no_seam_on_tile_boundary",
+      "no_per_tile_flicker"
+    ],
+    "single_tile_pass_only_if": "输出尺寸本身等于训练桶尺寸",
+    "window_rule": {
+      "preferred_frames": [
+        49,
+        97
+      ],
+      "over_window_effect": "丢细节、颜色漂移",
+      "requires_streaming": true
+    },
+    "guide_encode_constraint": {
+      "use_tiled_encode": false,
+      "reason": "空间 tiled guide 编码会把网格印进条件"
+    },
+    "negative_case": "只断言「无报错」而无接缝/闪烁断言，或块尺寸超出训练桶 → 必须判红"
+  },
+  "asr_segment_silence": {
+    "version": "1.0.0",
+    "source": "Noteknot（item_id 363249621192933376）+ Tiki（item_id 363418658564734976）：长视频分段 ASR 三步法",
+    "rule": "分段转写的完整性必须三数同行：声明总时长 / 实际转写覆盖时长 / 显式跳过段数（带原因码）；分段「非空≠完整」，静默失败与句尾截断都查不出来",
+    "required_triple": [
+      "declared_duration",
+      "transcribed_coverage",
+      "explicit_skipped_segments"
+    ],
+    "missing_any_verdict": "UNKNOWN",
+    "boundary_traceability": {
+      "field": "source_event_id",
+      "rule": "每个分段/章节边界须可回溯到源事件，完整性声明与游标签发同源",
+      "missing_verdict": "PRIVATE_EVIDENCE"
+    },
+    "sentence_boundary_assertion": {
+      "must": [
+        "first_sentence_complete",
+        "last_sentence_complete"
+      ],
+      "reason": "长视频 ASR 常见句尾截断，只看分段非空无法暴露",
+      "violation_verdict": "FAIL"
+    },
+    "dual_engine_alignment": {
+      "required": true,
+      "independence_required": true,
+      "rule": "双引擎交叉对齐的两引擎不得共用同一解码上游，否则记 unverified（对接 T-shared-fault-domain）"
+    },
+    "dedup_assertion": "相邻分段转写文本重叠率超阈值即判「未推进」，防服务端重放",
+    "dry_run_baseline": {
+      "required": true,
+      "detect": "干跑基线与实跑比对，检出编码/容器漂移"
+    },
+    "negative_case": "只报分段条数不报三数，或用共享解码上游的双引擎记 independent → 必须判红"
+  },
+  "degrade_double_write": {
+    "version": "1.0.0",
+    "source": "AI-Film-Studio",
+    "rule": "降级态必须双写两层键：命名层（产物命名/标记）与账本层（结构化字段），两层写的是同一个降级键；只写一层不足以成立降级态",
+    "layers": [
+      "naming_layer",
+      "ledger_layer"
+    ],
+    "key_consistency": "same_degrade_key_in_both_layers",
+    "ledger_is_authoritative": true,
+    "ledger_missing_verdict": "hardstop",
+    "naming_inference_forbidden": true,
+    "reason": "账本字段缺失 ⇒ 视为未声明降级态 ⇒ 硬停；不得回落到按命名层反推降级态，否则『忘了写账本』会被静默读成『没走降级』",
+    "naming_layer_constraint": "降级命名不得覆盖正常命名（对接 cache_key_grid 第五格 naming_rule）",
+    "negative_case": "账本层字段缺失时按命名层反推降级态（或只写命名层一层）→ 必须判红，且应按未声明降级态硬停"
+  },
+  "version_overlap_ambiguous": {
+    "version": "1.0.0",
+    "source": "AI-Film-Studio",
+    "rule": "两个口径版本在交叠区间内同时生效、且无法判定各自生效起点时，判 AMBIGUOUS 交人工裁决；禁止按『后签发者优先』等序关系自动消歧",
+    "overlap_states": [
+      "SINGLE",
+      "DISJOINT",
+      "AMBIGUOUS"
+    ],
+    "verdict_when_overlap": "AMBIGUOUS",
+    "auto_resolution_forbidden": [
+      "later_issuer_wins",
+      "timestamp_latest_wins",
+      "version_string_order"
+    ],
+    "human_required": true,
+    "must_carry": [
+      "overlap_window",
+      "candidate_versions",
+      "issuers"
+    ],
+    "reason": "后签发者优先把『谁更新』当成『谁生效』，而更新与生效是两笔账；消歧规则本身未被声明时，错卷进一批数据在账上看不出来",
+    "negative_case": "交叠区间按后签发者优先自动取用（无人工裁决）→ 必须判红"
+  },
+  "loaded_version_attestation": {
+    "version": "1.0.0",
+    "source": "布鲁斯 Bruce",
+    "rule": "依赖版本第三段『已加载版本』由运行侧按产物指纹反推，不由签发方自报",
+    "extends": "dependency_version_triple#loaded_version",
+    "attestor": "runtime_side",
+    "fingerprint_form": "content_sha256_first16hex",
+    "fingerprint_basis": "产物内容哈希（不带路径）前 16 位十六进制，与锚登记逐条比对",
+    "anchor_registry_required": true,
+    "load_at_required": true,
+    "load_at_rule": "加载指纹必须带 load_at 时间锚；无 load_at 时加载先后不可判，按未声明处理",
+    "self_report_excluded": true,
+    "self_report_handling": "签发方自报的 loaded_version 只作 claim 记账，不作为 loaded 段取值",
+    "fallback_to_self_report_forbidden": true,
+    "mismatch_verdict": "VERSION_CLAIM_MISMATCH",
+    "missing_fingerprint_verdict": "UNKNOWN",
+    "negative_case": "以签发方自报填 loaded_version 段，或加载指纹缺 load_at（先后不可判）→ 必须判红"
+  },
+  "impl_suspect_branch": {
+    "version": "1.0.0",
+    "source": "CatKing_Muse",
+    "rule": "规范化摘要不一致、而规范化器版本一致时，判第三分支 IMPL_SUSPECT（区分行集分歧与静默换实现），不得并入行集分歧桶",
+    "branches": [
+      "CANONICALIZER_VERSION_MISMATCH",
+      "ROW_SET_DIVERGED",
+      "IMPL_SUSPECT"
+    ],
+    "third_branch_precondition": [
+      "row_set_reproduced",
+      "producer_re_digest"
+    ],
+    "precondition_rule": "第三分支只在行集被独立复现（行集摘要可复算）或产出方在匹配版本下重出摘要时成立；两者皆无时判 UNABLE_TO_COMPARE，不得凭摘要差异断言换实现",
+    "fallback_verdict": "UNABLE_TO_COMPARE",
+    "merge_into_row_set_verdict": "REJECT",
+    "must_carry": [
+      "evidence_kind",
+      "evidence_issuer"
+    ],
+    "countersign_required": true,
+    "countersign_parties": [
+      "digest_producer",
+      "independent_reader"
+    ],
+    "self_signed_excluded": true,
+    "private_bucket_excluded_from": [
+      "shrinkage_count"
+    ],
+    "countersign_rule": "UNABLE_TO_COMPARE 台账行须由 digest 产出方联签，或由产出链路之外的独立读者持有；仅消费方自签的行进私有证据桶，不计入对外收缩数",
+    "negative_case": "摘要不一致被并入行集分歧桶，或消费方自签的 UNABLE_TO_COMPARE 行直接计入对外数字 → 必须判红"
+  },
+  "cross_shot_anchor_consistency": {
+    "version": "1.0.0",
+    "source": "分镜与视频制作助手（WorkBuddy）",
+    "rule": "跨镜头一致性以固定锚点图为基准（禁用顺序比对）；硬特征与软特征解耦各自容差（合并单一容差即过度滤波）；回滚范围按变更严重度分级；回滚前必检快照存在，缺失按硬停",
+    "reference_mode": "fixed_anchor",
+    "sequential_comparison_forbidden": true,
+    "feature_classes": {
+      "hard": [
+        "face",
+        "color",
+        "props"
+      ],
+      "soft": [
+        "lighting",
+        "grain"
+      ],
+      "tolerance_policy": "per_class",
+      "merged_tolerance_verdict": "REJECT",
+      "merged_tolerance_rationale": "单一容差会把软特征波动当硬漂移，触发过度滤波把细节抹平"
+    },
+    "rollback_tiers": {
+      "tiers": [
+        "shot_local",
+        "segment",
+        "sequence"
+      ],
+      "mapping": "by_change_severity"
+    },
+    "pre_rollback_snapshot_check": {
+      "required": true,
+      "missing_verdict": "hardstop"
+    },
+    "open_questions": [
+      "锚点放置位置（checkpoint placement）",
+      "风格化变化的容差标定"
+    ]
+  },
+  "truncation_threshold_indeterminate": {
+    "version": "1.0.0",
+    "source": "污鱼的agent",
+    "rule": "读取字节长度恰等于截断阈值时判 INDETERMINATE（不得判过）；双投票的第二票须跨周期磁盘冷读以隔离故障域，同周期同路径重读判 REJECT",
+    "threshold_alignment": {
+      "condition": "byte_length == truncation_threshold",
+      "verdict": "INDETERMINATE",
+      "may_pass": false
+    },
+    "second_vote": {
+      "mode": "cross_cycle_cold_read",
+      "same_cycle_reread_verdict": "REJECT",
+      "fault_domain_isolation_required": true
+    },
+    "required_triple": [
+      "byte_length",
+      "truncation_threshold",
+      "read_cycle_id"
+    ]
+  },
+  "producer_set_rank_conflict": {
+    "version": "1.0.0",
+    "source": "布鲁斯 Bruce",
+    "rule": "来源计数按唯一生产者集合基数（不得按消息量）；同源异内容判 CONFLICT（不得并入重复桶）；静默去重会掩盖传输/渲染失败；两条规则均须配 must-fail 负例 + 正控，并触发显式事件码",
+    "counting": {
+      "unit": "unique_producer_set",
+      "forbidden_units": [
+        "message_volume",
+        "raw_rows"
+      ],
+      "wrong_unit_verdict": "REJECT"
+    },
+    "classification": {
+      "same_source_diff_content": "CONFLICT",
+      "merge_into_duplicate_verdict": "REJECT",
+      "silent_dedup_forbidden": true
+    },
+    "negative_testing": {
+      "must_fail_cases_required": true,
+      "positive_control_paired": true,
+      "event_code_explicit": true
+    }
+  },
+  "evaluator_computed_digest": {
+    "version": "1.0.0",
+    "source": "OpenClaw量化助手",
+    "rule": "跨实现协议 diff 的回执摘要须哈希评估者的计算结果，不得哈希声称的期望值；回执须可被独立复算、不依赖信任声明方",
+    "digest_input": "evaluator_computed_result",
+    "forbidden_inputs": [
+      "claimed_expected_value",
+      "declarer_self_report"
+    ],
+    "wrong_input_verdict": "REJECT",
+    "reproducible_without_trust": true,
+    "receipt_fields": [
+      "digest_alg",
+      "digest_input_domain",
+      "recompute_hint"
+    ]
+  },
+  "unattested_state": {
+    "version": "1.0.0",
+    "source": "WorkBuddy · 内容研究助手",
+    "rule": "中间态不得静默二值坍缩；每个断言态须绑定因果与行政独立的证据源，共享来源判 REJECT；UNATTESTED 为并列第五态（不得折叠进 PASS/FAIL）；时间戳须外部签名，墙钟自断言判 REJECT",
+    "states": [
+      "PASS",
+      "FAIL",
+      "UNKNOWN",
+      "PENDING",
+      "UNATTESTED"
+    ],
+    "binary_collapse_verdict": "REJECT",
+    "evidence_independence": {
+      "dimensions": [
+        "causal",
+        "administrative"
+      ],
+      "shared_source_verdict": "REJECT",
+      "rationale": "校验方与被校验方同源 ⇒ 中间态被静默压平为二值"
+    },
+    "timestamp": {
+      "mode": "externally_signed",
+      "wall_clock_assertion_verdict": "REJECT"
+    }
+  },
+  "semantic_window_default_drift": {
+    "version": "1.0.0",
+    "source": "A股短线研究助手（WorkBuddy）",
+    "rule": "参数快照比对不足：上游默认值静默漂移会改变实际语义数据窗口而参数哈希不变；须存展开前默认值的内容寻址摘要，穷尽性结论绑定『快照地址 + as_of + 规则版本』三元组，防止陈旧验证继承",
+    "snapshot_insufficiency": {
+      "param_hash_unchanged_is_sufficient": false,
+      "missed_dimension": "default_expansion"
+    },
+    "content_addressable": {
+      "pre_expanded_defaults_required": true,
+      "digest_scope": "pre_expansion_effective_window"
+    },
+    "exhaustiveness_binding_triple": [
+      "snapshot_address",
+      "as_of",
+      "rule_version"
+    ],
+    "stale_validation_inheritance_verdict": "REJECT"
+  },
+  "hyperframes_design_bans": {
+    "version": "1.5.0",
+    "source": "pbakaus/impeccable（GitHub，Apache-2.0）reference/craft-floor.md 确定性反模式清单 → 竖屏画面包装（HyperFrames HTML/CSS + GSAP）本地化落地",
+    "upstream": {
+      "repo": "pbakaus/impeccable",
+      "license": "Apache-2.0",
+      "commit": "4adabaf2c2bd3148f162d35aaa6acd7025343649",
+      "cloned_at": "2026-10-02",
+      "reference_docs": {
+        "craft-floor.md": "d31766f5d4d1e9e2f510fa7b9214f57b678ece687ede90f3deb0973640d672a9",
+        "animate.md": "59f38d50c799aa47ecd7288c69dce0245d8c3e3e2368b29499d583996b5030b3",
+        "typeset.md": "bf0259f5b8363d09591885ca6b27ac97bbdf754c130fb2799b949d783a97186b",
+        "colorize.md": "dcc0c3ebb76bd22c543f45d73c283e3890e5b8a44eb5053ca2f7fdd425635c32",
+        "layout.md": "14ba132b6168bf0a7498f8c3fbbb41b73ff704da5dc3688fd842807446e54a05"
+      },
+      "doc_roles": {
+        "craft-floor.md": "禁用/不可协商清单与验证口径（AK/AL/AM/AN 主线）",
+        "animate.md": "动效时序、缓动与可达性（AM）",
+        "typeset.md": "正文行宽、字号地板、数字特性（AL）",
+        "colorize.md": "对比度与色彩空间（AN）",
+        "layout.md": "间距尺度、分组邻近与深度分层（AK/AN）"
+      }
+    },
+    "rule": "画面包装 HTML 的禁用项一律「先登记、后自证、再对账」：每条禁用项须带可自证正则（should_hit 必须命中、should_pass 不得误伤）或人工评审落点，并登记在册；母版（templates）按阻断制——出现未登记禁用项即判红；单镜（composition）按登记制——存量命中先进欠账清单、只读扫描超出登记数量才判红。适用面限画面包装 HTML，不触碰任何画面产物与素材。",
+    "verdict_scheme": {
+      "templates": "阻断制：母版出现未登记禁用项命中即判红（母版会被所有单镜继承，污染面最大）",
+      "composition": "登记制：单镜存量命中计入 legacy_inventory 欠账，只读扫描超出登记上限才判红（存量片不返工、新片不得新增）"
+    },
+    "rules": [
+      {
+        "id": "gradient_text",
+        "name": "渐变文字 / 抠字渐变",
+        "verdict": "ban",
+        "detector": "regex",
+        "pattern": "background-clip\\s*:\\s*text|-webkit-background-clip\\s*:\\s*text",
+        "basis_rule": "craft-floor / colorize：文字着色的对比度与可读性不可靠",
+        "should_hit": "-webkit-background-clip: text; color: transparent;",
+        "should_pass": "background-clip: padding-box;"
+      },
+      {
+        "id": "hard_offset_shadow",
+        "name": "硬偏移阴影（非零 x/y 偏移）",
+        "verdict": "ban",
+        "detector": "regex",
+        "pattern": "box-shadow\\s*:\\s*(?:inset\\s+)?(?:[^;{}]*,\\s*)?-?[1-9]\\d*px\\s+-?[1-9]\\d*px",
+        "basis_rule": "craft-floor / layout：深度须由层级与明度差建立，不靠硬阴影",
+        "should_hit": "box-shadow: 4px 6px 14px rgba(0,0,0,.45);",
+        "should_pass": "box-shadow: 0 24px 60px rgba(0,0,0,.45);"
+      },
+      {
+        "id": "zero_offset_glow",
+        "name": "零偏移色晕（0 0 Npx 发光）",
+        "verdict": "ban",
+        "detector": "regex",
+        "pattern": "box-shadow\\s*:\\s*0(?:px)?\\s+0(?:px)?\\s+[1-9]\\d*px",
+        "basis_rule": "craft-floor：零偏移大面积色晕属装饰性发光，压低文字对比",
+        "should_hit": "box-shadow: 0 0 40px rgba(99,102,241,.35);",
+        "should_pass": "box-shadow: 0 8px 24px rgba(0,0,0,.35);"
+      },
+      {
+        "id": "side_stripe_border",
+        "name": "单侧条纹边框（>1px 侧边强调条）",
+        "verdict": "ban",
+        "detector": "regex",
+        "pattern": "border(?:-left|-right|-top|-bottom)?\\s*:\\s*[2-9]\\d*px\\s+(?:solid|dashed|dotted)",
+        "basis_rule": "craft-floor：>1px 侧边条纹边框是模板化卡片语汇",
+        "should_hit": "border-bottom: 4px solid rgba(255,255,255,.18);",
+        "should_pass": "border: 1px solid rgba(255,255,255,.12);"
+      },
+      {
+        "id": "eyebrow_kicker",
+        "name": "eyebrow / kicker 引导小标",
+        "verdict": "ban",
+        "detector": "regex",
+        "pattern": "class\\s*=\\s*[\\\"'][^\\\"']*\\b(?:eyebrow|kicker)\\b",
+        "basis_rule": "craft-floor：kicker/eyebrow 属空转的装饰性前置标签",
+        "should_hit": "<p class=\"eyebrow\">本期看点</p>",
+        "should_pass": "<p class=\"section-label\">本期看点</p>"
+      },
+      {
+        "id": "tracking_too_tight",
+        "name": "字距过紧（< -0.04em）",
+        "verdict": "ban",
+        "detector": "regex",
+        "pattern": "letter-spacing\\s*:\\s*-\\s*0\\.0[5-9]|letter-spacing\\s*:\\s*-\\s*0\\.[1-9]",
+        "basis_rule": "typeset：收紧字距下限 -0.04em，超出即伤可读性",
+        "should_hit": "letter-spacing: -0.06em;",
+        "should_pass": "letter-spacing: -0.02em;"
+      },
+      {
+        "id": "identical_card_grids",
+        "name": "相同卡片网格（repeat(3, 1fr) 等分）",
+        "verdict": "ban",
+        "detector": "regex",
+        "pattern": "grid-template-columns\\s*:\\s*repeat\\(\\s*3\\s*,\\s*1fr\\s*\\)",
+        "basis_rule": "craft-floor / layout：等分三列卡片网格为无信息层级的模板排布",
+        "should_hit": "grid-template-columns: repeat(3, 1fr);",
+        "should_pass": "grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));"
+      },
+      {
+        "id": "hero_metric_template",
+        "name": "hero-metric 大数字模板",
+        "verdict": "ban",
+        "detector": "regex",
+        "pattern": "class\\s*=\\s*[\\\"'][^\\\"']*\\bhero-metric\\b",
+        "basis_rule": "craft-floor：hero 大数字 + 说明的套话式指标模板",
+        "should_hit": "<div class=\"hero-metric\"><span class=\"hero-metric__value\">98%</span></div>",
+        "should_pass": "<div class=\"metric-row\">98%</div>"
+      },
+      {
+        "id": "glyph_icons",
+        "name": "字符代图标（emoji/符号充当图标）",
+        "verdict": "ban",
+        "detector": "regex",
+        "pattern": ">\\s*[✓✔✗✘★☆→←↑↓⚠✅❌]\\s*<",
+        "basis_rule": "craft-floor：emoji/几何字符代图标，跨设备渲染不可控",
+        "should_hit": "<span class=\"badge\">★</span>",
+        "should_pass": "<span class=\"icon\" aria-hidden=\"true\"></span>"
+      },
+      {
+        "id": "glass_blur_decoration",
+        "name": "玻璃拟态模糊装饰",
+        "verdict": "ban",
+        "detector": "regex",
+        "pattern": "backdrop-filter\\s*:\\s*[^;{}]*blur\\(",
+        "basis_rule": "craft-floor：玻璃拟态 backdrop blur 为装饰性俗套且拖高渲染成本",
+        "should_hit": "backdrop-filter: blur(18px) saturate(140%);",
+        "should_pass": "background: rgba(15,18,32,.72);"
+      },
+      {
+        "id": "numbered_section_marker",
+        "name": "编号段落标记（01/02 序号块）",
+        "verdict": "ban",
+        "detector": "regex",
+        "pattern": "<span[^>]*>\\s*0[1-9]\\s*</span>",
+        "basis_rule": "craft-floor：01/02/03 编号块属空转的模板序号",
+        "should_hit": "<span class=\"row__rank\">01</span>",
+        "should_pass": "<span class=\"row__rank\">12</span>"
+      },
+      {
+        "id": "system_display_face",
+        "name": "系统显示字体作标题面",
+        "verdict": "ban",
+        "detector": "regex",
+        "pattern": "font-family\\s*:\\s*[^;{}]*(?:-apple-system|BlinkMacSystemFont|[\\\"']Segoe UI[\\\"'])",
+        "basis_rule": "typeset / craft-floor：标题面不得用系统显示字体兜底",
+        "should_hit": "font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\";",
+        "should_pass": "font-family: \"Noto Sans SC\", \"PingFang SC\", sans-serif;"
+      },
+      {
+        "id": "rough_sketch_svg",
+        "name": "手绘粗糙化 SVG（湍流/虚线抖动）",
+        "verdict": "ban",
+        "detector": "regex",
+        "pattern": "<path[^>]*\\b(?:filter\\s*=\\s*[\\\"'][^\\\"']*(?:feTurbulence|displacement)|stroke-dasharray\\s*=\\s*[\\\"']\\d+\\s+\\d+)",
+        "basis_rule": "craft-floor：feTurbulence/抖动虚线属伪手绘装饰",
+        "should_hit": "<path d=\"M0 0 L10 10\" filter=\"url(#rough)\" stroke-dasharray=\"6 4\"/>",
+        "should_pass": "<path d=\"M0 0 L10 10\" stroke=\"rgba(255,255,255,.2)\"/>"
+      },
+      {
+        "id": "repeating_stripes_bg",
+        "name": "重复条纹背景底纹",
+        "verdict": "ban",
+        "detector": "manual",
+        "review_entry": "母版评审项：templates 侧底纹仅允许纯色或 1 层信息性渐变，重复条纹须改由品牌视觉系统出图，评审记录落 reports/工程口径吸纳对照表.md",
+        "basis_rule": "craft-floor：重复条纹底纹为无信息装饰，且压缩后易生摩尔纹",
+        "self_evidence": "机制性禁用项：正则无法稳定区分「装饰条纹」与「数据条形」，故登记为人工评审项"
+      }
+    ],
+    "scan_scope": {
+      "composition": {
+        "glob": "*/composition/*.html",
+        "min_files": 8
+      },
+      "templates": {
+        "glob": "templates/**/*.html",
+        "min_files": 7
+      }
+    },
+    "scan_mode": "read_only（只读打开统计命中次数，不写入、不改名、不移动任何 HTML；扫描面少于登记下限即判红，材料缺失不得判过）",
+    "legacy_inventory": {
+      "composition": {
+        "gradient_text": 18,
+        "hard_offset_shadow": 0,
+        "zero_offset_glow": 7,
+        "side_stripe_border": 66,
+        "eyebrow_kicker": 0,
+        "tracking_too_tight": 0,
+        "identical_card_grids": 0,
+        "hero_metric_template": 0,
+        "glyph_icons": 2,
+        "glass_blur_decoration": 7,
+        "numbered_section_marker": 0,
+        "system_display_face": 1,
+        "rough_sketch_svg": 0
+      },
+      "templates": {
+        "gradient_text": 0,
+        "hard_offset_shadow": 0,
+        "zero_offset_glow": 2,
+        "side_stripe_border": 1,
+        "eyebrow_kicker": 0,
+        "tracking_too_tight": 0,
+        "identical_card_grids": 0,
+        "hero_metric_template": 0,
+        "glyph_icons": 0,
+        "glass_blur_decoration": 0,
+        "numbered_section_marker": 5,
+        "system_display_face": 0,
+        "rough_sketch_svg": 0
+      }
+    },
+    "negative_case": "把「未登记的新禁用项命中」当合规：只报「已登记项未超限」，对母版里新出现的渐变文字、玻璃拟态、零偏移色晕不登记也不判红；或反向把登记上限本身清零、把 patterns 删掉、放宽 verdict 使检查恒绿——均判 REJECT。登记制的前提是欠账清单必须与只读扫描逐项对账，quantity 只降不升，且清单清零须有全量扫描证据（否则材料缺失不得判过）。"
+  },
+  "hyperframes_type_rhythm_floor": {
+    "version": "1.5.0",
+    "source": "pbakaus/impeccable（Apache-2.0）reference/typeset.md 排版地板（正文行宽 45–75ch、1rem 下限、tabular 数字、字距下限 -0.04em）+ craft-floor.md → 竖屏 9:16 本地化折算",
+    "upstream": {
+      "repo": "pbakaus/impeccable",
+      "license": "Apache-2.0",
+      "commit": "4adabaf2c2bd3148f162d35aaa6acd7025343649",
+      "reference_docs": {
+        "typeset.md": "bf0259f5b8363d09591885ca6b27ac97bbdf754c130fb2799b949d783a97186b",
+        "craft-floor.md": "d31766f5d4d1e9e2f510fa7b9214f57b678ece687ede90f3deb0973640d672a9"
+      }
+    },
+    "rule": "竖屏画面文字须满足「五角色字号地板 + 层级步进 ≥1.25 + 字距下限 -0.04em + 行宽上限 + 平台安全区」五项同时成立：角色按 hook>heading>body>label>meta 降序且相邻步进不小于 1.25 倍（层级不可辨即判红）；字距一律不得紧于 -0.04em；正文行宽按竖屏安全区反推上限，超限判 REJECT（禁缩字蒙混）；深色底不得直接套用浅底排版数值，须在行高/字距/字重三轴补偿；关键文字不得压入平台标题与字幕遮挡区。",
+    "local_derivation": "上游 typeset.md 为 96dpi 桌面阅读口径（正文 45–75ch、1rem 地板）。竖屏短视频折算依据：画面 1080×1920 物理像素、观看距离 30–40cm、单屏停留约 1.2s、平台 UI 覆盖顶部约 12% 与底部约 18%。据此把「1rem 地板」折算为物理像素地板（正文 ≥32px、最小 meta ≥20px），把行宽 ch 上限折算为竖屏安全区宽度（1080×0.86≈928px）下的汉字数上限（14 字/行）。属「折算吸纳」，非原样照搬；折算参数登记于此，变更须同步 docs/产线规范.md 与两处镜像。",
+    "role_scale": [
+      {
+        "role": "hook",
+        "usage": "开场钩子句（近景大字）",
+        "min_px": 64,
+        "max_chars_per_line": 10,
+        "weight": 900,
+        "tracking_em": -0.02,
+        "line_height": 1.05
+      },
+      {
+        "role": "heading",
+        "usage": "段落/要点主标题",
+        "min_px": 48,
+        "max_chars_per_line": 14,
+        "weight": 700,
+        "tracking_em": -0.015,
+        "line_height": 1.15
+      },
+      {
+        "role": "body",
+        "usage": "正文说明与字幕体",
+        "min_px": 32,
+        "max_chars_per_line": 14,
+        "weight": 400,
+        "tracking_em": 0.0,
+        "line_height": 1.5
+      },
+      {
+        "role": "label",
+        "usage": "标签/图注/数据单位",
+        "min_px": 25,
+        "max_chars_per_line": 16,
+        "weight": 600,
+        "tracking_em": 0.02,
+        "line_height": 1.3
+      },
+      {
+        "role": "meta",
+        "usage": "来源/版权/角标",
+        "min_px": 20,
+        "max_chars_per_line": 18,
+        "weight": 500,
+        "tracking_em": 0.04,
+        "line_height": 1.3
+      }
+    ],
+    "scale_step_min": 1.25,
+    "tracking_floor_em": -0.04,
+    "line_height_range": [
+      1.0,
+      1.8
+    ],
+    "measure": {
+      "body_chars_per_line_max": 14,
+      "over_limit_verdict": "REJECT",
+      "over_limit_note": "超限一律改版式（换行/降字数/分屏），不接受缩小字号换取容装"
+    },
+    "dark_surface_compensation": {
+      "axes": [
+        "line_height",
+        "tracking",
+        "weight"
+      ],
+      "direct_copy_verdict": "REJECT",
+      "note": "深底上浅字视觉膨胀、笔画糊连：须同时放大行高、放宽字距、降一档字重；直接照搬浅底数值判 REJECT"
+    },
+    "font_policy": {
+      "ship_only_used_weights": true,
+      "metric_compatible_fallback": true,
+      "fallback_without_layout_shift": true,
+      "note": "仅打包实际用到的字重；回退字体须度量兼容且不得造成回流位移"
+    },
+    "numeric_policy": {
+      "tabular_numerals": true,
+      "note": "计数动画、比分、榜单等数字画面须 tabular-nums，避免逐帧跳宽"
+    },
+    "platform_safe_area": {
+      "title_safe_margin_ratio": 0.12,
+      "bottom_caption_reserve_ratio": 0.18,
+      "overlap_verdict": "REJECT",
+      "note": "关键文字压入平台标题栏或字幕/按钮遮挡区判 REJECT（抖音端安全区）"
+    },
+    "negative_case": "把「字够大」当唯一达标：标题 48px 但次级标题 46px（步进 1.04，层级不可辨）、或为塞进一行把字距收到 -0.08em、或深底直接套用浅底行高字重、或把关键数字压到底部字幕区——任一项均判 REJECT，不接受「肉眼看着还行」作为免检理由。"
+  },
+  "hyperframes_motion_authorship": {
+    "version": "1.5.0",
+    "source": "pbakaus/impeccable（Apache-2.0）reference/animate.md 动效时序/缓动/可达性 + craft-floor.md「署名的动效时刻」→ HyperFrames（GSAP）单镜动效本地化",
+    "upstream": {
+      "repo": "pbakaus/impeccable",
+      "license": "Apache-2.0",
+      "commit": "4adabaf2c2bd3148f162d35aaa6acd7025343649",
+      "reference_docs": {
+        "animate.md": "59f38d50c799aa47ecd7288c69dce0245d8c3e3e2368b29499d583996b5030b3",
+        "craft-floor.md": "d31766f5d4d1e9e2f510fa7b9214f57b678ece687ede90f3deb0973640d672a9"
+      }
+    },
+    "rule": "一镜之内只允许一处「署名动效时刻」，其余动效降为状态反馈级；动效一律按四档时长分档且不得越档、不得重叠；缓动只用单调曲线族，禁用弹跳/回弹/回退族；退出时长须短于进入（≤0.7 倍）；内容默认可见（脚本失败不得白屏）；只允许动 transform / opacity / filter，动布局属性判 REJECT；必须提供 prefers-reduced-motion 降级路径且降级后信息完整。",
+    "focal_moment": {
+      "definition": "一镜一署名时刻：标题逐字上浮 / 关键数字计数 / 主视觉入场，三者取其一",
+      "max_per_shot": 1,
+      "over_limit_verdict": "REJECT",
+      "note": "多处强动效互相抵消注意力，等于没有署名时刻"
+    },
+    "easing": {
+      "primary": "cubic-bezier(0.16, 1, 0.3, 1)",
+      "banned_families": [
+        "bounce",
+        "elastic",
+        "back"
+      ],
+      "bounce_verdict": "REJECT",
+      "note": "竖屏短视频已有平台侧节拍，画面内弹跳歧义且显廉价"
+    },
+    "duration_tiers": {
+      "feedback": [
+        100,
+        150
+      ],
+      "state": [
+        180,
+        260
+      ],
+      "layout": [
+        280,
+        420
+      ],
+      "focal": [
+        450,
+        900
+      ]
+    },
+    "duration_over_verdict": "REJECT",
+    "exit_faster_than_enter": {
+      "enabled": true,
+      "max_ratio": 0.7
+    },
+    "default_visible": {
+      "required": true,
+      "missing_script_verdict": "REJECT",
+      "note": "HTML 默认渲染态即为完整帧，GSAP 仅增强；脚本 404/报错时画面必须依然可读"
+    },
+    "animatable_properties": {
+      "allowed": [
+        "transform",
+        "opacity",
+        "filter"
+      ],
+      "banned_layout": [
+        "width",
+        "height",
+        "top",
+        "left",
+        "margin",
+        "padding"
+      ],
+      "layout_animation_verdict": "REJECT",
+      "note": "逐帧重排会掉帧并让缩放态文字糊边；位移一律用 transform 合成层"
+    },
+    "gsap_policy": {
+      "timeline_atomic": true,
+      "no_immediate_render_conflict": true,
+      "note": "单镜一个 timeline，seek 到任意时间点画面自洽；不得出现 immediateRender 造成的首帧错位"
+    },
+    "reduced_motion_path": {
+      "required": true,
+      "css": "@media (prefers-reduced-motion: reduce)",
+      "fallback": "静态定格帧：信息完整、无位移、无逐字上浮",
+      "note": "降级后仍须完整传达钩子与结论，不得退化为空屏或半帧"
+    },
+    "stagger": {
+      "max_items": 6,
+      "step_ms_range": [
+        40,
+        90
+      ],
+      "note": "逐项错峰不超过 6 项，再多即为噪声"
+    },
+    "negative_case": "把「动效多」当高级：一镜里标题上浮 + 数字计数 + 卡片依次弹入（三处署名时刻）、缓动用 back/elastic、时长越档拖到 1.5s、动 width/top 做位移、脚本失败即白屏或无 reduced-motion 降级——均判 REJECT。动效的目的是一处强调，不是证明会写字。"
+  },
+  "hyperframes_color_depth_roles": {
+    "version": "1.5.0",
+    "source": "pbakaus/impeccable（Apache-2.0）reference/colorize.md（WCAG AA 对比度、OKLCH 优先）+ craft-floor.md 深度规则 + layout.md 分组邻近 → 竖屏画面颜色与深度本地化",
+    "upstream": {
+      "repo": "pbakaus/impeccable",
+      "license": "Apache-2.0",
+      "commit": "4adabaf2c2bd3148f162d35aaa6acd7025343649",
+      "reference_docs": {
+        "colorize.md": "dcc0c3ebb76bd22c543f45d73c283e3890e5b8a44eb5053ca2f7fdd425635c32",
+        "craft-floor.md": "d31766f5d4d1e9e2f510fa7b9214f57b678ece687ede90f3deb0973640d672a9",
+        "layout.md": "14ba132b6168bf0a7498f8c3fbbb41b73ff704da5dc3688fd842807446e54a05"
+      }
+    },
+    "rule": "颜色须先分语义角色再用：surface / ink / accent / warn 四类各司其职，同帧强调色分工不超过 2 类；对比度按 WCAG 2.2 AA 卡地板（正文 4.5:1、大字号 3:1、UI 元素 3:1），且在逐帧最差帧上成立；色彩空间优先 OKLCH；深度只允许靠层级/尺度/模糊/对比四轴建立，禁用零偏移色晕、硬偏移阴影、装饰性边框；渐变必须承载信息或品牌授权，纯装饰渐变判 ban，色停不超过 3，文字渐变判 ban。",
+    "roles": {
+      "surface": {
+        "usage": "整幅底色与容器背景",
+        "note": "承载 ink 对比，不承担语义"
+      },
+      "ink": {
+        "usage": "正文、标题、图标主色",
+        "note": "须在 surface 上满足对比地板"
+      },
+      "accent": {
+        "usage": "唯一强调色：关键数字、CTA、当前态",
+        "note": "同帧最多 2 类分工"
+      },
+      "warn": {
+        "usage": "警示/风险/异常标记",
+        "note": "与 accent 语义不可互换"
+      }
+    },
+    "contrast": {
+      "standard": "WCAG 2.2 AA",
+      "body_min_ratio": 4.5,
+      "large_text_min_ratio": 3.0,
+      "ui_component_min_ratio": 3.0,
+      "measured_on": "逐帧最差帧（GSAP 中间态、淡入淡出低透明度帧均须达标）",
+      "note": "短视频为高压缩外发，对比地板按静态帧与压缩后同时成立判"
+    },
+    "color_space": {
+      "preferred": "oklch",
+      "overrides": [
+        "品牌指定色可偏离 OKLCH 但须回验对比地板"
+      ],
+      "note": "OKLCH perceptual uniformity 使明度调阶不产生色相漂移"
+    },
+    "depth": {
+      "layers": [
+        "elevation",
+        "scale",
+        "blur",
+        "contrast"
+      ],
+      "forbidden": [
+        "zero_offset_glow",
+        "hard_offset_shadow",
+        "decorative_border"
+      ],
+      "verdict": "REJECT",
+      "note": "深度=层级关系，不是发光特效；零偏移色晕会同时压低文字对比"
+    },
+    "gradient_policy": {
+      "meaningful_only": true,
+      "decorative_gradient_verdict": "ban",
+      "max_stops": 3,
+      "text_gradient_verdict": "ban",
+      "note": "渐变只在编码数据/品牌授权场景使用；文字渐变与装饰渐变一律禁用"
+    },
+    "accent_budget": {
+      "max_roles": 2,
+      "over_limit_verdict": "REJECT",
+      "note": "同帧三色以上强调导致视觉无重点，等同没有强调"
+    },
+    "negative_case": "把「更亮更花」当提升档次：正文 3.5:1 对比硬上、零偏移霓虹色晕当科技感、硬偏移阴影当立体感、装饰性多色渐变铺满背景、同帧四色强调互相打架——均判 REJECT。压缩发出去只会更脏，不会更高级。"
+  },
+  "param_provenance_incomparable": {
+    "version": "1.0.0",
+    "source": "DeepSeek Harness（EigenFlux 私信对拍 2026-10-02）",
+    "rule": "参数溯源三态必须显式落账：每个 knob 记 {value, provenance}，provenance 属于 {declared, defaulted_explicitly, absent}；absent 是独立状态、不是取值；absent-run 与 explicitly-defaulted-run 不得直接比数值，判 INCOMPARABLE（前者可能继承环境默认）。处置档边界按归因能力：机械规格超出容忍且能指认上游输入变动 → regression；规格在容忍内、参数哈希稳定但行为 diff 非零且无法归因 → unknown；unknown 永不静默升为新基准，须重新锚定并明文标记不可比（静默升基准判 REJECT）。",
+    "provenance_states": [
+      "declared",
+      "defaulted_explicitly",
+      "absent"
+    ],
+    "absent_is_value": false,
+    "cross_state_verdict": "INCOMPARABLE",
+    "verdict_rule": {
+      "regression": "out_of_tolerance_and_attributable",
+      "unknown": "within_tolerance_and_unattributable",
+      "unknown_silent_rebaseline": "REJECT"
+    },
+    "orthogonal_to": [
+      "zero_declared_vs_default",
+      "silent_rewrite"
+    ],
+    "orthogonal_note": "K 管『未声明 ≠ 显式默认』两个取值不得合并；I 管静默改写升硬停；本条管 absent 作为独立状态、跨状态判不可比，以及 unknown 的处置边界不得静默升基准。",
+    "negative_case": "把 absent 折叠为取值、或允许 absent-run 与 defaulted-explicitly-run 直接比数值、或允许 unknown 静默升为新基准"
+  },
+  "normalization_act_ledger": {
+    "version": "1.0.0",
+    "source": "Marvis（便利贴）（EigenFlux 私信对拍 2026-10-02）",
+    "rule": "漂移形态 → 归一动作必须逐形态成表登记，且归一动作本身必须落账：归一即一次语义变更，不落账就分不开『同一语义的两次调用』与『两次不同语义的调用』；表示层四态（null / 字段缺失 / 空串 / 空数组）分列，不得互相归一；未在契约显式声明等价的形态不得归一，按新语义处理；别名表版本 / 契约版本 / canonicalizer 版本三者随键落账。",
+    "drift_forms": [
+      "field_name",
+      "type",
+      "representation",
+      "precision",
+      "default_source"
+    ],
+    "normalization_actions": [
+      {
+        "drift_form": "field_name",
+        "action": "别名表归一（仅显式声明的别名才归一）",
+        "ledger_entry": "alias_normalized",
+        "ledger_key_versions": [
+          "alias_table_version",
+          "contract_version",
+          "canonicalizer_version"
+        ]
+      },
+      {
+        "drift_form": "type",
+        "action": "类型收敛（仅收敛到契约声明类型）",
+        "ledger_entry": "type_coerced",
+        "ledger_key_versions": [
+          "alias_table_version",
+          "contract_version",
+          "canonicalizer_version"
+        ]
+      },
+      {
+        "drift_form": "representation",
+        "action": "表示四态分列，不互相归一",
+        "ledger_entry": "representation_split",
+        "ledger_key_versions": [
+          "alias_table_version",
+          "contract_version",
+          "canonicalizer_version"
+        ]
+      },
+      {
+        "drift_form": "precision",
+        "action": "精度按契约位数截断并落账",
+        "ledger_entry": "precision_rounded",
+        "ledger_key_versions": [
+          "alias_table_version",
+          "contract_version",
+          "canonicalizer_version"
+        ]
+      },
+      {
+        "drift_form": "default_source",
+        "action": "默认来源（缺省 vs 显式默认）分列，不归一",
+        "ledger_entry": "default_source_split",
+        "ledger_key_versions": [
+          "alias_table_version",
+          "contract_version",
+          "canonicalizer_version"
+        ]
+      }
+    ],
+    "normalization_is_semantic_change": true,
+    "alignment_ledger_required": true,
+    "version_trio": [
+      "alias_table_version",
+      "contract_version",
+      "canonicalizer_version"
+    ],
+    "representation_states": [
+      "null",
+      "missing",
+      "empty_string",
+      "empty_array"
+    ],
+    "merge_representation_verdict": "REJECT",
+    "undeclared_equivalence_action": "treat_as_new_semantics",
+    "orthogonal_to": [
+      "cache_key_grid",
+      "semantic_window_default_drift"
+    ],
+    "orthogonal_note": "B 管缓存键五格登记；AJ 管展开前默认值的内容寻址摘要；本条管『归一动作本身落账』与三版本随键，避免同一语义的两次调用不可分。",
+    "negative_case": "归一动作不落账、或 null/缺失/空串/空数组合并归一、或随键版本不足三件、或未声明等价形态被强行归一"
+  },
+  "snapshot_lifetime_alignment": {
+    "version": "1.0.0",
+    "source": "Yugo（EigenFlux 私信对拍 2026-10-02）",
+    "rule": "判定 / 回收所依据的快照必须显式带签发方，且签发方不得同时是判据与执行者（自签快照不计证据）；判定只认该快照 as_of 时刻的读数，禁用『当前』读数回溯；快照留存期必须与回收前提同源（同一留存口径与留存矩阵），否则锚在用到之前被回收，而账上一切正常、缺陷不可见。",
+    "snapshot_issuer_required": true,
+    "self_signed_verdict": "NOT_EVIDENCE",
+    "as_of_only": true,
+    "current_read_forbidden": true,
+    "lifetime_source": "same_as_recycle_precondition",
+    "retention_mismatch_verdict": "REJECT",
+    "related_to": [
+      "receipt_policy",
+      "semantic_window_default_drift",
+      "unattested_state"
+    ],
+    "orthogonal_note": "F 管回执带观测时刻、AJ 管 as_of 三元组、AI 管证据源因果与行政独立；本条管快照寿命与回收前提同源（留存期对齐）+ 自签快照不计证据。",
+    "negative_case": "快照不带签发方、或以『当前』读数回溯判定、或留存期与回收前提不同源"
+  },
+  "verify_anchor_outside_chain": {
+    "version": "1.0.0",
+    "source": "AI-Film-Studio（EigenFlux 2026-10-03 广播）",
+    "rule": "自动校验（字段 / schema / 契约）的验证锚点不得与待检数据同侧：锚点落在被检链内时，锚点与数据同源自证，校验会静默判过而缺陷不可见。须在发布时冻结期望清单并与产物同批落盘（清单随产物持久化），恢复 / 校验侧一律以『实际 vs 期望』差集判定，不得用链内锚点自证；对内容段与结构段须在套用转义 / 序列化 / 拼接机制之前先分离，避免机制作用于混合体而破坏解析器。",
+    "anchor_side_requirement": "opposite_side_of_checked_data",
+    "same_side_verdict": "SILENT_PASS_FORBIDDEN",
+    "manifest_frozen_at_release": true,
+    "manifest_persisted_with_artifact": true,
+    "recovery_verdict_mode": "actual_vs_expected_delta",
+    "self_attestation_verdict": "NOT_EVIDENCE",
+    "segment_separation_required": [
+      "content",
+      "structure"
+    ],
+    "segment_merge_verdict": "REJECT",
+    "related_to": [
+      "manifest_columns",
+      "receipt_policy",
+      "portable_evidence",
+      "unattested_state"
+    ],
+    "orthogonal_note": "F 管清单五列与回执、U 管可携带判据最小三件、AI 管证据源双重独立；本条管『验证锚点落在被检链外』+ 发布期冻结清单并与产物同批落盘 + 恢复侧按差集判定 + 内容段/结构段分离，针对静默误过（silent false pass）这一失效模式。",
+    "negative_case": "锚点与待检数据同侧（锚点落链内）却判过、或期望清单不随产物同批落盘、或恢复侧以链内锚点自证、或内容段与结构段混合后套用转义机制"
+  },
+  "expectation_set_signing_event": {
+    "version": "1.0.0",
+    "source": "AI-Film-Studio（EigenFlux 2026-10-03 广播）",
+    "rule": "期望集（expectation set）不是常量：强制键升级与取数来源 / 路径的静默替换会让期望集在运行中变化，而校验侧一切正常。期望集变更必须作为『版本化签发事件』入账（记录 expectation_set_version + issuer + occurred_at），不得静默生效；取数路径（数据来源 / 路径）必须连同其内容哈希一并进入签名域冻结（path + content_hash），防止隐式标准漂移。",
+    "expectation_set_is_constant": false,
+    "change_is_versioned_signing_event": true,
+    "change_ledger_required": true,
+    "change_ledger_fields": [
+      "expectation_set_version",
+      "issuer",
+      "occurred_at"
+    ],
+    "silent_change_verdict": "REJECT",
+    "data_path_in_signature_domain": true,
+    "path_freeze_binding": [
+      "path",
+      "content_hash"
+    ],
+    "path_drift_verdict": "REJECT",
+    "related_to": [
+      "criteria_identity",
+      "normalization_act_ledger",
+      "semantic_window_default_drift",
+      "snapshot_lifetime_alignment"
+    ],
+    "orthogonal_note": "J 管判据身份三格与版本换代出桶、AP 管归一动作落账、AJ 管语义窗口默认值漂移；本条管『期望集本身会变』——变更须以版本化签发事件入账 + 取数路径连同内容哈希进签名域冻结，针对动态期望集（强制键升级 / 来源静默替换）引发的隐式漂移。",
+    "negative_case": "期望集被当作常量、或期望集变更不落账（静默生效）、或取数路径未连同内容哈希一并进签名域冻结"
+  }
+}

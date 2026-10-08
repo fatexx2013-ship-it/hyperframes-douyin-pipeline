@@ -1,0 +1,266 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#FF5926",
+      "purpose": "赤焰热力主题大数字渐变描边（VIS 数据强调，用主题色）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "title": "Photoshop 太贵？他给自己写了一个开源的",
+  "date": "2026.09.24",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "voice_desc": "慵懒玉女御姐音（Qwen3-TTS 本地 MLX，情绪自动匹配）",
+  "tts_line": "solo-yujie",
+  "tts_tuning": "G版（逐句·对比停顿）：-52dB/0.30s 句内静音上限，句首留白0.12s，句间 逗号0.25s / 句末0.75s / 段落1.20s",
+  "source": "github.com/robbietilton/Compositor · 官方 README（MIT 协议，未引用星标数字）",
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你还想拆哪个项目。",
+    "emotion": "thoughtful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你还想拆哪个项目？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "chip",
+      "card": {
+        "eyebrow": "开源情报站 · Mac 图像编辑器",
+        "title": "Photoshop 太贵，<accent>他干脆自己写了一个</accent>",
+        "subtitle": "完全免费开源 · MIT 协议 · 围绕合成与后期工作流",
+        "stats": [
+          {
+            "k": "开源协议",
+            "v": "MIT"
+          },
+          {
+            "k": "系统要求",
+            "v": "macOS 26.5+"
+          },
+          {
+            "k": "源码",
+            "v": "可自行改"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "Photoshop 太贵，GIMP 又不够顺手，于是作者干脆自己写了一个：Compositor，一款完全免费开源的 Mac 图像编辑器。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 10.87,
+      "beat": 2,
+      "pause_after": 0.25
+    },
+    {
+      "type": "feature",
+      "visual": "toolcall",
+      "card": {
+        "eyebrow": "图层系统",
+        "title": "图层蒙版剪贴蒙版，<accent>一个都不少</accent>",
+        "subtitle": "图层与文件夹 · Photoshop 全套混合模式（顺序一致）"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "图层和文件夹能嵌套，不透明度、全套混合模式都跟 Photoshop 一致。蒙版能画能填、能反相能羽化，剪贴蒙版也有。"
+        }
+      ],
+      "_start": 12.32,
+      "_end": 24.72,
+      "beat": 3
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "调整层 · 图层效果",
+        "title": "非破坏性编辑，<accent>随时能改回来</accent>",
+        "subtitle": "描边投影内外发光 · 由 GPU 渲染，可随时编辑"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "色阶、曲线、曝光、渐变映射、颗粒、黑白，全做成调整层；描边、投影、内外发光跑在 GPU 上，随时能改回来。"
+        }
+      ],
+      "_start": 25.92,
+      "_end": 38.48,
+      "beat": 3
+    },
+    {
+      "type": "feature",
+      "visual": "ladder",
+      "card": {
+        "eyebrow": "选区 · 填充",
+        "title": "魔棒、选择主体，<accent>选区一步到位</accent>",
+        "subtitle": "内容识别填充 · 还能把画面扩到画布之外"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "矩形椭圆选框、自由套索、多边形套索、魔棒和对象工具，按 Tab 就能切换。内容识别填充，还能把画面扩展到画布外面。"
+        }
+      ],
+      "_start": 39.88,
+      "_end": 52.52,
+      "beat": 4,
+      "pause_before": 0.2
+    },
+    {
+      "type": "feature",
+      "visual": "deploy",
+      "card": {
+        "eyebrow": "格式兼容",
+        "title": "PSD 直接开，<accent>图层还留着</accent>",
+        "subtitle": "PSD / PSB / Camera Raw / HEIC / TIFF / SVG"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "PSD、PSB 直接开，图层、蒙版、混合模式和水平文字都还能改；导入前先给你一份转换报告，Camera Raw、HEIC、SVG 也支持。"
+        }
+      ],
+      "_start": 53.72,
+      "_end": 68.36,
+      "beat": 3
+    },
+    {
+      "type": "outro",
+      "visual": "chip",
+      "card": {
+        "title": "关注 jerrychen2001",
+        "cta": "评论区聊聊",
+        "sub": "你还想拆哪个项目？"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "MIT 协议开源，需要 macOS 26.5 和 Xcode 26，下载 Xcode 工程就能自己加功能。"
+        }
+      ],
+      "_start": 69.56,
+      "_end": 78.36,
+      "beat": 5
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "Photoshop 太贵，GIMP 又不够顺手，于是作者干脆自己写了一个：Compositor，一款完全免费开源的 Mac 图像编辑器。",
+      "start": 0.0,
+      "end": 10.87,
+      "beat": 2,
+      "enter_scale": 1.12
+    },
+    {
+      "scene_index": 1,
+      "text": "图层和文件夹能嵌套，不透明度、全套混合模式都跟 Photoshop 一致。蒙版能画能填、能反相能羽化，剪贴蒙版也有。",
+      "start": 12.32,
+      "end": 24.72,
+      "beat": 3,
+      "enter_scale": 1.0
+    },
+    {
+      "scene_index": 2,
+      "text": "色阶、曲线、曝光、渐变映射、颗粒、黑白，全做成调整层；描边、投影、内外发光跑在 GPU 上，随时能改回来。",
+      "start": 25.92,
+      "end": 38.48,
+      "beat": 3,
+      "enter_scale": 1.0
+    },
+    {
+      "scene_index": 3,
+      "text": "矩形椭圆选框、自由套索、多边形套索、魔棒和对象工具，按 Tab 就能切换。内容识别填充，还能把画面扩展到画布外面。",
+      "start": 39.88,
+      "end": 52.52,
+      "beat": 4,
+      "enter_scale": 0.9
+    },
+    {
+      "scene_index": 4,
+      "text": "PSD、PSB 直接开，图层、蒙版、混合模式和水平文字都还能改；导入前先给你一份转换报告，Camera Raw、HEIC、SVG 也支持。",
+      "start": 53.72,
+      "end": 68.36,
+      "beat": 3,
+      "enter_scale": 1.0
+    },
+    {
+      "scene_index": 5,
+      "text": "MIT 协议开源，需要 macOS 26.5 和 Xcode 26，下载 Xcode 工程就能自己加功能。",
+      "start": 69.56,
+      "end": 78.36,
+      "beat": 5,
+      "enter_scale": 0.8
+    }
+  ],
+  "total_duration": 78.36,
+  "tts_params": {
+    "version": "G",
+    "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+    "ref_voice": "yujie_thoughtful.wav（慵懒御姐音）",
+    "silence_trim": "-52dB / 0.30s（句内上限）",
+    "lead_silence": 0.12,
+    "tail_silence": 0.08,
+    "pause_comma": 0.25,
+    "pause_period": 0.75,
+    "pause_paragraph": 1.2,
+    "sample_rate": 24000,
+    "channels": 1,
+    "silence_ge_040s_total": 0,
+    "rhythm": {
+      "version": "A1/v1",
+      "resolver": "scripts/rhythm.py",
+      "has_overrides": true,
+      "beats": [
+        2,
+        3,
+        3,
+        4,
+        3,
+        5
+      ],
+      "enter_scales": [
+        1.12,
+        1.0,
+        1.0,
+        0.9,
+        1.0,
+        0.8
+      ],
+      "gaps": [
+        1.45,
+        1.2,
+        1.4,
+        1.2,
+        1.2
+      ],
+      "issues": []
+    }
+  },
+  "tts_note": "单人女声口播 → 走单人线：本地 Qwen3-TTS 12Hz 1.7B Base 8bit（MLX）+ 慵懒御姐音参考音 yujie_thoughtful.wav，G 版参数（-52dB/0.30s 句内静音修剪、句首 0.12s / 句尾 0.08s 留白、逗号 0.25s / 句末 0.75s / 段落 1.20s）；未启用任何云端 TTS",
+  "delivery": {
+    "file": "douyin_final.mp4",
+    "duration": 83.21,
+    "size_mb": 10.97,
+    "spec": "1080x1920 / 9:16 / 30fps / H.264 High / AAC 44100Hz 2ch",
+    "watermark": "jerrychen2001",
+    "qc": "check FAIL 0（3 项探索级 WARN 登记周回归）；negcontrol run 8/8 达期望；verify-materials 全 OK；render 峰值 1.7GB / 24GB"
+  }
+}

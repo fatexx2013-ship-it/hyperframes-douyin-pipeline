@@ -1,0 +1,47 @@
+[
+  {
+    "text": "想做个热搜工具，数据哪来？这个开源项目叫 60s API，一行命令调出抖音微博知乎热搜，还不要钱。",
+    "path": "/Volumes/PSSD/抖音视频/story/60s-api/line_00.wav",
+    "duration": 10.17,
+    "voice_start": 0.11,
+    "voice_end": 10.05,
+    "silence_ge_040s": 0,
+    "ref_audio": "yujie_thoughtful.wav"
+  },
+  {
+    "text": "热搜只是基本盘：抖音微博知乎小红书 B 站全覆盖。还有天气、汇率、金价油价、翻译、二维码，60 多个接口，全免费。",
+    "path": "/Volumes/PSSD/抖音视频/story/60s-api/line_01.wav",
+    "duration": 13.35,
+    "voice_start": 0.11,
+    "voice_end": 13.23,
+    "silence_ge_040s": 0,
+    "ref_audio": "yujie_thoughtful.wav"
+  },
+  {
+    "text": "用法极其简单，一行 curl 直接出结果，不用注册不用 key。想稳定就自己部署，Docker 和云函数都支持，免费额度个人根本用不完。",
+    "path": "/Volumes/PSSD/抖音视频/story/60s-api/line_02.wav",
+    "duration": 12.0,
+    "voice_start": 0.11,
+    "voice_end": 11.89,
+    "silence_ge_040s": 0,
+    "ref_audio": "yujie_thoughtful.wav"
+  },
+  {
+    "text": "好玩的还有：KFC 疯狂星期四文案、每日摸鱼提示、发病文学，做个群聊机器人整活足够了。",
+    "path": "/Volumes/PSSD/抖音视频/story/60s-api/line_03.wav",
+    "duration": 9.44,
+    "voice_start": 0.12,
+    "voice_end": 9.33,
+    "silence_ge_040s": 0,
+    "ref_audio": "yujie_thoughtful.wav"
+  },
+  {
+    "text": "MIT 开源，自己装一个。你会拿它做什么工具？",
+    "path": "/Volumes/PSSD/抖音视频/story/60s-api/line_04.wav",
+    "duration": 5.84,
+    "voice_start": 0.11,
+    "voice_end": 5.73,
+    "silence_ge_040s": 0,
+    "ref_audio": "yujie_thoughtful.wav"
+  }
+]

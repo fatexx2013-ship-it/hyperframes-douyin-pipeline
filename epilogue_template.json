@@ -1,0 +1,70 @@
+{
+  "name": "douyin_news_card_epilogue",
+  "version": "1.0.0",
+  "created_at": "2026-09-17",
+  "description": "抖音「AI 快讯」新闻卡片成片的标准片尾场景模板：关注引导口播 + 评论区互动引导（G 版慵懒御姐音），供后续所有成片管线默认追加。",
+  "applies_to": "post_process.py 产出的抖音规格成片 douyin.mp4（1080x1920 / 30fps / H.264 High@4.2 / AAC 128k 44.1kHz）",
+  "applier": "append_epilogue.py",
+  "usage": "python3 append_epilogue.py <run_dir> [--out douyin_epilogue.mp4] [--force]",
+
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你还想拆哪个项目。",
+    "emotion": "thoughtful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你还想拆哪个项目？"
+    }
+  },
+
+  "voice": {
+    "role": "thoughtful",
+    "alias": "G 版慵懒御姐音",
+    "reference_wav": "/Users/mac/Projects/qwen3-tts-apple-silicon/voices/yujie_thoughtful.wav",
+    "engine": "Qwen3-TTS (mlx_audio) via generate_news_card_video.batch_tts",
+    "sample_rate": 24000,
+    "channels": 1
+  },
+
+  "cadence": {
+    "rule_inner_silence": "句内 > -52dB 的长静音截断到 0.30s",
+    "rule_lead_tail": "句首 / 句尾各保留 0.12s 留白",
+    "rule_gap_before": "上一句结束到片尾口播开始：0.40s 过渡静音",
+    "rule_tail_silence": "片尾口播结束后：0.50s 停留（卡片保持到结束）"
+  },
+
+  "style": {
+    "source": "严格复用原片 index.html 的 <style> 与 topbar / 水印结构",
+    "card_class": "ocard",
+    "title_class": "otitle",
+    "cta_class": "octa",
+    "sub_class": "osub",
+    "subtitle_class": "subtitle / sub-inner",
+    "watermark": "复用原片 #wm（右下角 jerrychen2001）",
+    "topbar": "复用原片 #topbar（brand + date）",
+    "progress_bar": "width:100%（满格）",
+    "entry_animation": "卡片 fade+y 位移 0.5s；三个文本行 stagger 0.09s；字幕 0.25s 淡入 / 0.18s 淡出",
+    "subtitle_window_rule": "字幕窗 = 语音边界 start-0.05s ~ end+0.15s（严格同起止，不跨句）"
+  },
+
+  "render": {
+    "tool": "hyperframes render --quality high",
+    "segment_duration": "gap_before + epilogue 音频时长 + tail_silence",
+    "codec_align": "H.264 High@4.2 / yuv420p / 30fps / 无音轨",
+    "concat": "原片视频流 -c:v copy 与片尾段拼接（原片 0~末帧逐帧零改动）",
+    "audio": "原 narration.wav 补静音 → 接片尾口播 → 混入 BGM(volume 0.18) → pan=stereo 显式复制声道后 AAC 128k 编码"
+  },
+
+  "known_pitfalls": [
+    "片尾口播的 adelay 必须放在「原片总时长 + gap」处，否则会叠到片头",
+    "24kHz 单声道转 44.1kHz 立体声时 SWR 默认上混会衰减 -3dB，必须用 pan=stereo|c0=c0|c1=c0 显式复制",
+    "hyperframes 依赖 node，需保证 /opt/homebrew/bin 在 PATH 中",
+    "片尾段 HTML 的 data-duration 是「片尾段自身时长」，不是整条成片总时长"
+  ]
+}

@@ -1,0 +1,109 @@
+<!doctype html>
+<!-- @dsCard group="ported-htmlvideo" name="Logo Outro (竖屏)" path="index.html" subtitle="片尾定版：标记缩放登场 + 品牌两行升起 + 呼吸收束" viewport="{width: 1080, height: 1920}" -->
+<!-- 来源：nexu-io/html-video templates/frame-logo-outro（Apache-2.0）
+     适配：1920×1080 → 1080×1920 竖屏重排 / 剔除 cdn.tailwindcss.com（改写手写 CSS）/
+           移除 Google Fonts（Inter Tight / Inter / Noto Sans SC）→ SF Pro Display + PingFang SC 本地回退 /
+           CSS @keyframes → GSAP 时间轴（含片尾呼吸与收束） -->
+<html lang="zh-CN" data-composition-variables='[
+  {"id":"mark","type":"string","label":"标记文字","default":"M"},
+  {"id":"line1","type":"string","label":"品牌行1","default":"本地 AI 视频产线"},
+  {"id":"line2","type":"string","label":"品牌行2","default":"HyperFrames · 竖屏 1080×1920"},
+  {"id":"sub","type":"string","label":"副行","default":"模板已落地，随时可出片。"},
+  {"id":"handle","type":"string","label":"账号","default":"@本地渲染实验室"},
+  {"id":"cta","type":"string","label":"行动语","default":"关注 · 追更模板库"}
+]'>
+<head>
+<meta charset="UTF-8" />
+<title>Logo Outro · 竖屏片尾定版</title>
+<style>
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC"), local("PingFangSC-Regular"); font-weight:400; font-display:block; }
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC Semibold"), local("PingFangSC-Semibold"), local("PingFang SC"); font-weight:600 900; font-display:block; }
+  @font-face { font-family:"SF Pro Display"; src:local("SF Pro Display"), local("SFProDisplay-Bold"); font-weight:400 900; font-display:block; }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1080px; height:1920px; overflow:hidden; position:relative;
+    background:#07070A; color:#F5F5F7;
+    font-family:"PingFang SC","SF Pro Display","Helvetica Neue",Arial,sans-serif;
+  }
+  .glow { position:absolute; inset:0;
+    background:radial-gradient(ellipse 900px 900px at 50% 42%, rgba(94,110,255,0.20) 0%, transparent 68%); }
+
+  .stack { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:0 96px; }
+
+  .mark { width:280px; height:280px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    background:linear-gradient(140deg,#2B2F63 0%,#5E6EFF 100%);
+    font-size:132px; font-weight:900; letter-spacing:-2px; color:#fff;
+    box-shadow:0 30px 90px rgba(94,110,255,0.35); }
+
+  .brand { margin-top:88px; text-align:center; }
+  .brand .l1 { font-size:96px; font-weight:900; letter-spacing:-2px; line-height:1.16; }
+  .brand .l2 { font-size:44px; font-weight:500; color:#9A9AA6; letter-spacing:1px; margin-top:26px; }
+
+  .divider { width:160px; height:3px; background:#5E6EFF; margin:78px auto 0; transform-origin:center; }
+
+  .sub { margin-top:60px; font-size:34px; font-weight:400; color:#C9C9D2; letter-spacing:0.5px; }
+
+  .pill { margin-top:96px; display:flex; align-items:center; gap:18px; padding:26px 54px; border-radius:999px;
+    border:1px solid rgba(245,245,247,0.22); font-size:32px; font-weight:700; letter-spacing:1px; }
+  .pill .dot { width:14px; height:14px; border-radius:50%; background:#5E6EFF; }
+
+  .cta { position:absolute; bottom:150px; left:0; right:0; text-align:center;
+    font-size:26px; font-weight:500; letter-spacing:6px; text-transform:uppercase; color:#7A7A88; }
+
+  .fade { position:absolute; inset:0; background:#000; opacity:0; pointer-events:none; }
+</style>
+</head>
+<body data-composition-id="logo-outro" data-width="1080" data-height="1920">
+  <div class="glow"></div>
+
+  <div class="stack">
+    <div class="mark" data-var="mark">M</div>
+    <div class="brand">
+      <div class="l1" data-var="line1">本地 AI 视频产线</div>
+      <div class="l2" data-var="line2">HyperFrames · 竖屏 1080×1920</div>
+    </div>
+    <div class="divider"></div>
+    <div class="sub" data-var="sub">模板已落地，随时可出片。</div>
+    <div class="pill"><span class="dot"></span><span data-var="handle">@本地渲染实验室</span></div>
+  </div>
+
+  <div class="cta" data-var="cta">关注 · 追更模板库</div>
+  <div class="fade"></div>
+
+  <script src="_shared/vendor/gsap.min.js"></script>
+  <script>window.gsap||document.write('<script src="../_vendor/gsap.min.js"><\/script>');</script>
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      document.querySelectorAll('[data-var]').forEach(function (el) {
+        var v = params.get(el.getAttribute('data-var'));
+        if (v) el.innerHTML = v;
+      });
+      var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
+
+      tl.from('.glow',      { opacity: 0, duration: 1.2, ease: 'power2.out' }, 0)
+        .from('.mark',      { opacity: 0, scale: 0.72, duration: 0.95 }, 0.15)
+        .to('.mark',        { boxShadow: '0 40px 120px rgba(94,110,255,0.5)', duration: 1.4, ease: 'sine.inOut' }, 1.2)
+        .from('.brand .l1', { opacity: 0, y: 34, duration: 0.8 }, 0.7)
+        .from('.brand .l2', { opacity: 0, y: 24, duration: 0.7, ease: 'power2.out' }, 0.92)
+        .from('.divider',   { scaleX: 0, duration: 0.8 }, 1.12)
+        .from('.sub',       { opacity: 0, y: 20, duration: 0.7, ease: 'power2.out' }, 1.35)
+        .from('.pill',      { opacity: 0, y: 22, duration: 0.7, ease: 'power2.out' }, 1.6)
+        .from('.cta',       { opacity: 0, duration: 0.8, ease: 'power2.out' }, 1.85)
+        // 收束：末尾轻微呼吸 + 淡出，便于与下一条衔接或定帧
+        .to('.stack',       { scale: 1.02, duration: 2.4, ease: 'sine.inOut' }, 2.2)
+        .to('.fade',        { opacity: 1, duration: 0.8, ease: 'power2.in' }, 4.0);
+
+      if (reduced) { tl.progress(1); tl.pause(); }
+      window.__timelines = window.__timelines || {};
+      window.__timelines['logo-outro'] = tl;
+      window.__timelines['main-comp'] = tl;
+
+      var t = parseFloat(params.get('t'));
+      if (!isNaN(t)) tl.seek(t);
+    })();
+  </script>
+</body>
+</html>

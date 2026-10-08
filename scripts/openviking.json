@@ -1,0 +1,22 @@
+{
+  "title": "字节开源OpenViking：AI终于不再金鱼脑了",
+  "date": "2026.09.16",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/Fight-BeatBrothers.flac",
+  "dialogue": [
+    {"role": "question", "text": "诶，你听说了吗？字节刚开源了一个项目，9个月就3.7万星了？"},
+    {"role": "answer", "text": "你说的是OpenViking吧？火山引擎出的，给AI Agent装记忆系统的，确实火。"},
+    {"role": "question", "text": "装记忆系统？AI不是本来就能记住对话吗？"},
+    {"role": "answer", "text": "那可不行。传统AI就像金鱼，聊着聊着就忘了你是谁。45小时对话记忆直接清零。"},
+    {"role": "question", "text": "这么夸张？那OpenViking怎么解决的？"},
+    {"role": "answer", "text": "它把记忆、知识、技能全统一成一个文件系统。AI用ls、find、grep就能检索上下文，跟人在电脑里找文件一样自然。"},
+    {"role": "question", "text": "用文件系统管理记忆？这思路好新颖啊。"},
+    {"role": "answer", "text": "更厉害的是三层加载机制。先看摘要判断相关性，再看概览规划，最后才读全文。Token消耗直接砍掉91%。"},
+    {"role": "question", "text": "Token砍91%？那成本不是省了一大笔？"},
+    {"role": "answer", "text": "对，而且记忆准确率从24%飙到82%。Claude Code、Cursor、Codex等12个主流Agent框架都已经接入了。"},
+    {"role": "question", "text": "12个框架都接了？这也太通用了吧！"},
+    {"role": "answer", "text": "毕竟3篇顶会论文撑腰，VLDB、ICDE级别的。字节这次是认真在做AI基础设施。"},
+    {"role": "question", "text": "那普通人能用上吗？还是只有大公司才行？"},
+    {"role": "answer", "text": "pip install openviking就能跑，支持本地Ollama模型。自托管、Docker部署都行，个人开发者完全用得起。"}
+  ]
+}

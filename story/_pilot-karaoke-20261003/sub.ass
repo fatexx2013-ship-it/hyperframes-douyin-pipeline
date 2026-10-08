@@ -1,0 +1,52 @@
+[Script Info]
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,PingFang SC,36,&H0000D7FF,&H00FFFFFF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,3,2,1,2,30,30,150,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:02.40,Default,,0,0,0,,{\kf42}别{\kf16}再{\kf18}花{\kf22}钱{\kf38}买{\kf4}A{\kf25}I{\kf14}会{\kf24}员{\kf38}了
+Dialogue: 0,0:00:02.40,0:00:03.44,Default,,0,0,0,,{\kf42}我{\kf24}是{\kf10}J{\kf4}e{\kf4}r{\kf4}r{\kf18}y
+Dialogue: 0,0:00:03.44,0:00:04.80,Default,,0,0,0,,{\kf36}今{\kf22}天{\kf24}给{\kf4}大{\kf21}家{\kf20}推{\kf10}荐
+Dialogue: 0,0:00:04.80,0:00:07.48,Default,,0,0,0,,{\kf26}g{\kf4}i{\kf4}t{\kf17}h{\kf4}u{\kf17}b{\kf22}上{\kf18}爆{\kf10}火{\kf18}的{\kf12}三{\kf14}个{\kf16}开{\kf18}源{\kf25}神{\kf9}技{\kf22}项{\kf14}目
+Dialogue: 0,0:00:07.48,0:00:08.80,Default,,0,0,0,,{\kf40}不{\kf28}仅{\kf4}完{\kf23}全{\kf24}免{\kf14}费
+Dialogue: 0,0:00:08.80,0:00:10.64,Default,,0,0,0,,{\kf40}还{\kf10}能{\kf16}帮{\kf14}你{\kf16}打{\kf14}工{\kf28}导{\kf46}前
+Dialogue: 0,0:00:10.64,0:00:12.04,Default,,0,0,0,,{\kf46}赶{\kf20}紧{\kf14}点{\kf20}赞{\kf24}关{\kf16}注
+Dialogue: 0,0:00:12.04,0:00:15.04,Default,,0,0,0,,{\kf44}认{\kf18}准{\kf4}我{\kf17}的{\kf16}抖{\kf22}音{\kf24}号{\kf14}J{\kf4}e{\kf4}r{\kf4}r{\kf12}y{\kf6}C{\kf4}h{\kf4}a{\kf29}n{\kf4}2{\kf4}0{\kf35}0{\kf36}1
+Dialogue: 0,0:00:15.04,0:00:16.04,Default,,0,0,0,,{\kf36}第{\kf14}一{\kf16}个{\kf26}项{\kf8}目
+Dialogue: 0,0:00:16.04,0:00:18.20,Default,,0,0,0,,{\kf27}A{\kf11}l{\kf2}l{\kf14}a{\kf4}m{\kf23}a{\kf27}加{\kf4}O{\kf4}p{\kf4}e{\kf14}n{\kf4}W{\kf5}e{\kf24}b{\kf4}U{\kf49}I
+Dialogue: 0,0:00:18.20,0:00:21.36,Default,,0,0,0,,{\kf34}这{\kf30}是{\kf4}一{\kf17}个{\kf16}能{\kf18}把{\kf12}大{\kf30}模{\kf28}型{\kf20}搬{\kf12}进{\kf14}你{\kf16}电{\kf8}脑{\kf20}的{\kf24}神{\kf14}器
+Dialogue: 0,0:00:21.36,0:00:22.40,Default,,0,0,0,,{\kf34}完{\kf28}全{\kf32}免{\kf10}费
+Dialogue: 0,0:00:22.40,0:00:23.48,Default,,0,0,0,,{\kf46}不{\kf4}需{\kf19}要{\kf24}联{\kf16}网
+Dialogue: 0,0:00:23.48,0:00:26.00,Default,,0,0,0,,{\kf42}不{\kf40}仅{\kf4}支{\kf21}持{\kf4}D{\kf5}e{\kf4}e{\kf19}p{\kf4}S{\kf7}e{\kf4}e{\kf31}k{\kf16}和{\kf10}L{\kf4}o{\kf4}m{\kf25}a{\kf14}3
+Dialogue: 0,0:00:26.00,0:00:27.64,Default,,0,0,0,,{\kf32}而{\kf24}且{\kf18}绝{\kf20}对{\kf26}隐{\kf44}私
+Dialogue: 0,0:00:27.64,0:00:28.68,Default,,0,0,0,,{\kf38}第{\kf14}二{\kf16}个{\kf22}项{\kf14}目
+Dialogue: 0,0:00:28.68,0:00:29.60,Default,,0,0,0,,{\kf24}D{\kf18}e{\kf4}F{\kf47}i
+Dialogue: 0,0:00:29.60,0:00:30.68,Default,,0,0,0,,{\kf44}零{\kf12}代{\kf18}码{\kf16}拖{\kf18}拽
+Dialogue: 0,0:00:30.68,0:00:33.08,Default,,0,0,0,,{\kf32}就{\kf14}能{\kf16}定{\kf14}制{\kf22}专{\kf46}属{\kf4}A{\kf29}I{\kf24}员{\kf40}工
+Dialogue: 0,0:00:33.08,0:00:34.84,Default,,0,0,0,,{\kf38}不{\kf22}管{\kf20}是{\kf22}写{\kf14}小{\kf14}红{\kf20}书{\kf22}文{\kf4}案
+Dialogue: 0,0:00:34.84,0:00:36.24,Default,,0,0,0,,{\kf26}还{\kf26}是{\kf14}自{\kf20}动{\kf24}克{\kf30}服
+Dialogue: 0,0:00:36.24,0:00:37.12,Default,,0,0,0,,{\kf40}挂{\kf16}在{\kf24}后{\kf8}台
+Dialogue: 0,0:00:37.12,0:00:38.88,Default,,0,0,0,,{\kf34}就{\kf12}能{\kf18}帮{\kf14}你{\kf16}默{\kf20}默{\kf24}打{\kf38}工
+Dialogue: 0,0:00:38.88,0:00:40.04,Default,,0,0,0,,{\kf42}第{\kf18}三{\kf16}个{\kf26}项{\kf14}目
+Dialogue: 0,0:00:40.04,0:00:40.92,Default,,0,0,0,,{\kf24}C{\kf20}l{\kf4}i{\kf4}e{\kf4}n{\kf34}t
+Dialogue: 0,0:00:40.92,0:00:44.12,Default,,0,0,0,,{\kf52}V{\kf22}S{\kf4}C{\kf4}o{\kf4}d{\kf10}e{\kf12}里{\kf18}的{\kf16}全{\kf20}自{\kf40}动{\kf4}A{\kf27}I{\kf16}程{\kf24}序{\kf50}员
+Dialogue: 0,0:00:44.12,0:00:45.48,Default,,0,0,0,,{\kf32}自{\kf28}己{\kf16}新{\kf18}建{\kf26}文{\kf16}件
+Dialogue: 0,0:00:45.48,0:00:46.32,Default,,0,0,0,,{\kf44}写{\kf18}代{\kf22}码
+Dialogue: 0,0:00:46.32,0:00:47.04,Default,,0,0,0,,{\kf58}改{\kf4}b{\kf4}u{\kf7}g
+Dialogue: 0,0:00:47.04,0:00:48.20,Default,,0,0,0,,{\kf42}跑{\kf26}测{\kf48}试
+Dialogue: 0,0:00:48.20,0:00:49.72,Default,,0,0,0,,{\kf38}你{\kf18}只{\kf16}需{\kf14}喝{\kf18}杯{\kf24}咖{\kf24}啡
+Dialogue: 0,0:00:49.72,0:00:52.32,Default,,0,0,0,,{\kf40}静{\kf16}静{\kf15}看{\kf11}他{\kf20}把{\kf20}系{\kf30}统{\kf24}写{\kf14}好{\kf26}就{\kf44}行
+Dialogue: 0,0:00:52.32,0:00:54.16,Default,,0,0,0,,{\kf42}这{\kf12}三{\kf14}个{\kf14}项{\kf10}目{\kf16}的{\kf12}一{\kf18}件{\kf12}安{\kf26}装{\kf8}包
+Dialogue: 0,0:00:54.16,0:00:55.24,Default,,0,0,0,,{\kf38}和{\kf16}新{\kf20}手{\kf28}视{\kf6}频
+Dialogue: 0,0:00:55.24,0:00:57.20,Default,,0,0,0,,{\kf38}叫{\kf16}成{\kf22}我{\kf4}已{\kf17}经{\kf16}整{\kf26}理{\kf4}好{\kf55}了
+Dialogue: 0,0:00:57.20,0:00:58.40,Default,,0,0,0,,{\kf40}关{\kf18}注{\kf4}我{\kf13}的{\kf16}抖{\kf24}音{\kf6}号
+Dialogue: 0,0:00:58.40,0:01:00.08,Default,,0,0,0,,{\kf12}j{\kf12}e{\kf8}r{\kf20}r{\kf8}y{\kf10}-{\kf4}c{\kf4}h{\kf4}a{\kf23}n{\kf4}2{\kf4}0{\kf33}0{\kf24}1
+Dialogue: 0,0:01:00.08,0:01:02.08,Default,,0,0,0,,{\kf42}在{\kf14}评{\kf18}论{\kf28}区{\kf36}扣{\kf4}6{\kf35}6{\kf24}6
+Dialogue: 0,0:01:02.08,0:01:03.76,Default,,0,0,0,,{\kf50}我{\kf4}直{\kf15}接{\kf18}私{\kf18}信{\kf14}发{\kf18}给{\kf32}你

@@ -1,0 +1,655 @@
+{
+  "caseset_version": "1.1.0",
+  "contract_ref": "config/param_contract.json@1.1.0",
+  "created_at": "2026-09-24",
+  "author": "file-agent",
+  "source": "AI-Film-Studio (qpzRm) 两级负控执行节奏：不变量级——参数表版本变更即全量跑；探索级——按发布节奏每周抽跑；素材必须留档并绑定版本；1.1.0 追加扩展判定层用例（NC-09~NC-14）",
+  "principle": "负控用例必须能被证伪：输入故意偏离合同口径，若判定不变红，说明检测器失效。每条用例都写清「触发条件 → 输入 → 期望判定 → 必填字段」，并绑定素材版本指纹。",
+  "case_schema": {
+    "id": "用例唯一号",
+    "level": "invariant | exploratory（决定执行节奏）",
+    "case_type": "negative_control（喂错输入必须判红） | positive_control（喂对输入必须判绿，证明检测器不是永远报红）",
+    "trigger": {
+      "condition": "contract_version_bump | weekly_schedule",
+      "description": "该用例何时被调度执行"
+    },
+    "input": {
+      "type": "real_fixture | real_fixture_pair | injected_manifest",
+      "video": "被测成片路径（real_fixture 系列）",
+      "story_dir": "可选，用于取声明时长",
+      "baseline_video": "real_fixture_pair 的基线素材",
+      "base_manifest": "injected_manifest 的底稿 manifest",
+      "mutation": "injected_manifest 的注入项（path/value），用于以已知答案的合成输入测检测器本身"
+    },
+    "expect": [
+      {
+        "field": "字段名",
+        "verdict": "FAIL | WARN | OK",
+        "reason_contains": "可选，判定理由必须包含该子串"
+      }
+    ],
+    "required_fields": "本用例输入/期望里必须齐全的字段（缺一即视为用例定义不完整）",
+    "retention": "素材留档与版本绑定要求"
+  },
+  "execution_policy": {
+    "invariant": {
+      "label": "不变量级",
+      "trigger": "参数表版本变更（contract_version bump）",
+      "run_mode": "full（该级别用例全量跑）",
+      "why": "不变量的价值就在「变更即验证」；若只按发布节奏跑，漂移会静默累积到成片才暴露，人耳回听时已经过了可用窗口。",
+      "command": "python3 scripts/negcontrol.py run --level invariant"
+    },
+    "exploratory": {
+      "label": "探索级",
+      "trigger": "每周一次固定回归（本产线口径：每周一）",
+      "run_mode": "sampled（按周抽跑）",
+      "why": "探索级字段变更频繁，全量跑性价比低，但又必须防止静默累积。",
+      "command": "python3 scripts/negcontrol.py run --level exploratory"
+    },
+    "material_binding": {
+      "rule": "每条用例的素材必须登记 sha256 + size_bytes，并由 scripts/negcontrol.py verify-materials 定期校验；素材被替换或重编码后，旧用例的对照基线即失效，必须先复核再沿用。",
+      "fixtures_dir": "reports/negcontrol/fixtures/",
+      "note": "横版红样已从 1/.temp/OpenMontage/assets/ 归档进 fixtures 目录，避免临时目录被清理后用例无法复现。"
+    }
+  },
+  "cases": [
+    {
+      "id": "NC-01-landscape-material",
+      "level": "invariant",
+      "case_type": "negative_control",
+      "title": "横版素材进入竖屏产线，必须同时判红画幅与音频",
+      "trigger": {
+        "condition": "contract_version_bump",
+        "description": "任何一次参数表版本升级都全量跑"
+      },
+      "input": {
+        "type": "real_fixture",
+        "video": "reports/negcontrol/fixtures/landscape-1920x1080-demo.mp4",
+        "material_ref": {
+          "sha256": "47d46d729e0881d37ea87e49a0d1cfb8277434bb58d66e0d51ac5163fd020dac",
+          "size_bytes": 20897137,
+          "observed": "h264 1920x1080 yuvj420p bt470bg 30fps / aac 48000Hz 2ch",
+          "origin": "1/.temp/OpenMontage/assets/signal-from-tomorrow-demo.mp4（已归档）"
+        }
+      },
+      "expect": [
+        {
+          "field": "resolution_aspect",
+          "verdict": "FAIL",
+          "reason_contains": "1920x1080"
+        },
+        {
+          "field": "audio_sample_rate_channels",
+          "verdict": "FAIL",
+          "reason_contains": "48000"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.video",
+        "input.material_ref.sha256",
+        "expect",
+        "retention"
+      ],
+      "retention": "素材已归档 reports/negcontrol/fixtures/landscape-1920x1080-demo.mp4 并绑定 sha256；源目录变动不影响复现"
+    },
+    {
+      "id": "NC-02-nonstandard-audio-sample-rate",
+      "level": "invariant",
+      "case_type": "negative_control",
+      "title": "非标准采样率音轨（48000Hz/2ch）必须判红",
+      "trigger": {
+        "condition": "contract_version_bump",
+        "description": "音频采样率属不变量级，版本变更即验证"
+      },
+      "input": {
+        "type": "real_fixture",
+        "video": "news-dialogue-0817-final.mp4",
+        "material_ref": {
+          "sha256": "d64d35c8c35eab51c3805669a1e7e101dc0596aa4180577d29bb81152b344a63",
+          "size_bytes": 6939353,
+          "observed": "h264 1080x1920 bt709 30fps / aac 48000Hz 2ch",
+          "note": "该成片未经 post_process.py 的 -ar 44100 统一，属绕过音频后处理的交付"
+        }
+      },
+      "expect": [
+        {
+          "field": "audio_sample_rate_channels",
+          "verdict": "FAIL",
+          "reason_contains": "48000Hz/2ch"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.video",
+        "input.material_ref.sha256",
+        "expect",
+        "retention"
+      ],
+      "retention": "素材位于产线根目录，成片不可覆盖；hash 写入用例"
+    },
+    {
+      "id": "NC-03-fps-timebase-drift",
+      "level": "invariant",
+      "case_type": "negative_control",
+      "title": "同一产线两条成片时基不一致（25fps vs 30fps）必须判红",
+      "trigger": {
+        "condition": "contract_version_bump",
+        "description": "时基与取整策略属不变量级"
+      },
+      "input": {
+        "type": "real_fixture_pair",
+        "baseline_video": "github_trending.mp4",
+        "video": "news-dialogue-0817-final.mp4",
+        "baseline_material_ref": {
+          "sha256": "6aaaf50299a56fb526973326b562f64901ea6cf0079b8204e0bff42a12945888",
+          "size_bytes": 978237
+        },
+        "current_material_ref": {
+          "sha256": "d64d35c8c35eab51c3805669a1e7e101dc0596aa4180577d29bb81152b344a63",
+          "size_bytes": 6939353
+        }
+      },
+      "expect": [
+        {
+          "field": "fps",
+          "verdict": "FAIL",
+          "reason_contains": "25.0 → 30.0"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.baseline_video",
+        "input.video",
+        "expect",
+        "retention"
+      ],
+      "retention": "baseline 与 current 两份素材的 sha256 均已绑定，任一方重编码需重新标定"
+    },
+    {
+      "id": "NC-04-injected-fps-and-audio",
+      "level": "invariant",
+      "case_type": "negative_control",
+      "title": "注入 manifest：fps 改 24、音频改 32000Hz/1ch，检测器必须判红（已知答案测检测器）",
+      "trigger": {
+        "condition": "contract_version_bump",
+        "description": "检测器自身回归；不依赖任何真实素材产出"
+      },
+      "input": {
+        "type": "injected_manifest",
+        "base_manifest": "reports/artifacts/manifest_github_trending.json",
+        "mutation": [
+          {
+            "path": "derived.fps.value",
+            "value": 24
+          },
+          {
+            "path": "derived.fps.rational",
+            "value": "24/1"
+          },
+          {
+            "path": "derived.audio_sample_rate_channels",
+            "value": {
+              "sample_rate_hz": 32000,
+              "channels": 1,
+              "channel_layout": "mono"
+            }
+          }
+        ],
+        "note": "这两个值都是合同明确禁止的口径，若判不出红，说明检测器对 fps / 音频字段失效"
+      },
+      "expect": [
+        {
+          "field": "fps",
+          "verdict": "FAIL",
+          "reason_contains": "24"
+        },
+        {
+          "field": "audio_sample_rate_channels",
+          "verdict": "FAIL",
+          "reason_contains": "32000Hz/1ch"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.base_manifest",
+        "input.mutation",
+        "expect",
+        "retention"
+      ],
+      "retention": "底稿 manifest 由 snapshot 生成并随仓库留档，mutation 以文本形式记录，可完整复现"
+    },
+    {
+      "id": "NC-05-declared-duration-drift",
+      "level": "exploratory",
+      "case_type": "negative_control",
+      "title": "成片时长与脚本声明时长偏差超容差（+7.087s）判 WARN",
+      "trigger": {
+        "condition": "weekly_schedule",
+        "description": "片段时长属探索级，按周抽跑"
+      },
+      "input": {
+        "type": "real_fixture",
+        "video": "story/howtolivebetter/douyin_final.mp4",
+        "story_dir": "story/howtolivebetter",
+        "material_ref": {
+          "sha256": "4414adc7fa2135ccc8923aa0d8063dcc2a262d0e9211b00a0e6d3fb116df7c60",
+          "size_bytes": 26343722,
+          "observed": "h264 1080x1920 bt709 30fps / aac 44100Hz 2ch / 成片 84.067s vs hyperframes.json 声明 76.98s"
+        }
+      },
+      "expect": [
+        {
+          "field": "segment_duration",
+          "verdict": "WARN",
+          "reason_contains": "+7.087s"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.video",
+        "input.story_dir",
+        "expect",
+        "retention"
+      ],
+      "retention": "成片与 hyperframes.json 均随 story 目录留档，声明时长随配置文件版本变化"
+    },
+    {
+      "id": "NC-06-colorspace-tag-drift",
+      "level": "exploratory",
+      "case_type": "negative_control",
+      "title": "注入 manifest：色彩空间改成 bt470bg，必须判 WARN",
+      "trigger": {
+        "condition": "weekly_schedule",
+        "description": "色彩空间属探索级"
+      },
+      "input": {
+        "type": "injected_manifest",
+        "base_manifest": "reports/artifacts/manifest_github_trending.json",
+        "mutation": [
+          {
+            "path": "derived.colorspace_gamma.value",
+            "value": "bt470bg"
+          },
+          {
+            "path": "derived.colorspace_gamma.color_space",
+            "value": "bt470bg"
+          }
+        ],
+        "note": "合同要求 bt709；bt470bg 是旧 SD 色域，串色会导致拼接处亮度与色偏"
+      },
+      "expect": [
+        {
+          "field": "colorspace_gamma",
+          "verdict": "WARN",
+          "reason_contains": "bt470bg"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.base_manifest",
+        "input.mutation",
+        "expect",
+        "retention"
+      ],
+      "retention": "底稿 manifest + mutation 文本，可完整复现"
+    },
+    {
+      "id": "NC-07-auto-downgrade-flag",
+      "level": "exploratory",
+      "case_type": "negative_control",
+      "title": "注入 manifest：渲染出现自动降级标记，必须判 WARN",
+      "trigger": {
+        "condition": "weekly_schedule",
+        "description": "分块与降级属探索级"
+      },
+      "input": {
+        "type": "injected_manifest",
+        "base_manifest": "reports/artifacts/manifest_story_cn_llm.json",
+        "mutation": [
+          {
+            "path": "derived.chunk_size_auto_downgrade.auto_downgrade",
+            "value": true
+          },
+          {
+            "path": "derived.chunk_size_auto_downgrade.downgrade_flags",
+            "value": [
+              "hf/render.log"
+            ]
+          }
+        ],
+        "note": "降级发生后细节与耗时同时变化，必须被记录而不是静默通过"
+      },
+      "expect": [
+        {
+          "field": "chunk_size_auto_downgrade",
+          "verdict": "WARN",
+          "reason_contains": "自动降级"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.base_manifest",
+        "input.mutation",
+        "expect",
+        "retention"
+      ],
+      "retention": "底稿 manifest + mutation 文本，可完整复现"
+    },
+    {
+      "id": "NC-08-positive-control",
+      "level": "invariant",
+      "case_type": "positive_control",
+      "title": "正控：合规素材必须判绿，证明检测器不是永远报红",
+      "trigger": {
+        "condition": "contract_version_bump",
+        "description": "与不变量级用例同批执行"
+      },
+      "input": {
+        "type": "real_fixture",
+        "video": "story/howtolivebetter/douyin_final.mp4",
+        "story_dir": "story/howtolivebetter",
+        "material_ref": {
+          "sha256": "4414adc7fa2135ccc8923aa0d8063dcc2a262d0e9211b00a0e6d3fb116df7c60",
+          "size_bytes": 26343722
+        }
+      },
+      "expect": [
+        {
+          "field": "fps",
+          "verdict": "OK"
+        },
+        {
+          "field": "resolution_aspect",
+          "verdict": "OK"
+        },
+        {
+          "field": "audio_sample_rate_channels",
+          "verdict": "OK"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.video",
+        "expect",
+        "retention"
+      ],
+      "retention": "与 NC-05 共用同一素材，正负控成对"
+    },
+    {
+      "id": "NC-09-extended-canonicalizer-drift",
+      "level": "invariant",
+      "case_type": "negative_control",
+      "title": "注入 manifest：规范化器签名换成未版本化实现，必须硬停（canonicalizer_version）",
+      "trigger": {
+        "condition": "contract_version_bump",
+        "description": "规范化器换实现属不变量级，变更即验证"
+      },
+      "input": {
+        "type": "injected_manifest",
+        "base_manifest": "reports/artifacts/manifest_paperclip_v110.json",
+        "mutation": [
+          {
+            "path": "extended.canonicalizer_version.value",
+            "value": "deadbeefdeadbeef"
+          }
+        ],
+        "note": "私信口径：canonicalizer_version 枚举/顺序变化即硬停；签名对不上合同声明即为换实现"
+      },
+      "expect": [
+        {
+          "field": "canonicalizer_version",
+          "verdict": "FAIL",
+          "reason_contains": "硬停"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.base_manifest",
+        "input.mutation",
+        "expect",
+        "retention"
+      ],
+      "retention": "底稿 manifest 随仓库留档，mutation 为纯文本，可完整复现"
+    },
+    {
+      "id": "NC-10-extended-frozen-digest-drift",
+      "level": "invariant",
+      "case_type": "negative_control",
+      "title": "注入 manifest：冻结基线摘要被改写，重判必须硬停（frozen_baseline_digest）",
+      "trigger": {
+        "condition": "contract_version_bump",
+        "description": "冻结摘要一致性属不变量级"
+      },
+      "input": {
+        "type": "injected_manifest",
+        "base_manifest": "reports/artifacts/manifest_paperclip_v110.json",
+        "mutation": [
+          {
+            "path": "extended.frozen_baseline_digest.value",
+            "value": "sha256:beefdeadbeefbeefdeadbeefbeefdeadbeefbeefdeadbeefbeefdeadbeefbeef"
+          }
+        ],
+        "note": "私信口径：frozen_baseline_digest 与重判行不一致即硬停，防止基线被静默改写"
+      },
+      "expect": [
+        {
+          "field": "frozen_baseline_digest",
+          "verdict": "FAIL",
+          "reason_contains": "≠ 冻结摘要"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.base_manifest",
+        "input.mutation",
+        "expect",
+        "retention"
+      ],
+      "retention": "底稿 manifest 随仓库留档，mutation 为纯文本，可完整复现"
+    },
+    {
+      "id": "NC-11-extended-resolution-downgrade",
+      "level": "exploratory",
+      "case_type": "negative_control",
+      "title": "注入 manifest：短边降级到 720px，必须判 WARN 并转人工（resolution_short_edge）",
+      "trigger": {
+        "condition": "weekly_schedule",
+        "description": "分辨率降级属探索级，按周抽跑"
+      },
+      "input": {
+        "type": "injected_manifest",
+        "base_manifest": "reports/artifacts/manifest_paperclip_v110.json",
+        "mutation": [
+          {
+            "path": "extended.resolution_short_edge.value",
+            "value": 720
+          }
+        ],
+        "note": "私信口径：resolution_short_edge 不在允许集即降级+人工，不得静默放行"
+      },
+      "expect": [
+        {
+          "field": "resolution_short_edge",
+          "verdict": "WARN",
+          "reason_contains": "不在合同允许集"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.base_manifest",
+        "input.mutation",
+        "expect",
+        "retention"
+      ],
+      "retention": "底稿 manifest 随仓库留档，mutation 为纯文本，可完整复现"
+    },
+    {
+      "id": "NC-12-extended-render-window-hardstop",
+      "level": "invariant",
+      "case_type": "negative_control",
+      "title": "两条成片渲染窗帧数不一致（2496 vs 2507）且无变更事件，必须硬停（render_window_frames）",
+      "trigger": {
+        "condition": "contract_version_bump",
+        "description": "渲染窗帧数属不变量级"
+      },
+      "input": {
+        "type": "real_fixture_pair",
+        "baseline_video": "story/compositor-mac/douyin_final.mp4",
+        "video": "story/paperclip/douyin_final.mp4",
+        "note": "私信口径：render_window_frames 与基线不同且无变更事件即硬停；本用例走真实成片，同时验证成片链路与合同一致"
+      },
+      "expect": [
+        {
+          "field": "render_window_frames",
+          "verdict": "FAIL",
+          "reason_contains": "2496 → 2507"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.baseline_video",
+        "input.video",
+        "expect",
+        "retention"
+      ],
+      "retention": "两份成片均在 story/ 目录留档，不可覆盖；重跑将自动重算 sha256"
+    },
+    {
+      "id": "NC-13-extended-peak-vram-over-band",
+      "level": "exploratory",
+      "case_type": "negative_control",
+      "title": "注入 manifest：同配置下峰值内存超容差带（1.784→3.5GiB），必须记录为 WARN（peak_vram）",
+      "trigger": {
+        "condition": "weekly_schedule",
+        "description": "资源峰值属探索级，按周抽跑"
+      },
+      "input": {
+        "type": "injected_manifest",
+        "base_manifest": "reports/artifacts/manifest_paperclip_v110.json",
+        "baseline_manifest": "reports/artifacts/manifest_compositor_v110.json",
+        "mutation": [
+          {
+            "path": "extended.peak_vram.value_gib",
+            "value": 3.5
+          }
+        ],
+        "note": "私信口径：peak_vram 超容差带只降级记录、不阻断；0 不得读作无占用"
+      },
+      "expect": [
+        {
+          "field": "peak_vram",
+          "verdict": "WARN",
+          "reason_contains": "峰值内存"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.base_manifest",
+        "input.baseline_manifest",
+        "input.mutation",
+        "expect",
+        "retention"
+      ],
+      "retention": "底稿与基线 manifest 均随仓库留档，mutation 为纯文本，可完整复现"
+    },
+    {
+      "id": "NC-14-extended-positive-control",
+      "level": "invariant",
+      "case_type": "positive_control",
+      "title": "扩展层正控：合规成片在扩展判定层必须判绿（不得永远报红）",
+      "trigger": {
+        "condition": "contract_version_bump",
+        "description": "与不变量级用例同批执行"
+      },
+      "input": {
+        "type": "real_fixture",
+        "video": "story/paperclip/douyin_final.mp4",
+        "note": "覆盖扩展层可通过的五个通道：短边、容差、规范化器版本、条目数、冻结摘要"
+      },
+      "expect": [
+        {
+          "field": "resolution_short_edge",
+          "verdict": "OK"
+        },
+        {
+          "field": "tolerance_value",
+          "verdict": "OK"
+        },
+        {
+          "field": "canonicalizer_version",
+          "verdict": "OK"
+        },
+        {
+          "field": "expected_n",
+          "verdict": "OK"
+        },
+        {
+          "field": "frozen_baseline_digest",
+          "verdict": "OK"
+        }
+      ],
+      "required_fields": [
+        "id",
+        "level",
+        "case_type",
+        "trigger",
+        "input.video",
+        "expect",
+        "retention"
+      ],
+      "retention": "与 NC-12 的 current 素材同源，正负控成对"
+    }
+  ],
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-09-24",
+      "note": "初版 8 条：不变量级 5（NC-01~04、NC-08）+ 探索级 3（NC-05~07），绑定合同 1.0.1"
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-09-26",
+      "note": "合并 AI-Film-Studio 第二条私信扩展口径：新增 NC-09~NC-14 覆盖 8 字段扩展层（硬停/告警/正控三条通道），并在 injected_manifest 输入中支持可选 baseline_manifest（使扩展字段可带基线比对）"
+    }
+  ]
+}

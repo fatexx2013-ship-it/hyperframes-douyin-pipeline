@@ -1,0 +1,50 @@
+[
+  {
+    "text": "GitHub 今日热榜第一，不是哪个新模型，而是一整家公司：Paperclip。它说得很直白，如果 OpenClaw 是员工，它就是公司。",
+    "path": "/Volumes/PSSD/抖音视频/story/paperclip/line_00.wav",
+    "duration": 12.31,
+    "voice_start": 0.11,
+    "voice_end": 12.19,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "它本质是一个 Node.js 服务加一套 React 后台，自己部署、MIT 开源。你只管说清目标，怎么拆解、派给谁，它来安排。",
+    "path": "/Volumes/PSSD/抖音视频/story/paperclip/line_01.wav",
+    "duration": 10.74,
+    "voice_start": 0.11,
+    "voice_end": 10.62,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "每个 Agent 都有职位、汇报线和工作范围：CEO 拆目标，工程师写代码，QA 验收。谁能做什么、向谁汇报，都写在架构里。",
+    "path": "/Volumes/PSSD/抖音视频/story/paperclip/line_02.wav",
+    "duration": 12.64,
+    "voice_start": 0.11,
+    "voice_end": 12.53,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "每个 Agent 都有月度预算，花到八成先警告，满额自动停工，防止死循环烧穿 Token。每笔花费和调用，都进审计日志。",
+    "path": "/Volumes/PSSD/抖音视频/story/paperclip/line_03.wav",
+    "duration": 12.56,
+    "voice_start": 0.11,
+    "voice_end": 12.45,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "Agent 也不是常驻进程，而是被心跳叫醒：看一眼有没有活，原子地领走任务，干完回来汇报。成本可预期，行为也能观测。",
+    "path": "/Volumes/PSSD/抖音视频/story/paperclip/line_04.wav",
+    "duration": 14.11,
+    "voice_start": 0.11,
+    "voice_end": 13.99,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "一行 npx 命令就能本地跑起来，需要 Node 24 以上。你想让 AI 开一家什么公司？",
+    "path": "/Volumes/PSSD/抖音视频/story/paperclip/line_05.wav",
+    "duration": 8.24,
+    "voice_start": 0.11,
+    "voice_end": 8.13,
+    "silence_ge_040s": 0
+  }
+]

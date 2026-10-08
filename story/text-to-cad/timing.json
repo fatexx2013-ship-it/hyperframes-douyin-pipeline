@@ -1,0 +1,34 @@
+[
+  {
+    "text": "CAD 学半年，AI 一句话？这个插件叫 text-to-cad，装上之后你的 AI 助手就能直接画 3D 零件。",
+    "path": "/Volumes/PSSD/抖音视频/story/text-to-cad/line_00.wav",
+    "duration": 9.5,
+    "voice_start": 0.11,
+    "voice_end": 9.38,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "说句话或者给张图，它输出 STEP、STL、3MF 这些工业格式，还能自动出带尺寸标注的工程图 PDF。",
+    "path": "/Volumes/PSSD/抖音视频/story/text-to-cad/line_01.wav",
+    "duration": 10.84,
+    "voice_start": 0.11,
+    "voice_end": 10.72,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "画完还能查可制造性：壁厚、悬垂、拔模斜度逐项测，每条结论都附实测证据。不行切片直接出 G-code，发给 3D 打印机。",
+    "path": "/Volumes/PSSD/抖音视频/story/text-to-cad/line_02.wav",
+    "duration": 12.56,
+    "voice_start": 0.11,
+    "voice_end": 12.45,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "MIT 开源，本地跑、零成本。你会让 AI 画什么零件？",
+    "path": "/Volumes/PSSD/抖音视频/story/text-to-cad/line_03.wav",
+    "duration": 6.79,
+    "voice_start": 0.12,
+    "voice_end": 6.67,
+    "silence_ge_040s": 0
+  }
+]

@@ -1,0 +1,171 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#FF5926",
+      "purpose": "赤焰热力主题大数字渐变描边（VIS 数据强调，用主题色）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "delivery_spec_waiver": [],
+  "title": "中国相机杀疯纽约，千人通宵排队",
+  "date": "2026.09.22",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "voice_desc": "慵懒玉女御姐音（Qwen3-TTS 本地 MLX，情绪自动匹配）",
+  "source": "百度热搜 · 齐鲁晚报网 2026-09-22《纽约千人排长队买中国相机》",
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你被哪些国货圈过粉。",
+    "emotion": "thoughtful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你被哪些国货圈过粉？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "times-square",
+      "card": {
+        "eyebrow": "热搜 · 中国影像品牌出海纽约",
+        "title": "纽约时代广场，<accent>千人排队买中国相机</accent>",
+        "subtitle": "队伍拐过两条街 · 美国第一家旗舰店开业",
+        "stats": [
+          {
+            "k": "排队人数",
+            "v": "超 1000"
+          },
+          {
+            "k": "跑完队伍",
+            "v": "61 秒"
+          },
+          {
+            "k": "开业时间",
+            "v": "9月19日"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "纽约时代广场，一家还没开业的中国相机店门口，队伍拐过街角、跨过剧院，一路延伸到下一个路口。有人一路小跑和每个人击掌，跑到队尾，整整用了61秒。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 15.77
+    },
+    {
+      "type": "feature",
+      "visual": "queue-night",
+      "card": {
+        "eyebrow": "头号粉丝 · 凌晨两点半",
+        "title": "通宵排队10小时，<accent>就为当第一个</accent>",
+        "subtitle": "想当 YouTuber 的年轻人 · 拿到黄金 logo 限量版"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "门店中午十二点才开门，第一位顾客凌晨两点半就到了。一个想当YouTuber的年轻人，下了夜班直接过来排队，通宵等了将近十个小时，拿到了影石送出的黄金logo限量版相机。"
+        }
+      ],
+      "_start": 16.12,
+      "_end": 31.15
+    },
+    {
+      "type": "feature",
+      "visual": "world-map",
+      "card": {
+        "eyebrow": "跨越近万公里 · 埃及飞纽约",
+        "title": "没有经销商？<accent>飞近万公里来买</accent>",
+        "subtitle": "埃及赛车手 · 美国父子的十岁生日"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "队伍里有人从埃及专程飞来，跨越近万公里，只因为埃及还没有影石的经销商。还有一位美国爸爸，带儿子来纽约过十岁生日，就为了体验最新款的云台相机。"
+        }
+      ],
+      "_start": 31.5,
+      "_end": 45.83
+    },
+    {
+      "type": "stat",
+      "visual": "product",
+      "card": {
+        "eyebrow": "产品力 · 中美双榜第一",
+        "title": "双摄云台加全景，<accent>中美销量榜都是第一</accent>",
+        "big": "1000万",
+        "big_label": "影石全球相机累计出货（台）· 同一天苹果库克发文关注中国消费者排队"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "开业当天，全球首款双摄云台相机Luna Ultra和全景相机X6同时亮相，双双拿下中美两大市场电商销量榜第一。同一天，影石全球相机出货量突破一千万台。"
+        }
+      ],
+      "_start": 46.18,
+      "_end": 59.78
+    },
+    {
+      "type": "outro",
+      "visual": "decade",
+      "card": {
+        "title": "在美国深耕了整整十年",
+        "cta": "时代广场店 · 百老汇大道151号",
+        "sub": "泡泡玛特、名创优品、喜茶都在附近"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "从茶饮到潮玩，从文创到相机，越来越多中国品牌在海外排起属于自己的队。中国品牌出海，从来不是把门店复制到异国，而是先让自己成为当地生活的一部分。"
+        }
+      ],
+      "_start": 60.13,
+      "_end": 73.85
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "纽约时代广场，一家还没开业的中国相机店门口，队伍拐过街角、跨过剧院，一路延伸到下一个路口。有人一路小跑和每个人击掌，跑到队尾，整整用了61秒。",
+      "start": 0.0,
+      "end": 15.77
+    },
+    {
+      "scene_index": 1,
+      "text": "门店中午十二点才开门，第一位顾客凌晨两点半就到了。一个想当YouTuber的年轻人，下了夜班直接过来排队，通宵等了将近十个小时，拿到了影石送出的黄金logo限量版相机。",
+      "start": 16.12,
+      "end": 31.15
+    },
+    {
+      "scene_index": 2,
+      "text": "队伍里有人从埃及专程飞来，跨越近万公里，只因为埃及还没有影石的经销商。还有一位美国爸爸，带儿子来纽约过十岁生日，就为了体验最新款的云台相机。",
+      "start": 31.5,
+      "end": 45.83
+    },
+    {
+      "scene_index": 3,
+      "text": "开业当天，全球首款双摄云台相机Luna Ultra和全景相机X6同时亮相，双双拿下中美两大市场电商销量榜第一。同一天，影石全球相机出货量突破一千万台。",
+      "start": 46.18,
+      "end": 59.78
+    },
+    {
+      "scene_index": 4,
+      "text": "从茶饮到潮玩，从文创到相机，越来越多中国品牌在海外排起属于自己的队。中国品牌出海，从来不是把门店复制到异国，而是先让自己成为当地生活的一部分。",
+      "start": 60.13,
+      "end": 73.85
+    }
+  ],
+  "total_duration": 73.85
+}

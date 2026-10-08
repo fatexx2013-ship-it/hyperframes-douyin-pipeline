@@ -1,0 +1,27 @@
+[Script Info]
+Title: Auto-generated
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default, PingFang SC, 36, &H00FFFFFF, &H000000FF, &H00000000, &H00000000, 0, 0, 0, 0, 100, 100, 0, 0, 3, 2, 1, 2, 30, 30, 150, 1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,00:00:00.000,00:00:06.800,Default,,0,0,0,,别只盯着ChatGPT了,本周github爆火的这四个神器,才真正在重塑我们的工作流。
+Dialogue: 0,00:00:06.800,00:00:14.200,Default,,0,0,0,,第一个,Strix,开源AI渗透测试神器,它能自动发现定修复你应用的漏洞。
+Dialogue: 0,00:00:14.200,00:00:16.800,Default,,0,0,0,,一万型,安全工程师必备。
+Dialogue: 0,00:00:16.800,00:00:20.400,Default,,0,0,0,,第二个,UmniRoot,免费AI网关。
+Dialogue: 0,00:00:20.400,00:00:25.200,Default,,0,0,0,,一个接口对接231个AI提供商,50多个免费。
+Dialogue: 0,00:00:25.200,00:00:29.300,Default,,0,0,0,,Cloud,GPT,Gemini全打通,省钱利器。
+Dialogue: 0,00:00:29.300,00:00:33.400,Default,,0,0,0,,第三个,Meatly,隐私优先的AI会议助手。
+Dialogue: 0,00:00:33.400,00:00:39.600,Default,,0,0,0,,本地实施转路,Allama自动摘药,100%离线,开会再也不怕泄密。
+Dialogue: 0,00:00:39.600,00:00:44.200,Default,,0,0,0,,第四个,Videos,用代码编辑视频的革命性工具。
+Dialogue: 0,00:00:44.200,00:00:49.200,Default,,0,0,0,,自然与言指令,就能剪辑视频、AI时代、人人都是导演。
+Dialogue: 0,00:00:49.200,00:00:54.500,Default,,0,0,0,,这四个项目,正在悄悄改变我们开发、安全、办公的方式。
+Dialogue: 0,00:00:54.500,00:00:56.000,Default,,0,0,0,,想知道怎么用?
+Dialogue: 0,00:00:56.000,00:00:59.200,Default,,0,0,0,,点赞关注,下期手把手教你配置。

@@ -1,0 +1,15 @@
+{
+  "title": "AI能替代程序员吗",
+  "date": "2026.09.16",
+  "bgm": "/Volumes/PSSD/视频/BGM/游京 - .mp3",
+  "dialogue": [
+    {"role": "question", "text": "诶，我最近看新闻说AI能自己写代码了，这是真的吗？"},
+    {"role": "answer", "text": "是真的。像GitHub Copilot、Claude Code这些工具，已经能帮你写大部分常规代码了。"},
+    {"role": "question", "text": "那程序员会不会因此失业啊？我有点慌。"},
+    {"role": "answer", "text": "短期内不会。AI写代码就像自动驾驶，能处理80%的常规路况，但遇到复杂架构设计、业务逻辑判断，还是得靠人。"},
+    {"role": "question", "text": "那我现在学编程还有意义吗？还是说应该去学别的？"},
+    {"role": "answer", "text": "当然有意义。学会编程，你就能驾驭AI，让它帮你干活。你想想，是会开车的人容易失业，还是不会开车的人？"},
+    {"role": "question", "text": "有道理诶！那我应该学什么语言比较好？"},
+    {"role": "answer", "text": "Python入门最友好，应用也广。但更重要的是学会用AI工具，比如Cursor、Claude Code，这些才是未来程序员的核心竞争力。"}
+  ]
+}

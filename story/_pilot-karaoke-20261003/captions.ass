@@ -1,0 +1,53 @@
+[Script Info]
+Title: Auto-generated
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default, PingFang SC, 36, &H00FFFFFF, &H000000FF, &H00000000, &H00000000, 0, 0, 0, 0, 100, 100, 0, 0, 3, 2, 1, 2, 30, 30, 150, 1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,00:00:00.000,00:00:02.400,Default,,0,0,0,,别再花钱买AI会员了
+Dialogue: 0,00:00:02.400,00:00:03.440,Default,,0,0,0,,我是Jerry
+Dialogue: 0,00:00:03.440,00:00:04.800,Default,,0,0,0,,今天给大家推荐
+Dialogue: 0,00:00:04.800,00:00:07.480,Default,,0,0,0,,github上爆火的三个开源神技项目
+Dialogue: 0,00:00:07.480,00:00:08.800,Default,,0,0,0,,不仅完全免费
+Dialogue: 0,00:00:08.800,00:00:10.640,Default,,0,0,0,,还能帮你打工导前
+Dialogue: 0,00:00:10.640,00:00:12.040,Default,,0,0,0,,赶紧点赞关注
+Dialogue: 0,00:00:12.040,00:00:15.040,Default,,0,0,0,,认准我的抖音号JerryChan2001
+Dialogue: 0,00:00:15.040,00:00:16.040,Default,,0,0,0,,第一个项目
+Dialogue: 0,00:00:16.040,00:00:18.200,Default,,0,0,0,,Allama加Open WebUI
+Dialogue: 0,00:00:18.200,00:00:21.360,Default,,0,0,0,,这是一个能把大模型搬进你电脑的神器
+Dialogue: 0,00:00:21.360,00:00:22.400,Default,,0,0,0,,完全免费
+Dialogue: 0,00:00:22.400,00:00:23.480,Default,,0,0,0,,不需要联网
+Dialogue: 0,00:00:23.480,00:00:26.000,Default,,0,0,0,,不仅支持DeepSeek和Loma3
+Dialogue: 0,00:00:26.000,00:00:27.640,Default,,0,0,0,,而且绝对隐私
+Dialogue: 0,00:00:27.640,00:00:28.680,Default,,0,0,0,,第二个项目
+Dialogue: 0,00:00:28.680,00:00:29.600,Default,,0,0,0,,DeFi
+Dialogue: 0,00:00:29.600,00:00:30.680,Default,,0,0,0,,零代码拖拽
+Dialogue: 0,00:00:30.680,00:00:33.080,Default,,0,0,0,,就能定制专属AI员工
+Dialogue: 0,00:00:33.080,00:00:34.840,Default,,0,0,0,,不管是写小红书文案
+Dialogue: 0,00:00:34.840,00:00:36.240,Default,,0,0,0,,还是自动克服
+Dialogue: 0,00:00:36.240,00:00:37.120,Default,,0,0,0,,挂在后台
+Dialogue: 0,00:00:37.120,00:00:38.880,Default,,0,0,0,,就能帮你默默打工
+Dialogue: 0,00:00:38.880,00:00:40.040,Default,,0,0,0,,第三个项目
+Dialogue: 0,00:00:40.040,00:00:40.920,Default,,0,0,0,,Client
+Dialogue: 0,00:00:40.920,00:00:44.120,Default,,0,0,0,,VS Code里的全自动AI程序员
+Dialogue: 0,00:00:44.120,00:00:45.480,Default,,0,0,0,,自己新建文件
+Dialogue: 0,00:00:45.480,00:00:46.320,Default,,0,0,0,,写代码
+Dialogue: 0,00:00:46.320,00:00:47.040,Default,,0,0,0,,改bug
+Dialogue: 0,00:00:47.040,00:00:48.200,Default,,0,0,0,,跑测试
+Dialogue: 0,00:00:48.200,00:00:49.720,Default,,0,0,0,,你只需喝杯咖啡
+Dialogue: 0,00:00:49.720,00:00:52.320,Default,,0,0,0,,静静看他把系统写好就行
+Dialogue: 0,00:00:52.320,00:00:54.160,Default,,0,0,0,,这三个项目的一件安装包
+Dialogue: 0,00:00:54.160,00:00:55.240,Default,,0,0,0,,和新手视频
+Dialogue: 0,00:00:55.240,00:00:57.200,Default,,0,0,0,,叫成我已经整理好了
+Dialogue: 0,00:00:57.200,00:00:58.400,Default,,0,0,0,,关注我的抖音号
+Dialogue: 0,00:00:58.400,00:01:00.080,Default,,0,0,0,,jerry-chan2001
+Dialogue: 0,00:01:00.080,00:01:02.080,Default,,0,0,0,,在评论区扣666
+Dialogue: 0,00:01:02.080,00:01:03.760,Default,,0,0,0,,我直接私信发给你

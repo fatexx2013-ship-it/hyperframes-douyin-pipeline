@@ -1,0 +1,511 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""从 script.json 生成 index.html（赤焰热力主题，compositor-mac：SVG 动效场景）
+
+V-BASE 视觉提亮基线（真源 docs/产线规范.md v1.12.0，2026-10-07 默认化；依据 cua 成片实证）：
+  本模板即 `storyctl new` 的出厂脚手架，故基线直接落在模板本体，新建 story 天生带基线。
+  基线只调「亮度梯度 / 表面明度」，**不改主题色相、不动版面结构、不加减动效**，也不触碰
+  门禁判据与 config/ 共享参数真源（交付尺寸 / 编码仍由 post_process 收口）。
+  参数（角色 → 取值口径）：
+    1) 全局基色    : 三段线性基色抬亮约 +3~4 阶（#121214/#17171B/#0D0F0F → #15181D/#1A1E24/#0F1216）
+    2) 中心光雾    : 新增 radial-gradient(1600×1200 at 50% 34%, rgba(主题,.07), transparent 72%)
+    3) 四角主光/反光: 左上主题暖光 .40→.46、右上主题冷光 .16→.22（暖冷对撞不变量保持）
+    4) 暗角        : 新增 radial-gradient(1400×1000 at 50% 48%, transparent 46%, rgba(6,7,9,.42))
+    5) 网格纹理    : rgba(主题,.05)→.08（仍为 72px 网格，不改密度）
+    6) 卡片表面    : --card rgba(26,26,30,.92) → rgba(27,30,36,.94)（+明度、不透明 +.02）
+    7) 可视底板    : .vis 与各 v-* 模块底板 #101013/#0D0F0F → #151A20，内嵌 1px 顶部亮线
+    8) 面板层级    : 代码/清单面板 #0A0B0C → #12161B（仍比底板深，保住「底板>面板」深度分层）
+    9) 文案卡/字幕 : 表面提亮 + 边框不变（字幕底 rgba(8,8,10,.9) → rgba(16,18,22,.92)）
+  回退：本文件 .bak-20261007；模板侧回退不影响已出片 story 的历史产物。
+"""
+import json, os, html, sys, re
+
+STORY = "/Volumes/PSSD/抖音视频/story/a1e2e-20261008"
+
+# A1（v1.13.0）：入场速度按 script.json 的 beat 缩放；无 beat 字段时倍率恒为 1.0，
+# 生成的 index.html 与本文件 .bak-20261008 逐字节一致（默认链路零漂移）。
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(STORY)), "scripts"))
+import rhythm as RZ
+
+def scene_anim(i, s, e, esc=1.0):
+    """单场景通用入场/退场补间。esc=1.0 时输出与旧版字面量完全一致。"""
+    if esc == 1.0:
+        return f'''tl.from("#scene-{i} .card", {{ y: 44, opacity: 0, duration: 0.5, ease: "power3.out" }}, {s:.2f});
+      tl.from("#scene-{i} .anim", {{ y: 26, opacity: 0, duration: 0.45, stagger: 0.09, ease: "power2.out" }}, {s+0.18:.2f});
+      tl.from("#scene-{i} .vis", {{ scale: 1.06, opacity: 0, duration: 0.6, ease: "power2.out" }}, {s:.2f});
+      tl.fromTo("#scene-{i} .card::after", {{ xPercent: 0 }}, {{ xPercent: 375, duration: 0.9, ease: "power2.inOut" }}, {s+0.35:.2f});
+      tl.to("#scene-{i} .card", {{ opacity: 0, y: -18, duration: 0.3, ease: "power2.in" }}, {e-0.32:.2f});
+      tl.set("#scene-{i} .card", {{ opacity: 0 }}, {e:.2f});'''
+    d = lambda v: round(v * esc, 3)
+    a = lambda v: round(s + v * esc, 3)
+    return f'''tl.from("#scene-{i} .card", {{ y: 44, opacity: 0, duration: {d(0.5)}, ease: "power3.out" }}, {s:.2f});
+      tl.from("#scene-{i} .anim", {{ y: 26, opacity: 0, duration: {d(0.45)}, stagger: {d(0.09)}, ease: "power2.out" }}, {a(0.18):.2f});
+      tl.from("#scene-{i} .vis", {{ scale: 1.06, opacity: 0, duration: {d(0.6)}, ease: "power2.out" }}, {s:.2f});
+      tl.fromTo("#scene-{i} .card::after", {{ xPercent: 0 }}, {{ xPercent: 375, duration: {d(0.9)}, ease: "power2.inOut" }}, {a(0.35):.2f});
+      tl.to("#scene-{i} .card", {{ opacity: 0, y: -18, duration: 0.3, ease: "power2.in" }}, {e-0.32:.2f});
+      tl.set("#scene-{i} .card", {{ opacity: 0 }}, {e:.2f});'''
+
+def render_stat(s):
+    return "".join(f'<div class="stat"><div class="k">{html.escape(x["k"])}</div><div class="v">{html.escape(x["v"])}</div></div>' for x in s)
+
+# ---------- 场景动效（SVG，全部挂在 GSAP 时间轴上，seek 安全）----------
+
+def vis_chip(i):
+    return f'''<div class="vis v-chip" id="vis-{i}">
+      <div class="chip-stage">
+        <div class="chip" id="chip-{i}">
+          <svg viewBox="0 0 200 200">
+            <g opacity="0.40">
+              <text x="46" y="120" font-size="88" fill="#9A9AA3" text-anchor="middle" font-family="monospace" font-weight="800">$</text>
+              <line x1="8" y1="86" x2="84" y2="100" stroke="#E85122" stroke-width="6" stroke-linecap="round"/>
+            </g>
+            <g>
+              <rect x="100" y="40" width="92" height="92" rx="16" fill="rgba(255,89,38,.14)" stroke="#FF5926" stroke-width="5"/>
+              <text x="146" y="101" font-size="30" fill="#FF5926" text-anchor="middle" font-family="monospace" font-weight="800">FREE</text>
+            </g>
+            <text x="100" y="176" font-size="21" fill="#9A9AA3" text-anchor="middle" font-family="monospace">Photoshop ? GIMP ?</text>
+          </svg>
+        </div>
+        <div class="chip-label">完全免费 · MIT 开源</div>
+      </div>
+      <div class="vis-badge">Mac 上的全功能图像编辑器</div>
+    </div>'''
+
+
+def vis_toolcall(i):
+    return f'''<div class="vis v-toolcall" id="vis-{i}">
+      <div class="tc-stage">
+        <div class="tc-bubble" id="tcq-{i}">
+          <div class="tc-who">图层堆叠</div>
+          <div class="tc-text">文字层、调整层、图层组，随便嵌套和拖拽排序</div>
+        </div>
+        <div class="tc-arrow" id="tca-{i}">
+          <svg viewBox="0 0 80 120"><path d="M40 8 V96 M22 74 L40 100 L58 74" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="tc-code" id="tcc-{i}">
+          <div class="tc-line"><span class="k">panel</span>: <span class="s">[</span></div>
+          <div class="tc-line i1"><span class="f">图层组</span>(<span class="n">opacity</span>: <span class="v">80%</span>)</div>
+          <div class="tc-line i1"><span class="f">图层蒙版</span>(<span class="n">paint</span>: <span class="v">true</span>)</div>
+          <div class="tc-line i1"><span class="f">剪贴蒙版</span>(<span class="n">link</span>: <span class="v">on</span>)</div>
+          <div class="tc-line"><span class="s">]</span> <span class="c">// 全套混合模式 · 顺序一致</span></div>
+        </div>
+      </div>
+      <div class="vis-badge">蒙版可画 / 填 / 反相 / 模糊 / 羽化</div>
+    </div>'''
+
+
+def vis_extract(i):
+    return f'''<div class="vis v-extract" id="vis-{i}">
+      <div class="ex-stage">
+        <div class="ex-messy" id="exm-{i}">
+          <div class="ex-who">调整层</div>
+          <div class="ex-line">色阶 · 曲线 · 曝光</div>
+          <div class="ex-line">渐变映射 · 颗粒 · 黑白</div>
+          <div class="ex-line">色相饱和度 · 色彩平衡</div>
+        </div>
+        <div class="ex-arrow" id="exa-{i}">
+          <svg viewBox="0 0 80 120"><path d="M40 8 V96 M22 74 L40 100 L58 74" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="ex-tidy" id="ext-{i}">
+          <div class="ex-who">图层效果 · GPU</div>
+          <div class="ex-row"><span>stroke</span><b>描边</b></div>
+          <div class="ex-row"><span>drop_shadow</span><b>投影</b></div>
+          <div class="ex-row"><span>inner_glow</span><b>内发光</b></div>
+          <div class="ex-row"><span>outer_glow</span><b>外发光</b></div>
+        </div>
+      </div>
+      <div class="vis-badge">非破坏性 · 随时可以再改</div>
+    </div>'''
+
+
+def vis_ladder(i):
+    steps = [(70, 96, "矩形"), (180, 130, "椭圆"), (290, 164, "套索"),
+             (400, 246, "魔棒"), (510, 196, "对象"), (620, 268, "主体")]
+    bars = []
+    for x, h, lbl in steps:
+        elite = lbl == "魔棒"
+        bars.append(f'''<g class="rung" data-h="{h}">
+            <rect x="{x}" y="{540-h}" width="78" height="{h}" rx="8" fill="{"url(#lg-"+str(i)+")" if not elite else "#FF5926"}" stroke="{"#FF5926" if not elite else "#FFB08A"}" stroke-width="3"/>
+            <text x="{x+39}" y="{540-h-16}" font-size="24" fill="{"#9A9AA3" if not elite else "#FF5926"}" text-anchor="middle" font-weight="700" font-family="PingFang SC,sans-serif">{lbl}</text>
+          </g>''')
+    return f'''<div class="vis v-ladder" id="vis-{i}">
+      <svg viewBox="0 0 960 560" class="vis-svg" id="lad-{i}">
+        <defs>
+          <linearGradient id="lg-{i}" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#8A3A1A"/><stop offset="1" stop-color="#4A2412"/>
+          </linearGradient>
+        </defs>
+        <rect width="960" height="560" fill="#101013"/>
+        <line x1="40" y1="540" x2="920" y2="540" stroke="#2A2A32" stroke-width="3"/>
+        {"".join(bars)}
+        <g id="flag-{i}" transform="translate(180,186)">
+          <path d="M0 0 V210 M0 0 H104 M0 34 H88" stroke="#FF5926" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <rect x="14" y="6" width="198" height="52" rx="10" fill="rgba(255,89,38,.14)" stroke="#FF5926" stroke-width="2"/>
+          <text x="113" y="40" font-size="22" fill="#FF5926" text-anchor="middle" font-family="PingFang SC,sans-serif">Tab 一键切换</text>
+        </g>
+      </svg>
+      <div class="vis-badge">内容识别填充 · 可扩到画布之外</div>
+    </div>'''
+
+
+def vis_deploy(i):
+    tags = [("PSD", "80"), ("PSB", "260"), ("Camera Raw", "440"), ("HEIC", "620"), ("SVG", "800")]
+    icons = []
+    for name, x in tags:
+        fs = 24 if len(name) <= 4 else 18
+        icons.append(f'''<g class="dev" transform="translate({x},60)">
+            <rect x="0" y="0" width="140" height="86" rx="14" fill="rgba(255,89,38,.10)" stroke="#FF5926" stroke-width="4"/>
+            <text x="70" y="54" font-size="{fs}" fill="#F2F2F5" text-anchor="middle" font-family="monospace" font-weight="700">{name}</text>
+          </g>''')
+    return f'''<div class="vis v-deploy" id="vis-{i}">
+      <svg viewBox="0 0 960 400" class="vis-svg">
+        <rect width="960" height="400" fill="#101013"/>
+        {"".join(icons)}
+        <g class="dev" transform="translate(80,250)">
+          <rect x="0" y="0" width="360" height="96" rx="12" fill="rgba(255,89,38,.10)" stroke="#FF5926" stroke-width="4"/>
+          <text x="180" y="47" font-size="26" fill="#FF5926" text-anchor="middle" font-weight="700">图层 / 蒙版 / 文字</text>
+          <text x="180" y="78" font-size="22" fill="#9A9AA3" text-anchor="middle">导入后仍可编辑</text>
+        </g>
+        <g class="dev" transform="translate(470,250)">
+          <rect x="0" y="0" width="360" height="96" rx="12" fill="rgba(255,89,38,.10)" stroke="#FF5926" stroke-width="4"/>
+          <text x="180" y="47" font-size="26" fill="#FF5926" text-anchor="middle" font-weight="700">转换报告</text>
+          <text x="180" y="78" font-size="22" fill="#9A9AA3" text-anchor="middle">应用前先给你看</text>
+        </g>
+      </svg>
+      <div class="vis-badge">Camera Raw 面板 · 光 / 色 / 曲线 / 细节</div>
+    </div>'''
+
+VIS = {"chip": vis_chip, "toolcall": vis_toolcall, "extract": vis_extract, "ladder": vis_ladder, "deploy": vis_deploy}
+
+def anim_chip(i, s, e):
+    n = int((e - s) / 0.6) + 2
+    return f'''tl.fromTo("#chip-{i}", {{ scale: 0.7, opacity: 0, rotation: -8 }}, {{ scale: 1, opacity: 1, rotation: 0, duration: 0.7, ease: "back.out(1.6)" }}, {s:.2f});
+      tl.to("#chip-{i}", {{ scale: 1.05, duration: 0.6, yoyo: true, repeat: {n}, ease: "sine.inOut" }}, {s+0.8:.2f});
+      tl.from("#vis-{i} .chip-label", {{ y: 20, opacity: 0, duration: 0.5, ease: "power2.out" }}, {s+0.5:.2f});
+      tl.from("#vis-{i} .vis-badge", {{ y: 22, opacity: 0, duration: 0.5, ease: "power2.out" }}, {s+0.4:.2f});'''
+
+def anim_toolcall(i, s, e):
+    n = int((e - s) / 1.2) + 2
+    return f'''tl.from("#tcq-{i}", {{ x: -40, opacity: 0, duration: 0.5, ease: "power2.out" }}, {s+0.2:.2f});
+      tl.from("#tca-{i}", {{ y: -16, opacity: 0, duration: 0.4, ease: "power2.out" }}, {s+0.7:.2f});
+      tl.from("#tcc-{i}", {{ x: 40, opacity: 0, duration: 0.6, ease: "power2.out" }}, {s+1.0:.2f});
+      tl.from("#tcc-{i} .tc-line", {{ opacity: 0, x: 14, duration: 0.3, stagger: 0.11, ease: "power1.out" }}, {s+1.15:.2f});
+      tl.to("#tca-{i}", {{ y: 8, duration: 0.5, yoyo: true, repeat: {n}, ease: "sine.inOut" }}, {s+1.6:.2f});
+      tl.from("#vis-{i} .vis-badge", {{ y: 22, opacity: 0, duration: 0.5, ease: "power2.out" }}, {s+0.4:.2f});'''
+
+def anim_extract(i, s, e):
+    return f'''tl.from("#exm-{i}", {{ x: -40, opacity: 0, duration: 0.5, ease: "power2.out" }}, {s+0.2:.2f});
+      tl.from("#exa-{i}", {{ y: -16, opacity: 0, duration: 0.4, ease: "power2.out" }}, {s+0.7:.2f});
+      tl.from("#ext-{i}", {{ x: 40, opacity: 0, duration: 0.6, ease: "power2.out" }}, {s+1.0:.2f});
+      tl.from("#ext-{i} .ex-row", {{ opacity: 0, x: 14, duration: 0.3, stagger: 0.1, ease: "power1.out" }}, {s+1.2:.2f});
+      tl.to("#exa-{i}", {{ y: 8, duration: 0.5, yoyo: true, repeat: 8, ease: "sine.inOut" }}, {s+1.7:.2f});
+      tl.from("#vis-{i} .vis-badge", {{ y: 22, opacity: 0, duration: 0.5, ease: "power2.out" }}, {s+0.4:.2f});'''
+
+def anim_ladder(i, s, e):
+    return f'''tl.from("#lad-{i} .rung rect", {{ scaleY: 0, duration: 0.55, stagger: 0.1, ease: "power2.out", transformOrigin: "50% 100%" }}, {s+0.3:.2f});
+      tl.from("#lad-{i} .rung text", {{ opacity: 0, y: 12, duration: 0.4, stagger: 0.1, ease: "power1.out" }}, {s+0.6:.2f});
+      tl.fromTo("#flag-{i}", {{ scale: 0.4, opacity: 0 }}, {{ scale: 1, opacity: 1, duration: 0.5, ease: "back.out(2)" }}, {s+1.8:.2f});
+      tl.to("#flag-{i}", {{ y: -8, duration: 0.6, yoyo: true, repeat: 6, ease: "sine.inOut" }}, {s+2.4:.2f});
+      tl.from("#vis-{i} .vis-badge", {{ y: 22, opacity: 0, duration: 0.5, ease: "power2.out" }}, {s+0.4:.2f});'''
+
+def anim_deploy(i, s, e):
+    return f'''tl.from("#vis-{i} .dev", {{ scale: 0.6, opacity: 0, duration: 0.5, stagger: 0.13, ease: "back.out(1.8)" }}, {s+0.3:.2f});
+      tl.to("#vis-{i} .dev", {{ y: -10, duration: 0.7, yoyo: true, repeat: 4, ease: "sine.inOut", stagger: 0.1 }}, {s+1.6:.2f});
+      tl.from("#vis-{i} .vis-badge", {{ y: 22, opacity: 0, duration: 0.5, ease: "power2.out" }}, {s+0.4:.2f});'''
+
+ANIM = {"chip": anim_chip, "toolcall": anim_toolcall, "extract": anim_extract, "ladder": anim_ladder, "deploy": anim_deploy}
+
+# ---------- 卡片 ----------
+
+def card_html(sc, i):
+    c = sc["card"]
+    t = sc["type"]
+    if t == "header":
+        body = f'''<p class="eyebrow anim">{html.escape(c["eyebrow"])}</p>
+        <h1 class="anim">{c["title"]}</h1>
+        <p class="hsubtitle anim">{html.escape(c["subtitle"])}</p>
+        <div class="stats anim">{render_stat(c["stats"])}</div>'''
+    elif t == "outro":
+        body = f'''<div class="otitle anim">{c["title"]}</div>
+        <div class="octa anim">{html.escape(c["cta"])}</div>
+        <div class="osub anim">{html.escape(c["sub"])}</div>'''
+    else:
+        sub = f'<p class="hsubtitle anim">{html.escape(c["subtitle"])}</p>' if c.get("subtitle") else ""
+        big = ""
+        if c.get("big"):
+            big = f'''<div class="bigwrap anim"><div class="bignum">{html.escape(c["big"])}</div>
+            <div class="biglabel">{html.escape(c["big_label"])}</div></div>'''
+        body = f'''<p class="eyebrow anim">{html.escape(c["eyebrow"])}</p>
+        <h2 class="anim">{c["title"]}</h2>
+        {sub}
+        {big}'''
+    return f'<div class="card{" ocard" if t=="outro" else ""}">{body}</div>'
+
+def main():
+    script = json.load(open(os.path.join(STORY, "script.json"), encoding="utf-8"))
+    scenes = script["scenes"]
+    lines = script["lines"]
+    DUR = round(lines[-1]["end"] + 0.4, 2)
+    wm = script.get("watermark", "jerrychen2001")
+    date = script.get("date", "")
+
+    scene_divs = []
+    for i, sc in enumerate(scenes):
+        s, e = sc["_start"], sc["_end"]
+        v = sc.get("visual", "chip")
+        scene_divs.append(f'''<div id="scene-{i}" class="scene clip" data-start="{s:.2f}" data-duration="{e-s:.2f}" data-track-index="3">{VIS[v](i)}{card_html(sc, i)}</div>''')
+
+    sub_divs, tl_lines = [], []
+    for i, ln in enumerate(lines):
+        s, e = ln["start"], ln["end"]
+        sub_divs.append(f'''<div id="sub-{i}" class="subtitle clip" data-start="{s:.2f}" data-duration="{e-s:.2f}" data-track-index="10"><div class="sub-inner">{html.escape(ln["text"])}</div></div>''')
+        tl_lines.append(f'''tl.from("#sub-{i} .sub-inner", {{ y: 26, opacity: 0, duration: 0.25, ease: "power2.out" }}, {s:.2f});
+      tl.to("#sub-{i} .sub-inner", {{ opacity: 0, duration: 0.18, ease: "power2.in" }}, {e-0.18:.2f});
+      tl.set("#sub-{i} .sub-inner", {{ opacity: 0 }}, {e:.2f});''')
+
+    anim_lines = []
+    esc_map = RZ.scene_enter_scales(script)          # A1：beat → 入场倍率
+    esc_on = [i for i, v in esc_map.items() if v != 1.0]
+    if esc_on:
+        print(f"[rhythm] 入场倍率覆盖 scene {esc_on} → "
+              f"{[esc_map[i] for i in esc_on]}（beat 越高入场越快）")
+    for i, sc in enumerate(scenes):
+        s, e = sc["_start"], sc["_end"]
+        v = sc.get("visual", "chip")
+        anim_lines.append(ANIM[v](i, s, e))
+        anim_lines.append(scene_anim(i, s, e, esc_map.get(i, 1.0)))
+
+    # ── A7（v1.13.0）：shot 级光照覆写 bg_base_lift / glow_gain ──────────────
+    # script.json 的 scenes[i].light = {"bg_base_lift": 0.02, "glow_gain": 1.05}
+    # 未给字段 = 0.0 / 1.0（等价不生成任何 CSS 规则 → 与默认渲染逐字节一致）。
+    # 仅覆写该 scene 的可视底板亮度与饱和度增益，不改全局提亮基线常量。
+    light_rules, light_snap = [], {}
+    for i, sc in enumerate(scenes):
+        lt = sc.get("light") or {}
+        lift = float(lt.get("bg_base_lift", 0.0) or 0.0)
+        gain = float(lt.get("glow_gain", 1.0) or 1.0)
+        light_snap[str(i)] = {"bg_base_lift": round(lift, 4),
+                              "glow_gain": round(gain, 4)}
+        if lift or gain != 1.0:
+            light_rules.append(
+                f"      #scene-{i} > .vis {{ filter:brightness({1.0 + lift:.4f}) "
+                f"saturate({gain:.4f}); }}")
+    if light_rules:
+        print(f"[light/A7] shot 级光照覆写 {len(light_rules)} 项："
+              f"{[k for k, v in light_snap.items() if v['bg_base_lift'] or v['glow_gain'] != 1.0]}")
+    light_css = "\n".join(light_rules)
+
+    page = f'''<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face {{ font-family: "PingFang SC"; src: local("PingFang SC"); }}
+      :root {{
+        /* 赤焰热力主题（色相不动，V-BASE 只抬明度） */
+        --theme:#FF5926; --theme-deep:#B03D1A; --theme-mid:#E85122;
+        --ink:#F2F2F5; --ink-2:#9A9AA3; --ink-3:#7A7A84;
+        --line:rgba(255,89,38,.18);
+        /* V-BASE 提亮基线⑥：卡片表面 +明度 / +不透明 */
+        --card:rgba(27,30,36,.94);
+      }}
+      * {{ box-sizing:border-box; margin:0; padding:0; }}
+      /* V-BASE 提亮基线①–⑤：暗角 + 四角主光/反光增强 + 中心光雾 + 网格提亮 + 基色抬亮 */
+      html, body {{ width:1080px; height:1920px; overflow:hidden;
+        font-family:"PingFang SC",sans-serif; color:var(--ink); line-height:1.6;
+        background:
+          radial-gradient(1400px 1000px at 50% 48%, transparent 46%, rgba(6,7,9,.42) 100%),
+          radial-gradient(1100px 780px at 6% -12%, rgba(196,72,34,.46), transparent 60%),
+          radial-gradient(900px 620px at 102% 0%, rgba(255,89,38,.22), transparent 58%),
+          radial-gradient(1600px 1200px at 50% 34%, rgba(255,89,38,.07), transparent 72%),
+          radial-gradient(820px 820px at 50% 112%, rgba(18,18,20,.92), transparent 62%),
+          linear-gradient(rgba(255,89,38,.08) 1px, transparent 1px) 0 0/72px 72px,
+          linear-gradient(90deg, rgba(255,89,38,.08) 1px, transparent 1px) 0 0/72px 72px,
+          linear-gradient(168deg,#15181D 0%,#1A1E24 46%,#0F1216 100%);
+      }}
+      .scene {{ position:absolute; inset:0; display:flex; flex-direction:column;
+        align-items:center; padding:150px 56px 400px; }}
+      .topbar {{ position:absolute; top:56px; left:56px; right:56px; display:flex;
+        justify-content:space-between; align-items:center; z-index:20;
+        font-size:24px; color:var(--ink-3); }}
+      .topbar .brand {{ font-weight:700; color:var(--theme); letter-spacing:.08em; }}
+      .topbar .date {{ font-family:monospace; letter-spacing:.05em; }}
+      .progress {{ position:absolute; top:0; left:0; height:4px;
+        background:linear-gradient(90deg,var(--theme-deep),var(--theme)); z-index:30; width:0%;
+        box-shadow:0 0 12px rgba(255,89,38,.9); }}
+      .wm {{ position:absolute; right:40px; bottom:104px; z-index:25; font-size:44px; font-weight:600;
+        color:rgba(255,255,255,.55); text-shadow:0 0 3px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.40),0 -1px 2px rgba(0,0,0,.30); }}
+
+      /* V-BASE 提亮基线⑦：可视底板 #0D0F0F → #151A20，补 1px 顶部内嵌亮线 */
+      .vis {{ width:100%; height:560px; border-radius:20px; overflow:hidden; position:relative;
+        border:1px solid var(--line);
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 26px 64px -30px rgba(0,0,0,.88);
+        margin-bottom:36px; background:#151A20; }}
+      .vis-svg {{ width:100%; height:100%; display:block; }}
+      .vis-badge {{ position:absolute; left:20px; bottom:20px; font-size:22px; font-weight:700;
+        letter-spacing:.06em; color:#121214; background:var(--theme); padding:9px 18px; border-radius:9px;
+        box-shadow:0 0 20px rgba(255,89,38,.55); }}
+
+      /* chip：8MB 芯片（底板随 V-BASE⑦，主题径向光 +.02） */
+      .v-chip {{ display:flex; align-items:center; justify-content:center;
+        background:radial-gradient(700px 420px at 50% 45%, rgba(255,89,38,.14), transparent 65%),#151A20; }}
+      .chip-stage {{ display:flex; flex-direction:column; align-items:center; gap:26px; }}
+      .chip {{ width:300px; height:300px; filter:drop-shadow(0 0 30px rgba(255,89,38,.45)); }}
+      .chip-label {{ font-size:30px; font-weight:800; color:var(--ink-2); letter-spacing:.06em; }}
+
+      /* toolcall / extract：左右流转 */
+      .v-toolcall, .v-extract {{ display:flex; align-items:center;
+        background:radial-gradient(700px 420px at 50% 40%, rgba(255,89,38,.12), transparent 65%),#151A20; }}
+      .tc-stage, .ex-stage {{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; gap:14px; padding:0 24px; }}
+      .tc-bubble, .ex-messy {{ width:330px; flex:none; }}
+      .tc-bubble {{ background:rgba(255,89,38,.10); border:1px solid var(--line); border-radius:22px 22px 22px 6px; padding:26px 24px; }}
+      .tc-who, .ex-who {{ font-size:18px; font-weight:800; color:var(--theme); letter-spacing:.16em; margin-bottom:12px; }}
+      .tc-text {{ font-size:25px; line-height:1.5; color:var(--ink); }}
+      .tc-arrow, .ex-arrow {{ width:52px; color:var(--theme); flex:none; filter:drop-shadow(0 0 8px rgba(255,89,38,.6)); }}
+      .tc-code {{ width:430px; flex:none; background:#12161B; border:1px solid var(--line); border-radius:16px;
+        padding:24px 26px; font-family:monospace; }}
+      .tc-line {{ font-size:21px; line-height:1.75; color:var(--ink-2); white-space:nowrap; }}
+      .tc-line.i1 {{ padding-left:26px; }}
+      .tc-line .k {{ color:#7FB2FF; }} .tc-line .f {{ color:#FF8A5C; font-weight:700; }}
+      .tc-line .n {{ color:#9A9AA3; }} .tc-line .v {{ color:#8FE0B0; }} .tc-line .s {{ color:var(--ink-3); }}
+      .tc-line .c {{ color:#5A5A64; font-size:18px; }}
+      .ex-messy {{ background:rgba(255,255,255,.07); border:1px dashed #4A4A54; border-radius:16px; padding:24px; }}
+      .ex-line {{ font-size:21px; line-height:1.7; color:var(--ink-2); }}
+      .ex-tidy {{ width:360px; flex:none; background:#12161B; border:1px solid var(--line); border-radius:16px; padding:22px 24px; }}
+      .ex-row {{ display:flex; justify-content:space-between; font-family:monospace; font-size:21px;
+        line-height:1.8; color:var(--ink-3); border-bottom:1px solid rgba(255,255,255,.06); }}
+      .ex-row b {{ color:#8FE0B0; font-weight:700; }}
+
+      /* V-BASE 提亮基线⑥：卡片表面提亮（var(--card)）+ 1px 顶部内嵌亮线 */
+      .card {{ position:relative; width:100%; background:var(--card); border:1px solid var(--line);
+        border-radius:24px; padding:48px 46px 50px;
+        box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 1px 2px rgba(0,0,0,.3),0 32px 64px -30px rgba(0,0,0,.8);
+        overflow:hidden; }}
+      .card::before {{ content:""; position:absolute; left:0; top:40px; bottom:40px; width:6px;
+        border-radius:0 4px 4px 0; background:linear-gradient(180deg,var(--theme-mid),var(--theme-deep)); }}
+      .card::after {{ content:""; position:absolute; top:0; left:0; width:40%; height:100%;
+        background:linear-gradient(100deg,transparent,rgba(255,89,38,.16),transparent);
+        transform:skewX(-18deg) translateX(-250%); pointer-events:none; }}
+      .eyebrow {{ font-size:24px; letter-spacing:.2em; color:var(--theme); font-weight:700; margin-bottom:22px; }}
+      h1 {{ font-size:66px; line-height:1.24; font-weight:800; letter-spacing:-.01em; }}
+      h2 {{ font-size:46px; line-height:1.3; font-weight:800; letter-spacing:-.005em; }}
+      .accent {{ color:var(--theme); text-shadow:0 0 18px rgba(255,89,38,.5); }}
+      .hsubtitle {{ margin-top:24px; color:var(--ink-2); font-size:27px; line-height:1.5; }}
+      .stats {{ margin-top:38px; display:flex; flex-wrap:wrap; gap:16px; }}
+      .stat {{ background:rgba(255,89,38,.10); border:1px solid var(--line); border-radius:16px;
+        padding:20px 28px; min-width:250px; }}
+      .stat .k {{ font-size:17px; letter-spacing:.1em; color:var(--ink-3); }}
+      .stat .v {{ font-size:40px; font-weight:800; color:var(--theme); margin-top:6px; }}
+      .bigwrap {{ margin-top:36px; background:linear-gradient(135deg,rgba(255,89,38,.16),rgba(255,89,38,.05));
+        border:1px solid rgba(255,89,38,.26); border-radius:20px; padding:32px 40px; }}
+      .bignum {{ font-size:108px; font-weight:900; line-height:1.05;
+        background:linear-gradient(135deg,var(--theme) 0%,#FFB08A 100%);
+        -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }}
+      .biglabel {{ margin-top:8px; font-size:23px; color:var(--ink-2); letter-spacing:.03em; line-height:1.5; }}
+      .ocard {{ text-align:center; padding:72px 46px; }}
+      .otitle {{ font-size:58px; font-weight:900; line-height:1.25; }}
+      .octa {{ margin-top:34px; font-size:38px; font-weight:800; color:var(--theme);
+        text-shadow:0 0 18px rgba(255,89,38,.45); }}
+      .osub {{ margin-top:22px; font-size:28px; color:var(--ink-3); }}
+
+      .subtitle {{ position:absolute; left:56px; right:56px; bottom:150px; z-index:15;
+        display:flex; justify-content:center; pointer-events:none; }}
+      .sub-inner {{ max-width:100%; padding:26px 34px; border-radius:24px;
+        background:rgba(16,18,22,.92); backdrop-filter:blur(10px);
+        box-shadow:0 14px 36px -18px rgba(0,0,0,.8); border-left:6px solid var(--theme);
+        font-size:33px; font-weight:600; color:#fff; line-height:1.5; }}
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="{DUR}" data-width="1080" data-height="1920">
+      <div id="progress" class="progress clip" data-start="0" data-duration="{DUR}" data-track-index="100"></div>
+      <div id="topbar" class="topbar clip" data-start="0" data-duration="{DUR}" data-track-index="1">
+        <span class="brand">{html.escape(wm)} · 开源情报站</span>
+        <span class="date">{html.escape(date)}</span>
+      </div>
+      <div id="wm" class="wm clip" data-start="0" data-duration="{DUR}" data-track-index="2">{html.escape(wm)}</div>
+      {chr(10).join(scene_divs)}
+      {chr(10).join(sub_divs)}
+      <audio id="narration-audio" data-start="0" data-duration="{DUR}" data-track-index="51" src="audio_combined.wav" data-volume="1.0"></audio>
+    </div>
+    <script>
+      window.__timelines = window.__timelines || {{}};
+      const tl = gsap.timeline({{ paused: true }});
+      const DUR = {DUR};
+      tl.to("#progress", {{ width: "100%", duration: DUR, ease: "none" }}, 0);
+      {chr(10).join("      " + l for l in anim_lines)}
+      {chr(10).join("      " + l for l in tl_lines)}
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>'''
+
+    # ── A2（v1.13.0）：外观一致性锚点快照 ────────────────────────────────────
+    # A7：仅当存在 shot 级光照覆写时才注入 CSS（无覆写 → 与默认渲染逐字节一致）
+    if light_css:
+        _scene_rule = ("        align-items:center; padding:150px 56px 400px; }")
+        page = page.replace(_scene_rule, _scene_rule + "\n" + light_css, 1)
+
+    # 从**已生成的 CSS/HTML 实际取值**里解析锚点（不是复述脚本常量），写入一行
+    # HTML 注释 ANCHOR-SNAPSHOT，供 scripts/anchors_check.py 与 story/anchors.json
+    # 做渲染前漂移比对。注释不影响渲染、不改变任何尺寸/颜色取值。
+    def _g(pat, default=None, flags=0):
+        m = re.search(pat, page, flags)
+        return m.groups()[0] if m else default
+
+    _card = re.search(r"--card:rgba\((\d+),(\d+),(\d+),([\d.]+)\)", page)
+    anchors = {
+        "theme": _g(r"--theme:(#[0-9A-Fa-f]{6})"),
+        "theme_deep": _g(r"--theme-deep:(#[0-9A-Fa-f]{6})"),
+        "theme_mid": _g(r"--theme-mid:(#[0-9A-Fa-f]{6})"),
+        "card_bg_rgb": ",".join(_card.groups()[:3]) if _card else None,
+        "card_alpha": float(_card.group(4)) if _card else None,
+        "vis_base": _g(r"\.vis \{.*?background:(#[0-9A-Fa-f]{6})", None, re.S),
+        "grid_px": int(_g(r"0 0/(\d+)px \d+px") or 0),
+        "font_family": _g(r'@font-face \{ font-family: "([^"]+)"'),
+        "wm_pos": {"right_px": int(_g(r"\.wm \{ position:absolute; right:(\d+)px") or 0),
+                   "bottom_px": int(_g(r"\.wm \{ position:absolute; right:\d+px; bottom:(\d+)px") or 0)},
+        "resolution": f'{_g("data-width=" + chr(34) + "(" + chr(92) + "d+)")}x'
+                      f'{_g("data-height=" + chr(34) + "(" + chr(92) + "d+)")}',
+        "fps": 30,
+    }
+    snapshot = {"version": "A2/v1", "story": os.path.basename(STORY),
+                "anchor_count": len(anchors), "anchors": anchors, "light": light_snap}
+    page = page.replace(
+        '<meta name="viewport" content="width=1080, height=1920" />',
+        '<meta name="viewport" content="width=1080, height=1920" />\n'
+        "    <!-- ANCHOR-SNAPSHOT " +
+        json.dumps(snapshot, ensure_ascii=False, sort_keys=True) + " -->")
+    print("[anchors/A2] 锚点快照已写入 index.html："
+          f"theme={anchors['theme']} grid={anchors['grid_px']}px "
+          f"vis_base={anchors['vis_base']} card_alpha={anchors['card_alpha']}")
+
+    open(os.path.join(STORY, "index.html"), "w", encoding="utf-8").write(page)
+
+    # A2：--emit-anchors 首次登记（把**当前**实际取值固化为 anchors.json）
+    if "--emit-anchors" in sys.argv:
+        ap = os.path.join(STORY, "anchors.json")
+        tgt = sys.argv[sys.argv.index("--emit-anchors") + 1] \
+            if len(sys.argv) > sys.argv.index("--emit-anchors") + 1 else ap
+        payload = {
+            "version": "A2/v1",
+            "story": os.path.basename(STORY),
+            "note": "外观一致性锚点表：由 build_html.py --emit-anchors 登记当前 composition "
+                    "实际取值；anchors_check.py 渲染前逐项比对，漂移即告警。未列入本表的"
+                    "取值不参与比对。",
+            "anchors": anchors,
+            "light_thresholds": {"lift_delta_max": 0.04, "gain_delta_max": 0.10},
+        }
+        json.dump(payload, open(tgt, "w", encoding="utf-8"),
+                  ensure_ascii=False, indent=2)
+        print(f"anchors.json 已登记：{tgt}")
+    open(os.path.join(STORY, "hyperframes.json"), "w").write(json.dumps({
+        "name": "compositor-mac", "width": 1080, "height": 1920, "fps": 30,
+        "duration": DUR, "output": "output.mp4"
+    }, ensure_ascii=False, indent=2))
+    print(f"index.html 已生成，总时长 {DUR}s，{len(scenes)} 场景")
+
+if __name__ == "__main__":
+    main()

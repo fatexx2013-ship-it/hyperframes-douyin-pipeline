@@ -1,0 +1,115 @@
+<!doctype html>
+<!-- @dsCard group="data-analysis" name="Data Analysis Outro" path="outro.html" subtitle="数据收尾：结论 + 口径说明" viewport="{width: 1080, height: 1920}" -->
+<html lang="zh-CN" class="dark dark-theme"
+  data-composition-variables='[
+    {"id":"conclusion","type":"string","label":"结论","default":"结论：端侧不是替代云端，而是把高频交互留在本地"},
+    {"id":"source","type":"string","label":"口径","default":"数据来源：本机 30 天埋点均值 · 样本 12.4 万次"}
+  ]'
+>
+<head>
+  <meta charset="UTF-8" />
+  <script src="_shared/vendor/gsap.min.js"></script>
+  <script src="_shared/vendor/CustomEase.min.js"></script>
+  <link rel="stylesheet" href="_shared/tokens/radix-slate-dark.css" />
+  <link rel="stylesheet" href="_shared/tokens/radix-violet-dark.css" />
+  <link rel="stylesheet" href="_shared/tokens/open-props-sizes.min.css" />
+  <link rel="stylesheet" href="_shared/tokens/open-props-shadows.min.css" />
+  <link rel="stylesheet" href="_shared/tokens/open-props-borders.min.css" />
+  <style>
+    /* 系统字体显式声明（lint 要求；中文用系统 PingFang SC，杜绝渲染回退不确定） */
+    @font-face {
+      font-family: "PingFang SC";
+      src: local("PingFang SC"), local("PingFangSC-Regular");
+      font-weight: 400;
+      font-style: normal;
+      font-display: block;
+    }
+    @font-face {
+      font-family: "PingFang SC";
+      src: local("PingFang SC Semibold"), local("PingFangSC-Semibold"), local("PingFang SC");
+      font-weight: 600 900;
+      font-style: normal;
+      font-display: block;
+    }
+    @font-face {
+      font-family: "SF Pro Display";
+      src: local("SF Pro Display"), local("SFProDisplay-Bold");
+      font-weight: 400 900;
+      font-style: normal;
+      font-display: block;
+    }
+
+    :root {
+      --bg-app: var(--slate-1); --card: var(--slate-3); --border-subtle: var(--slate-6);
+      --text-primary: var(--slate-12); --text-secondary: var(--slate-11);
+      --primary: var(--violet-9); --background: var(--bg-app); --foreground: var(--text-primary);
+      --muted-foreground: var(--text-secondary); --border: var(--border-subtle);
+      --radius: var(--radius-3); --shadow-color: 220 40% 2%; --shadow-strength: 30%;
+      --shadow-card: var(--shadow-4);
+    }
+    body {
+      margin: 0; width: 1080px; height: 1920px; overflow: hidden;
+      background: var(--background); color: var(--foreground);
+      font-family: "PingFang SC", "SF Pro Display", sans-serif;
+    }
+    .scene { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    .grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(color-mix(in oklab, var(--border-subtle) 45%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in oklab, var(--border-subtle) 45%, transparent) 1px, transparent 1px);
+      background-size: 120px 120px; opacity: 0.35;
+    }
+    .center {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; padding: var(--size-px-9);
+      box-sizing: border-box; z-index: 6;
+    }
+    .card {
+      width: 920px; box-sizing: border-box; padding: var(--size-px-8);
+      border: 1px solid var(--border); border-radius: var(--radius);
+      background: color-mix(in oklab, var(--card) 82%, transparent);
+      box-shadow: var(--shadow-card); opacity: 0;
+    }
+    .card__label { font-size: 26px; letter-spacing: 0.14em; color: var(--muted-foreground); margin: 0 0 var(--size-px-3); }
+    .card__body { font-size: 50px; font-weight: 600; line-height: 1.42; margin: 0; }
+    .card__sep { height: 1px; background: var(--border); margin: var(--size-px-5) 0; }
+    .card__meta { font-size: 26px; color: var(--muted-foreground); margin: 0; opacity: 0; }
+    .fade-in { position: absolute; inset: 0; background: var(--bg-app); opacity: 1; z-index: 30; }
+  </style>
+</head>
+<body>
+  <div id="root" data-composition-id="outro" data-width="1080" data-height="1920"
+       data-start="0" data-duration="4" data-track-index="0">
+    <div class="scene">
+      <div class="grid"></div>
+      <div class="center">
+        <div class="card" id="card-el">
+          <p class="card__label">本期结论</p>
+          <p class="card__body" id="conclusion-el">结论：端侧不是替代云端，而是把高频交互留在本地</p>
+          <div class="card__sep"></div>
+          <p class="card__meta" id="source-el">数据来源：本机 30 天埋点均值 · 样本 12.4 万次</p>
+        </div>
+      </div>
+      <div class="fade-in" id="fade-in-el"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var vars = window.__hyperframes ? window.__hyperframes.getVariables() : {};
+      document.getElementById("conclusion-el").textContent = vars.conclusion || "结论：端侧不是替代云端，而是把高频交互留在本地";
+      document.getElementById("source-el").textContent = vars.source || "数据来源：本机 30 天埋点均值 · 样本 12.4 万次";
+
+      var tl = gsap.timeline({ paused: true });
+      /* E11 Fade：由上一分镜叠化进入 */
+      tl.fromTo("#fade-in-el", { opacity: 1 }, { opacity: 0, duration: 0.5, ease: "power2.out" }, 0);
+      tl.fromTo("#card-el", { y: 48, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65, ease: "power3.out" }, 0.35);
+      /* E10/E12：口径行最后进入（信息优先级最低） */
+      tl.fromTo("#source-el", { y: 16, opacity: 0 }, { y: 0, opacity: 1, duration: 0.6, ease: "expo.out" }, 1.0);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["outro"] = tl;
+    })();
+  </script>
+</body>
+</html>

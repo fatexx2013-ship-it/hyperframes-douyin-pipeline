@@ -1,0 +1,50 @@
+[
+  {
+    "text": "想抓小红书的笔记、抖音的评论，又不想硬啃加密算法？这个叫 MediaCrawler 的开源项目，GitHub 上已经攒了六万六千多颗星，专做多平台数据采集。",
+    "path": "/Volumes/PSSD/抖音视频/story/mediacrawler/line_00.wav",
+    "duration": 15.1,
+    "voice_start": 0.12,
+    "voice_end": 14.99,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "它的思路挺聪明：用 Playwright 复用一个已经登录好的 Chrome 浏览器，直接在浏览器上下文里用 JS 表达式取签名参数，不用逆向加密算法，门槛一下就降下来了。",
+    "path": "/Volumes/PSSD/抖音视频/story/mediacrawler/line_01.wav",
+    "duration": 14.42,
+    "voice_start": 0.11,
+    "voice_end": 14.3,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "一套代码覆盖七个平台：小红书、抖音、快手、B站、微博、贴吧、知乎。打开媒体下载，封面、视频、图文图片会按帖子自动归档，B站装好 ffmpeg 还能走 DASH 拿最高画质。",
+    "path": "/Volumes/PSSD/抖音视频/story/mediacrawler/line_02.wav",
+    "duration": 17.92,
+    "voice_start": 0.11,
+    "voice_end": 17.81,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "抓下来的数据能存成 CSV、JSON、Excel、SQLite 或者 MySQL；关键词搜索、指定帖子、二级评论、创作者主页、登录态缓存、IP 代理池、评论词云，这些能力都齐。",
+    "path": "/Volumes/PSSD/抖音视频/story/mediacrawler/line_03.wav",
+    "duration": 18.24,
+    "voice_start": 0.11,
+    "voice_end": 18.13,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "上手也简单：装好 uv，一条 uv sync 同步依赖就能跑；不想敲命令行，还有可视化 WebUI，点点鼠标就能配平台、登录方式，实时看运行日志。",
+    "path": "/Volumes/PSSD/抖音视频/story/mediacrawler/line_04.wav",
+    "duration": 14.93,
+    "voice_start": 0.11,
+    "voice_end": 14.81,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "最后提醒一句：这个工具仅限学习研究，禁止商业用途和非法用途。想研究多平台采集的架构，这个六万六千多颗星的仓库，值得一看。",
+    "path": "/Volumes/PSSD/抖音视频/story/mediacrawler/line_05.wav",
+    "duration": 14.21,
+    "voice_start": 0.11,
+    "voice_end": 14.09,
+    "silence_ge_040s": 0
+  }
+]

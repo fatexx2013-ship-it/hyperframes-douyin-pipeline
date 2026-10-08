@@ -1,0 +1,58 @@
+[
+  {
+    "text": "PS5 独占游戏想用电脑玩？以前只能等模拟器，性能还拉胯。GitHub 这个项目叫 AnyPS5，把 PS5 的游戏文件直接重链接成电脑原生程序，不用模拟器。",
+    "path": "/Volumes/PSSD/抖音视频/story/anyps5/line_00.wav",
+    "duration": 14.07,
+    "voice_start": 0.11,
+    "voice_end": 13.95,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "一定要分清楚：它不是模拟器。模拟器是实时翻译 PS5 指令，性能损耗大。AnyPS5 是把可执行文件重链接成 Windows 或 Linux 的原生格式，再把 PS5 系统库实现一遍供动态链接，游戏直接以原生程序跑。",
+    "path": "/Volumes/PSSD/抖音视频/story/anyps5/line_01.wav",
+    "duration": 19.28,
+    "voice_start": 0.11,
+    "voice_end": 19.17,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "看实测数据：已验证的游戏 Dreaming Sarah，在 GTX 1050 Ti 加 i5-7500 这套老配置上稳跑 60 帧，连 Intel 核显 HD 620 都有 36 帧。这就是原生运行的好处，没有模拟层白吃性能。",
+    "path": "/Volumes/PSSD/抖音视频/story/anyps5/line_02.wav",
+    "duration": 18.0,
+    "voice_start": 0.11,
+    "voice_end": 17.89,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "除了主程序，显卡的着色器代码也要翻译。它把 PS5 的着色器转写成 Vulkan 通用的 SPIR-V 格式，转换结果还用 SPIRV-Tools 做校验。输入方面，SDL 手柄全套支持，摇杆扳机都能用，键鼠可以自己写配置文件映射。",
+    "path": "/Volumes/PSSD/抖音视频/story/anyps5/line_03.wav",
+    "duration": 21.28,
+    "voice_start": 0.11,
+    "voice_end": 21.17,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "说说现状，得诚实：项目 2026 年 8 月才开源，非常新。PS5 系统库的覆盖率还在持续推进，作者公开了进度徽章。但目前真正验证过的只有 Dreaming Sarah 这一款游戏，想玩大作还得再等等。",
+    "path": "/Volumes/PSSD/抖音视频/story/anyps5/line_04.wav",
+    "duration": 17.69,
+    "voice_start": 0.12,
+    "voice_end": 17.58,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "最后讲清楚法律边界。作者明确定位是互操作、研究、游戏保存和兼容性，项目本身不含也不分发任何版权软件、固件、加密密钥或专有库。游戏文件从哪来、怎么用，合规责任在使用者自己。",
+    "path": "/Volumes/PSSD/抖音视频/story/anyps5/line_05.wav",
+    "duration": 19.02,
+    "voice_start": 0.11,
+    "voice_end": 18.9,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "GPL 2.0 开源，代码在 GitHub。你最想在电脑上玩哪款 PS5 游戏？",
+    "path": "/Volumes/PSSD/抖音视频/story/anyps5/line_06.wav",
+    "duration": 7.76,
+    "voice_start": 0.11,
+    "voice_end": 7.65,
+    "silence_ge_040s": 0
+  }
+]

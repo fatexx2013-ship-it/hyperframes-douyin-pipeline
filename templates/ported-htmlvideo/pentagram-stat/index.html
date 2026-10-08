@@ -1,0 +1,117 @@
+<!doctype html>
+<!-- @dsCard group="ported-htmlvideo" name="Pentagram Stat (竖屏)" path="index.html" subtitle="瑞士网格数据锚点：巨号数字 + 红色高亮关键词 + 基线署名" viewport="{width: 1080, height: 1920}" -->
+<!-- 来源：nexu-io/html-video templates/frame-pentagram-stat（Apache-2.0）
+     适配：1920×1080 3×3 网格 → 1080×1920 3列×6行竖版网格重排 / 移除 Google Fonts（Archivo → SF Pro Display + PingFang SC）/ GSAP 时间轴
+     注意：原版 "R7.2M" 等符号为示意数值，接入时须以本产线核实数据替换 -->
+<html lang="zh-CN" data-composition-variables='[
+  {"id":"stat","type":"string","label":"巨号数字","default":"7.2"},
+  {"id":"unit","type":"string","label":"单位","default":"M"},
+  {"id":"label","type":"string","label":"数字标签","default":"本地渲染时长（分钟）"},
+  {"id":"statement","type":"string","label":"陈述句","default":"把 21 个模板收进本地，<span class=hl>渲染链路</span>才真正闭环。"},
+  {"id":"q1","type":"string","label":"角标1","default":"01 / 模板全部 1080×1920"},
+  {"id":"q2","type":"string","label":"角标2","default":"02 / 零外部依赖"},
+  {"id":"q3","type":"string","label":"角标3","default":"03 / 许可证可商用"},
+  {"id":"q4","type":"string","label":"角标4","default":"04 / 时间轴可 seek"},
+  {"id":"source","type":"string","label":"来源","default":"来源：本机产线基线清单 2026-10-03"},
+  {"id":"logo","type":"string","label":"署名","default":"PSSD · 抖音产线"}
+]'>
+<head>
+<meta charset="UTF-8" />
+<title>Pentagram Stat · 竖屏瑞士网格</title>
+<style>
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC"), local("PingFangSC-Regular"); font-weight:400; font-display:block; }
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC Semibold"), local("PingFangSC-Semibold"), local("PingFang SC"); font-weight:600 900; font-display:block; }
+  @font-face { font-family:"SF Pro Display"; src:local("SF Pro Display"), local("SFProDisplay-Bold"); font-weight:400 900; font-display:block; }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1080px; height:1920px; overflow:hidden; position:relative;
+    background:#FFFFFF; color:#000000;
+    font-family:"PingFang SC","SF Pro Display","Helvetica Neue",Arial,sans-serif;
+  }
+
+  /* 竖版 3 列 × 6 行参考网格 */
+  .grid { position:absolute; inset:0; z-index:0; pointer-events:none; }
+  .grid .v { position:absolute; top:0; bottom:0; width:1px; background:rgba(0,0,0,0.06); }
+  .grid .h { position:absolute; left:0; right:0; height:1px; background:rgba(0,0,0,0.06); }
+
+  .stat-wrap { position:absolute; top:118px; left:76px; display:flex; align-items:baseline; }
+  .stat { font-size:300px; font-weight:900; line-height:0.86; letter-spacing:-9px; }
+  .unit { font-size:96px; font-weight:900; margin-left:12px; color:#E60012; }
+
+  .label { position:absolute; top:492px; left:80px; font-size:42px; font-weight:700; letter-spacing:2px; }
+
+  .statement { position:absolute; top:690px; left:80px; width:700px; font-size:48px; font-weight:500;
+    line-height:1.5; letter-spacing:-0.01em; }  /* 原 -0.5px 改以 em 表述（-0.01em ≈ -0.48px@48px），落在 -0.04em 下限之内 */
+  .statement .hl { background:#E60012; color:#fff; padding:2px 10px; display:inline-block; transform-origin:left center; }
+
+  .quad { position:absolute; font-size:24px; font-weight:500; letter-spacing:1.5px; color:#7A7A7A; }
+  .quad b { color:#000; font-weight:700; }
+
+  .baseline { position:absolute; left:76px; right:76px; top:1560px; height:2px; background:#000; transform-origin:left center; }
+  .source { position:absolute; left:76px; top:1596px; font-size:22px; color:#8A8A8A; letter-spacing:1px; }
+  .logo { position:absolute; right:76px; top:1770px; font-size:26px; font-weight:900; letter-spacing:4px; }
+  .logo .red { color:#E60012; }
+</style>
+</head>
+<body data-composition-id="pentagram-stat" data-width="1080" data-height="1920">
+  <div class="grid">
+    <div class="v" style="left:360px"></div>
+    <div class="v" style="left:720px"></div>
+    <div class="h" style="top:320px"></div>
+    <div class="h" style="top:640px"></div>
+    <div class="h" style="top:960px"></div>
+    <div class="h" style="top:1280px"></div>
+    <div class="h" style="top:1600px"></div>
+  </div>
+
+  <div class="stat-wrap">
+    <span class="stat" data-var="stat">7.2</span><span class="unit" data-var="unit">M</span>
+  </div>
+  <div class="label" data-var="label">本地渲染时长（分钟）</div>
+
+  <div class="statement" data-var="statement">把 21 个模板收进本地，<span class="hl">渲染链路</span>才真正闭环。</div>
+
+  <div class="quad" style="left:80px;  top:1150px"><b data-var="q1">01 / 模板全部 1080×1920</b></div>
+  <div class="quad" style="left:560px; top:1150px"><b data-var="q2">02 / 零外部依赖</b></div>
+  <div class="quad" style="left:80px;  top:1330px"><b data-var="q3">03 / 许可证可商用</b></div>
+  <div class="quad" style="left:560px; top:1330px"><b data-var="q4">04 / 时间轴可 seek</b></div>
+
+  <div class="baseline"></div>
+  <div class="source" data-var="source">来源：本机产线基线清单 2026-10-03</div>
+  <div class="logo">PSSD <span class="red">·</span> 抖音产线</div>
+
+  <script src="_shared/vendor/gsap.min.js"></script>
+  <script>window.gsap||document.write('<script src="../_vendor/gsap.min.js"><\/script>');</script>
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      document.querySelectorAll('[data-var]').forEach(function (el) {
+        var v = params.get(el.getAttribute('data-var'));
+        if (v) el.innerHTML = v;
+      });
+      var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
+
+      tl.from('.grid',        { opacity: 0, duration: 0.6, ease: 'power2.out' }, 0)
+        .from('.stat',        { opacity: 0, y: 60, duration: 0.9 }, 0.15)
+        .from('.unit',        { opacity: 0, x: -30, duration: 0.7 }, 0.55)
+        .from('.label',       { opacity: 0, y: 20, duration: 0.6, ease: 'power2.out' }, 0.7)
+        .from('.statement',   { opacity: 0, y: 24, duration: 0.7, ease: 'power2.out' }, 0.9)
+        .from('.statement .hl',{ scaleX: 0, duration: 0.5, ease: 'power2.out' }, 1.25)
+        .from('.quad',        { opacity: 0, y: 14, duration: 0.5, stagger: 0.08, ease: 'power2.out' }, 1.2)
+        .from('.baseline',    { scaleX: 0, duration: 0.7 }, 1.5)
+        .from('.source',      { opacity: 0, duration: 0.5, ease: 'power2.out' }, 1.75)
+        .from('.logo',        { opacity: 0, y: 16, duration: 0.6, ease: 'power2.out' }, 1.9);
+
+      if (reduced) tl.progress(1);
+      window.__timelines = window.__timelines || {};
+      window.__timelines['pentagram-stat'] = tl;
+      window.__timelines['main-comp'] = tl;
+
+      var t = parseFloat(params.get('t'));
+      if (!isNaN(t)) tl.seek(t);
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "frozen_at": "2026-09-26T21:53:39",
+  "label": "paperclip-1.1.0",
+  "ref_manifest": "reports/artifacts/manifest_paperclip_v110.json",
+  "video_fingerprint": "ad56f56a90d115812f0e545de471f1a26e409d5eef17885a5b67cf2317b96e56",
+  "digest": "sha256:cdfb67ff463908f363006dd69132002ae9f6ea1a4be16cdc076655c4f984865f",
+  "digest_rule": "sha256('sha256:') of json.dumps({label, video_fingerprint.sha256, derived}, sort_keys=True) 经 normalize_point 规范化",
+  "canonicalizer_version": "np-1.1.0",
+  "canonicalizer_signature": "06b9cc9e43cfdb0b",
+  "normalize_point_applied": true,
+  "contract_version": "1.1.0",
+  "note": "冻结基线真源：重判不一致即 FAIL（硬停）；重新冻结须显式执行 freeze"
+}

@@ -1,0 +1,42 @@
+[
+  {
+    "text": "你手机里几万张照片，可能正躺在别人的服务器上，还得按月交钱。GitHub 上有个 11.5 万星的开源项目 Immich，能把整个谷歌相册，搬回你自己家。",
+    "path": "/Volumes/PSSD/抖音视频/story/immich/line_00.wav",
+    "duration": 13.91,
+    "voice_start": 0.12,
+    "voice_end": 13.8,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "它最狠的是手机端。iOS 和安卓都有原生 App，打开就自动备份整库，断点续传、防重复，还能只挑几个相册。这一步，就刷掉了九成自建相册。",
+    "path": "/Volumes/PSSD/抖音视频/story/immich/line_01.wav",
+    "duration": 15.52,
+    "voice_start": 0.11,
+    "voice_end": 15.41,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "更离谱的是搜索。人脸自动认人聚类，你搜「海滩上的狗」，它真能给你翻出来，连图里的文字都搜得到。重点是，这些 AI 全部跑在你自己机器上，一张照片都不出网。",
+    "path": "/Volumes/PSSD/抖音视频/story/immich/line_02.wav",
+    "duration": 16.61,
+    "voice_start": 0.12,
+    "voice_end": 16.5,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "算笔账。谷歌相册 2TB，一个月 9 块 9 美金，一年小一千。Immich 的订阅费是零，只要你有一台能跑 Docker 的机器，旧电脑、NAS 都行。数据还是标准文件，随时能搬走，不锁死。",
+    "path": "/Volumes/PSSD/抖音视频/story/immich/line_03.wav",
+    "duration": 18.0,
+    "voice_start": 0.11,
+    "voice_end": 17.89,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "部署就一行 docker compose up，官方还挂了在线 Demo，能先试后装。不过它迭代很快，官方自己提醒：别当成唯一的备份，老老实实做 3-2-1。11.5 万星，AGPL 协议。你的照片，该回家了。",
+    "path": "/Volumes/PSSD/抖音视频/story/immich/line_04.wav",
+    "duration": 20.24,
+    "voice_start": 0.11,
+    "voice_end": 20.13,
+    "silence_ge_040s": 0
+  }
+]

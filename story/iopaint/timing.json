@@ -1,0 +1,74 @@
+[
+  {
+    "text": "想擦掉照片里的路人或水印，又不想花钱？这个开源项目，把模型直接装进你自己电脑。",
+    "path": "/Volumes/PSSD/抖音视频/story/iopaint/line_00.wav",
+    "duration": 8.8,
+    "voice_start": 0.11,
+    "voice_end": 8.69,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "它的自述就一句：免费开源的图像修复和扩图工具，背后跑的是最新 AI 模型。",
+    "path": "/Volumes/PSSD/抖音视频/story/iopaint/line_01.wav",
+    "duration": 8.32,
+    "voice_start": 0.11,
+    "voice_end": 8.21,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "四种玩法：擦掉多余的东西，替换画面里的物体，在图上写字，还有把图往外扩一圈。",
+    "path": "/Volumes/PSSD/抖音视频/story/iopaint/line_02.wav",
+    "duration": 9.28,
+    "voice_start": 0.11,
+    "voice_end": 9.17,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "担心没显卡？它 CPU、GPU 和苹果芯片都能跑，Windows 还有一键安装包。",
+    "path": "/Volumes/PSSD/抖音视频/story/iopaint/line_03.wav",
+    "duration": 7.2,
+    "voice_start": 0.11,
+    "voice_end": 7.09,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "还带六个插件：交互式抠图、去背景、动漫分割，连超分和人脸修复都给你配好了。",
+    "path": "/Volumes/PSSD/抖音视频/story/iopaint/line_04.wav",
+    "duration": 7.76,
+    "voice_start": 0.11,
+    "voice_end": 7.65,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "用法只要一条安装命令，一条启动命令，浏览器打开本地地址就能开始修图。",
+    "path": "/Volumes/PSSD/抖音视频/story/iopaint/line_05.wav",
+    "duration": 7.92,
+    "voice_start": 0.11,
+    "voice_end": 7.81,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "图片多也不怕，命令行指一下输入、遮罩和输出目录，整批图片一次跑完。",
+    "path": "/Volumes/PSSD/抖音视频/story/iopaint/line_06.wav",
+    "duration": 8.16,
+    "voice_start": 0.11,
+    "voice_end": 8.05,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "四种任务、六个插件，全部跑在你自己电脑上，图片一张都不用往外传。",
+    "path": "/Volumes/PSSD/抖音视频/story/iopaint/line_07.wav",
+    "duration": 7.28,
+    "voice_start": 0.11,
+    "voice_end": 7.17,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "评论区聊聊：你手机里最想修掉的那张图，是缺了谁还是多了谁？",
+    "path": "/Volumes/PSSD/抖音视频/story/iopaint/line_08.wav",
+    "duration": 6.88,
+    "voice_start": 0.11,
+    "voice_end": 6.77,
+    "silence_ge_040s": 0
+  }
+]

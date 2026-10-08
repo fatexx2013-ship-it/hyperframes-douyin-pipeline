@@ -1,0 +1,27 @@
+[
+  {
+    "text": "8MB能干什么？一个叫Needle的开源模型，8到29兆的体积，却能干翻比自己大十倍的模型，手机、手表、甚至单片机都能跑。",
+    "path": "/Volumes/PSSD/抖音视频/story/needle/line_00.wav",
+    "duration": 11.38
+  },
+  {
+    "text": "它不跟你闲聊。你给它几个函数，它听懂你的话，自己选对工具、填好参数、把活干了，干完还告诉你它有多大把握。",
+    "path": "/Volumes/PSSD/抖音视频/story/needle/line_01.wav",
+    "duration": 11.71
+  },
+  {
+    "text": "它还能干结构化提取。你声明一个格式，把乱七八糟的文本丢进去，它还你一张发票、一个订单、一条通知，格式保证能解析。",
+    "path": "/Volumes/PSSD/抖音视频/story/needle/line_02.wav",
+    "duration": 12.0
+  },
+  {
+    "text": "它的参数像阶梯一样，2层到20层，每一档都是能直接部署的完整模型。微调之后，4层、2900万参数的小号，就能超过 DeepSeek V4 Flash。",
+    "path": "/Volumes/PSSD/抖音视频/story/needle/line_03.wav",
+    "duration": 13.32
+  },
+  {
+    "text": "一行 pip install 装好，权重在 HuggingFace，浏览器里还能直接试。一万两千颗星，Apache 协议开源，这就是边缘 AI 的新卷法。",
+    "path": "/Volumes/PSSD/抖音视频/story/needle/line_04.wav",
+    "duration": 12.53
+  }
+]

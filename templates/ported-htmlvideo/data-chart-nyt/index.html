@@ -1,0 +1,160 @@
+<!doctype html>
+<!-- @dsCard group="ported-htmlvideo" name="Data Chart NYT (竖屏)" path="index.html" subtitle="新闻编辑风数据图：报头细规 + 手绘 SVG 柱状图 + 红点批注" viewport="{width: 1080, height: 1920}" -->
+<!-- 来源：nexu-io/html-video templates/frame-data-chart-nyt（Apache-2.0）
+     适配：1920×1080 横版 → 1080×1920 竖版重排（图表通栏加高）/ 剔除 cdn.tailwindcss.com 全部改写为手写 CSS /
+           移除 Google Fonts（Source Serif Pro / IBM Plex Sans / IBM Plex Mono / Noto Sans SC）
+           → 本地衬线 Songti SC + PingFang SC + SF Mono 回退 / 内联 SVG 图表保留并重绘为竖版比例 / GSAP 时间轴 -->
+<html lang="zh-CN" data-composition-variables='[
+  {"id":"masthead","type":"string","label":"报头","default":"本地 AI 观察 · 数据版"},
+  {"id":"headline","type":"string","label":"标题","default":"一年之内，本地推理的占比翻了三倍"},
+  {"id":"dek","type":"string","label":"副题","default":"样本：127 个自建视频项目，统计口径为「渲染在本机完成」。"},
+  {"id":"chartTitle","type":"string","label":"图表标题","default":"本地渲染项目占比（%）"},
+  {"id":"byline","type":"string","label":"署名","default":"制图：Marvis · 抖音产线"},
+  {"id":"source","type":"string","label":"数据来源","default":"数据为示例值，接入时须替换为本产线核实数据。"}
+]'>
+<head>
+<meta charset="UTF-8" />
+<title>Data Chart NYT · 竖屏数据图</title>
+<style>
+  /* 本地系统字体显式声明，替代上游 Google Fonts 三族 */
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC"), local("PingFangSC-Regular"); font-weight:400; font-display:block; }
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC Semibold"), local("PingFangSC-Semibold"), local("PingFang SC"); font-weight:600 900; font-display:block; }
+  @font-face { font-family:"Songti SC"; src:local("Songti SC"), local("STSong"), local("SongtiSC-Regular"); font-weight:400 900; font-display:block; }
+  @font-face { font-family:"SF Pro Display"; src:local("SF Pro Display"), local("SFProDisplay-Bold"); font-weight:400 900; font-display:block; }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1080px; height:1920px; overflow:hidden; position:relative; background:#FFFFFF; color:#121212;
+    font-family:"Songti SC","SF Pro Display","PingFang SC","Times New Roman",serif;
+  }
+
+  .masthead { position:absolute; top:86px; left:76px; right:76px; display:flex; justify-content:space-between; align-items:baseline;
+    font-family:"SF Pro Display","PingFang SC",sans-serif; font-size:22px; font-weight:700; letter-spacing:4px; text-transform:uppercase; color:#121212; }
+  .masthead .dim { color:#9A9A9A; font-weight:500; letter-spacing:2px; }
+
+  .rule { position:absolute; left:76px; right:76px; height:2px; background:#121212; transform-origin:left center; }
+  .rule-a { top:132px; }
+  .rule-b { top:136px; height:1px; opacity:0.35; }
+
+  .headline { position:absolute; left:76px; right:76px; top:184px; font-size:70px; font-weight:900; line-height:1.28; letter-spacing:-1px; }
+  .dek { position:absolute; left:76px; width:800px; top:412px; font-size:32px; line-height:1.62; color:#4A4A4A; font-weight:400; }
+
+  .chart-title { position:absolute; left:76px; top:576px; font-family:"SF Pro Display","PingFang SC",sans-serif;
+    font-size:30px; font-weight:700; letter-spacing:1px; }
+  .chart-sub { position:absolute; left:76px; top:620px; font-family:"SF Pro Display","PingFang SC",sans-serif;
+    font-size:20px; color:#8A8A8A; letter-spacing:0.5px; }
+
+  svg.chart { position:absolute; left:76px; top:672px; width:928px; height:620px; }
+  .b-label { font-family:"SF Pro Display","PingFang SC",sans-serif; font-size:24px; font-weight:700; }
+  .b-cat   { font-family:"SF Pro Display","PingFang SC",sans-serif; font-size:22px; fill:#8A8A8A; }
+  .g-line  { stroke:#E2E2E2; stroke-width:1; }
+  .baseline{ stroke:#121212; stroke-width:2; }
+  .bar     { fill:#1A1A1A; }
+  .bar-hl  { fill:#E60012; }
+  .callout-line { stroke:#E60012; stroke-width:2; fill:none; }
+  .callout-txt  { font-family:"SF Pro Display","PingFang SC",sans-serif; }
+
+  .note { position:absolute; left:76px; right:76px; top:1348px; font-family:"SF Pro Display","PingFang SC",sans-serif;
+    font-size:22px; line-height:1.6; color:#6E6E6E; }
+  .byline { position:absolute; left:76px; top:1460px; font-family:"SF Pro Display","PingFang SC",sans-serif;
+    font-size:24px; font-weight:700; letter-spacing:1px; }
+  .footer { position:absolute; left:76px; right:76px; bottom:96px; display:flex; justify-content:space-between;
+    font-family:"SF Pro Display","PingFang SC",sans-serif; font-size:22px; color:#9A9A9A; letter-spacing:2px; }
+</style>
+</head>
+<body data-composition-id="data-chart-nyt" data-width="1080" data-height="1920">
+  <div class="masthead"><span data-var="masthead">本地 AI 观察 · 数据版</span><span class="dim">2026 · 10 · 03</span></div>
+  <div class="rule rule-a"></div>
+  <div class="rule rule-b"></div>
+
+  <div class="headline" data-var="headline">一年之内，本地推理的占比翻了三倍</div>
+  <div class="dek" data-var="dek">样本：127 个自建视频项目，统计口径为「渲染在本机完成」。</div>
+
+  <div class="chart-title" data-var="chartTitle">本地渲染项目占比（%）</div>
+  <div class="chart-sub">示例数据 · 单位：百分比</div>
+
+  <svg class="chart" viewBox="0 0 928 620" preserveAspectRatio="none" aria-label="本地渲染占比柱状图">
+    <line class="g-line" x1="0" y1="60"  x2="928" y2="60"></line>
+    <line class="g-line" x1="0" y1="175" x2="928" y2="175"></line>
+    <line class="g-line" x1="0" y1="290" x2="928" y2="290"></line>
+    <line class="g-line" x1="0" y1="405" x2="928" y2="405"></line>
+    <line class="baseline" x1="0" y1="520" x2="928" y2="520"></line>
+
+    <g class="bars">
+      <rect class="bar" x="76"  y="451" width="82" height="69"></rect>
+      <rect class="bar" x="202" y="411" width="82" height="109"></rect>
+      <rect class="bar" x="328" y="365" width="82" height="155"></rect>
+      <rect class="bar" x="454" y="324.5" width="82" height="195.5"></rect>
+      <rect class="bar" x="580" y="255.5" width="82" height="264.5"></rect>
+      <rect class="bar" x="706" y="186.5" width="82" height="333.5"></rect>
+      <rect class="bar bar-hl" x="832" y="112" width="82" height="408"></rect>
+    </g>
+
+    <g class="vals">
+      <text class="b-label" x="117" y="432" text-anchor="middle">12</text>
+      <text class="b-label" x="243" y="392" text-anchor="middle">19</text>
+      <text class="b-label" x="369" y="346" text-anchor="middle">27</text>
+      <text class="b-label" x="495" y="305" text-anchor="middle">34</text>
+      <text class="b-label" x="621" y="236" text-anchor="middle">46</text>
+      <text class="b-label" x="747" y="167" text-anchor="middle">58</text>
+      <text class="b-label" x="873" y="92"  text-anchor="middle" fill="#E60012">71</text>
+    </g>
+
+    <g class="cats">
+      <text class="b-cat" x="117" y="560" text-anchor="middle">1月</text>
+      <text class="b-cat" x="243" y="560" text-anchor="middle">2月</text>
+      <text class="b-cat" x="369" y="560" text-anchor="middle">3月</text>
+      <text class="b-cat" x="495" y="560" text-anchor="middle">4月</text>
+      <text class="b-cat" x="621" y="560" text-anchor="middle">5月</text>
+      <text class="b-cat" x="747" y="560" text-anchor="middle">6月</text>
+      <text class="b-cat" x="873" y="560" text-anchor="middle">7月</text>
+    </g>
+
+    <g class="callout">
+      <path class="callout-line" d="M873 100 L700 44 L560 44"></path>
+      <text class="callout-txt" x="546" y="38" text-anchor="end" font-size="22" font-weight="700" fill="#E60012">全月最高 71%</text>
+    </g>
+  </svg>
+
+  <div class="note" data-var="source">数据为示例值，接入时须替换为本产线核实数据。</div>
+  <div class="byline" data-var="byline">制图：Marvis · 抖音产线</div>
+
+  <div class="footer"><span>本地渲染 · 竖屏 1080×1920</span><span>PAGE 01</span></div>
+
+  <script src="_shared/vendor/gsap.min.js"></script>
+  <script>window.gsap||document.write('<script src="../_vendor/gsap.min.js"><\/script>');</script>
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      document.querySelectorAll('[data-var]').forEach(function (el) {
+        var v = params.get(el.getAttribute('data-var'));
+        if (v) el.innerHTML = v;
+      });
+      var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
+
+      tl.from('.masthead',   { opacity: 0, y: -14, duration: 0.6, ease: 'power2.out' }, 0.05)
+        .from('.rule',       { scaleX: 0, duration: 0.7, stagger: 0.06 }, 0.2)
+        .from('.headline',   { opacity: 0, y: 26, duration: 0.8 }, 0.4)
+        .from('.dek',        { opacity: 0, y: 18, duration: 0.7, ease: 'power2.out' }, 0.65)
+        .from('.chart-title, .chart-sub', { opacity: 0, y: 14, duration: 0.6, ease: 'power2.out' }, 0.85)
+        .from('.g-line, .baseline', { scaleX: 0, transformOrigin: 'left center', duration: 0.8, stagger: 0.08 }, 1.0)
+        .from('.bar',        { scaleY: 0, transformOrigin: '50% 520px', duration: 0.9, stagger: 0.09 }, 1.15)
+        .from('.vals text',  { opacity: 0, y: 12, duration: 0.5, stagger: 0.09, ease: 'power2.out' }, 1.5)
+        .from('.cats text',  { opacity: 0, duration: 0.5, stagger: 0.05, ease: 'power2.out' }, 1.7)
+        .from('.callout-line',{ opacity: 0, duration: 0.6, ease: 'power2.out' }, 2.05)
+        .from('.callout-txt', { opacity: 0, x: 24, duration: 0.6, ease: 'power2.out' }, 2.25)
+        .from('.note, .byline',{ opacity: 0, y: 12, duration: 0.6, stagger: 0.1, ease: 'power2.out' }, 2.3)
+        .from('.footer',     { opacity: 0, duration: 0.6, ease: 'power2.out' }, 2.55);
+
+      if (reduced) tl.progress(1);
+      window.__timelines = window.__timelines || {};
+      window.__timelines['data-chart-nyt'] = tl;
+      window.__timelines['main-comp'] = tl;
+
+      var t = parseFloat(params.get('t'));
+      if (!isNaN(t)) tl.seek(t);
+    })();
+  </script>
+</body>
+</html>

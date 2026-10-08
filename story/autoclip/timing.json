@@ -1,0 +1,50 @@
+[
+  {
+    "text": "GitHub 上有个项目叫 AutoClip，九千多颗星，就干一件事：把长视频里的精彩片段自动挑出来，一键剪成能直接发的高清短视频。",
+    "path": "/Volumes/PSSD/抖音视频/story/autoclip/line_00.wav",
+    "duration": 12.63,
+    "voice_start": 0.11,
+    "voice_end": 12.51,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "用法很直接：导入一段带字幕的视频，确认制作类型，AI 就按字幕逐句分析精彩片段，自动生成标题和话题时间线，再剪成片段与合集。",
+    "path": "/Volumes/PSSD/抖音视频/story/autoclip/line_01.wav",
+    "duration": 13.36,
+    "voice_start": 0.11,
+    "voice_end": 13.25,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "它适合访谈、播客、课程和直播回放。视频可以是本地文件，也能直接贴 YouTube 或 B 站的链接；没有字幕也没关系，挂上本地 Whisper 就能转写，现成的字幕可以随视频一起导入。",
+    "path": "/Volumes/PSSD/抖音视频/story/autoclip/line_02.wav",
+    "duration": 17.28,
+    "voice_start": 0.11,
+    "voice_end": 17.17,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "模型这块给得很宽：Qwen、OpenAI、Gemini、DeepSeek 这些云端模型都能接，也能连 Ollama 或 LM Studio 跑本地模型。剪辑和渲染全在本机完成，走云端时只发字幕文字和抽样画面。",
+    "path": "/Volumes/PSSD/抖音视频/story/autoclip/line_03.wav",
+    "duration": 18.58,
+    "voice_start": 0.11,
+    "voice_end": 18.46,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "入口不止一个：桌面版内置 Python 和 FFmpeg，装完就能用；还有 Docker 网页版、命令行 CLI，以及给 Agent 调用的 MCP。游戏录屏也能识别高光，但要自己配视觉模型。",
+    "path": "/Volumes/PSSD/抖音视频/story/autoclip/line_04.wav",
+    "duration": 17.76,
+    "voice_start": 0.11,
+    "voice_end": 17.65,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "项目按 MIT 协议开源，macOS 和 Windows 安装包都在 Releases 里，九千多颗星、一千六百多次 fork，还上过 Trendshift 榜。你想先拿它剪哪段视频？",
+    "path": "/Volumes/PSSD/抖音视频/story/autoclip/line_05.wav",
+    "duration": 13.28,
+    "voice_start": 0.11,
+    "voice_end": 13.17,
+    "silence_ge_040s": 0
+  }
+]

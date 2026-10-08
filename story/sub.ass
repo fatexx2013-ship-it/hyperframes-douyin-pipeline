@@ -1,0 +1,24 @@
+[Script Info]
+Title: Auto-generated
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default, PingFang SC, 36, &H00FFFFFF, &H000000FF, &H00000000, &H00000000, 0, 0, 0, 0, 100, 100, 0, 0, 3, 2, 1, 2, 30, 30, 150, 1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,00:00:00.000,00:00:04.600,Default,,0,0,0,,AI竞争的题眼，已经从谁更强，换成了谁更划算。
+Dialogue: 0,00:00:04.600,00:00:08.200,Default,,0,0,0,,中国大模型，正在把AI打成白菜价。
+Dialogue: 0,00:00:08.200,00:00:13.440,Default,,0,0,0,,阶跃星辰发布Step 5 Preview，智能指数跻身全球开源前三。
+Dialogue: 0,00:00:13.440,00:00:18.920,Default,,0,0,0,,单任务成本只有Claude Opus 5的八分之一，十月十五日正式开源。
+Dialogue: 0,00:00:18.920,00:00:24.320,Default,,0,0,0,,Kimi K3上架亚马逊云Bedrock，和OpenAI、Anthropic同台。
+Dialogue: 0,00:00:24.320,00:00:31.000,Default,,0,0,0,,这是中国大模型首次以收入分成模式，向全球三大云厂商输出模型能力。
+Dialogue: 0,00:00:31.000,00:00:38.000,Default,,0,0,0,,讯飞星火X2.5，混合专家架构，从训练到推理，全跑在全国产算力上。
+Dialogue: 0,00:00:38.000,00:00:44.880,Default,,0,0,0,,开源侧更热闹，面壁、紫东太初接力开源，端侧模型已支持一百万Token。
+Dialogue: 0,00:00:44.880,00:00:47.400,Default,,0,0,0,,九成的能力，一成的价格。
+Dialogue: 0,00:00:47.400,00:00:51.080,Default,,0,0,0,,AI普惠时代，是中国队按下了加速键。

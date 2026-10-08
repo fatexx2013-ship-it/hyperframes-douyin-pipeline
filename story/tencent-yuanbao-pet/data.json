@@ -1,0 +1,115 @@
+{
+  "title": "腾讯元宝出桌宠了",
+  "date": "2026.09.28",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "source": "腾讯元宝官方公众号 2026-09-28《元宝桌宠尝鲜版来了|你的桌面新搭子》+ AI商业漫谈 + 数舟AI日报",
+  "materials": [
+    "/Volumes/PSSD/抖音视频/story/tencent-yuanbao-pet/materials/official_yuanbao_cover.jpg",
+    "/Volumes/PSSD/抖音视频/story/tencent-yuanbao-pet/materials/ai_business_cover.jpg"
+  ],
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你还想拆哪个项目。",
+    "emotion": "thoughtful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你还想拆哪个项目？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "image",
+      "card": {
+        "eyebrow": "腾讯元宝官宣 · 2026.09.28",
+        "title": "AI 助手<accent>住进了你的桌面</accent>",
+        "subtitle": "桌宠尝鲜版正式上线 · Windows / macOS 双平台",
+        "image": "official_yuanbao_cover.jpg",
+        "stats": [
+          {"k": "上线时间", "v": "9月28日"},
+          {"k": "支持平台", "v": "Win · Mac"},
+          {"k": "当前状态", "v": "灰度放量"}
+        ]
+      },
+      "lines": [
+        {"role": "answer", "text": "9月28日，腾讯元宝突然官宣，桌宠尝鲜版正式上线。蓝色小元宝住进了你的电脑桌面，Windows和Mac都能用。"}
+      ]
+    },
+    {
+      "type": "stat",
+      "card": {
+        "eyebrow": "核心功能",
+        "title": "文件图片<accent>拖过去就行</accent>",
+        "big": "拖过去就行",
+        "big_label": "本地文件、图片直接拖到桌宠，快速进入元宝对话",
+        "items": [
+          {"k": "拖拽导入", "v": "本地文件 / 图片直接拖到桌宠"},
+          {"k": "无需切换", "v": "不用打开客户端，不用找入口"},
+          {"k": "直接对话", "v": "文件进入元宝对话，即刻使用"}
+        ]
+      },
+      "lines": [
+        {"role": "answer", "text": "最实用的功能，文件图片直接拖到桌宠身上，唰的一下就进了元宝对话。不用打开客户端，拖过去就行。"}
+      ]
+    },
+    {
+      "type": "stat",
+      "card": {
+        "eyebrow": "核心功能",
+        "title": "长任务<accent>进度实时播报</accent>",
+        "big": "实时播报",
+        "big_label": "进度条直接显示在桌面，完成专属动画提醒",
+        "items": [
+          {"k": "进度条", "v": "长任务实时显示在桌面"},
+          {"k": "完成提醒", "v": "专属动画通知，不用盯屏"},
+          {"k": "后台运行", "v": "后台默默跑完，告诉你结果"}
+        ]
+      },
+      "lines": [
+        {"role": "answer", "text": "长任务不用干等了。进度条直接显示在桌面，完成了还会播放专属动画提醒你。"}
+      ]
+    },
+    {
+      "type": "compare",
+      "card": {
+        "eyebrow": "桌面交互 · AI 快捷能力",
+        "title": "会照顾你的<accent>桌面搭子</accent>",
+        "rows": [
+          {"name": "双击桌宠", "pct": 100, "value": "打开主客户端"},
+          {"name": "右键菜单", "pct": 90, "value": "随时隐藏"},
+          {"name": "边缘停靠", "pct": 85, "value": "自动吸附不挡屏"},
+          {"name": "喝水提醒", "pct": 80, "value": "定时起身活动"},
+          {"name": "复制翻译", "pct": 75, "value": "一键翻译选中文字"},
+          {"name": "网页阅读", "pct": 70, "value": "提炼长网页要点"}
+        ],
+        "footnote": "适用平台 Windows / macOS · 客户端 v2.87+"
+      },
+      "lines": [
+        {"role": "answer", "text": "它还会定时提醒你喝水、起身活动。双击打开主客户端，右键隐藏，拖到边缘自动吸附，不挡你干活。"}
+      ]
+    },
+    {
+      "type": "image",
+      "card": {
+        "eyebrow": "怎么用上",
+        "title": "升级到 <accent>v2.87+</accent> 就能领养",
+        "subtitle": "左下角头像 → 我的桌宠 · Windows / macOS · 灰度放量中",
+        "image": "ai_business_cover.jpg",
+        "stats": [
+          {"k": "最低版本", "v": "v2.87+"},
+          {"k": "开启入口", "v": "头像 → 我的桌宠"},
+          {"k": "支持平台", "v": "Win · Mac"}
+        ]
+      },
+      "lines": [
+        {"role": "answer", "text": "想试试的话，把电脑端元宝升级到2.87以上，左下角头像里点我的桌宠，就能把小元宝领回桌面。"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+[project]
+name = "hyperframes-douyin-pipeline"
+version = "2.0.0"
+description = "抖音竖屏 AI 短视频本地零成本产线 — 基于 HyperFrames + FFmpeg + whisper.cpp"
+requires-python = ">=3.10"
+dependencies = [
+    "scipy",
+]
+
+[tool.uv]
+# 推荐用 uv 管理依赖：uv sync / uv pip install .

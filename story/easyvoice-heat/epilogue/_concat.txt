@@ -1,0 +1,2 @@
+file '/Volumes/PSSD/抖音视频/story/easyvoice-heat/douyin.mp4'
+file '/Volumes/PSSD/抖音视频/story/easyvoice-heat/epilogue/_seg.mp4'

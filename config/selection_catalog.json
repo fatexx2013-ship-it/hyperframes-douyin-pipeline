@@ -1,0 +1,1440 @@
+{
+  "catalog_version": "1.0.1",
+  "changelog": [
+    {
+      "version": "1.0.0",
+      "date": "2026-10-07",
+      "change": "首版：三类知识库项目资料抽表 + 12 story / 36 output 登记"
+    },
+    {
+      "version": "1.0.1",
+      "date": "2026-10-07",
+      "change": "试点修正（口径对齐）：voice_role 由语义值「旁白」改为现网实证值 answer；新增 voice_engine_aliases（Qwen3-TTS → qwen3）与 spec_ref.runtime_alignment"
+    }
+  ],
+  "generated_at": "2026-10-07",
+  "generated_by": "S4 / file-agent",
+  "purpose": "抖音竖屏产线选型库（方案A）：把 RAG 知识库 TTS配音 / 视频生成 / 网页提升质量 三类项目资料抽成机器可读决策表，供 scripts/storyctl.py catalog voice|video|frontend 读取，替代文件系统启发式兜底；并登记 12 个双脚本同簇 story 与 output 目录。",
+  "kb_root": "/Volumes/PSSD/RAG知识库/sources",
+  "fetched_at": "2026-10-07",
+  "catalog_schema": {
+    "reader": "scripts/storyctl.py :: cmd_catalog（CATALOG_JSON = config/selection_catalog.json）",
+    "contract": [
+      "顶层为 object",
+      "<category> 为 array",
+      "条目 object 的 name/path/note 为读取字段",
+      "多余字段被读取端忽略（向后兼容）"
+    ],
+    "categories": [
+      "voice",
+      "video",
+      "frontend"
+    ]
+  },
+  "spec_ref": {
+    "param_contract": "/Volumes/PSSD/抖音视频/config/param_contract.json",
+    "contract_version": "1.3.0",
+    "extended_contract_version": "1.1.0-ext",
+    "voice_check_keys": [
+      "voice_role",
+      "voice_engine"
+    ],
+    "voice_keys_note": "param_contract.json 内无 voice_* 命名键（已核：0 命中）；voice_* 口径的锚点是 scripts/storyctl.py --check 的 error 集（title / scenes+lines / epilogue / voice_role+voice_engine / source）。本 catalog 的 voice 条目已按 voice_role / voice_engine 键名对齐，可直接回填 script.json。",
+    "core_fields": [
+      {
+        "field": "fps",
+        "stability": "invariant",
+        "expected": 30
+      },
+      {
+        "field": "segment_duration",
+        "stability": "exploratory",
+        "expected": null
+      },
+      {
+        "field": "resolution_aspect",
+        "stability": "invariant",
+        "expected": {
+          "resolution": "1080x1920",
+          "aspect_ratio": "9:16"
+        }
+      },
+      {
+        "field": "colorspace_gamma",
+        "stability": "exploratory",
+        "expected": "bt709"
+      },
+      {
+        "field": "model_weight_version",
+        "stability": "invariant",
+        "expected": "baseline_bound"
+      },
+      {
+        "field": "sampler_steps_cfg_seed",
+        "stability": "exploratory",
+        "expected": null
+      },
+      {
+        "field": "precision_mode",
+        "stability": "exploratory",
+        "expected": "int8"
+      },
+      {
+        "field": "vae_version",
+        "stability": "exploratory",
+        "expected": null
+      },
+      {
+        "field": "audio_sample_rate_channels",
+        "stability": "invariant",
+        "expected": {
+          "deliver_sample_rate_hz": 44100,
+          "channels_note": "1（纯配音）或 2（含 BGM 立体声混音）均可接受"
+        }
+      },
+      {
+        "field": "chunk_size_auto_downgrade",
+        "stability": "exploratory",
+        "expected": {
+          "render_chunk_mode": "per-scene",
+          "auto_downgrade_allowed": false
+        }
+      }
+    ],
+    "runtime_alignment": {
+      "evidence": "2026-10-07 实跑统计 /Volumes/PSSD/抖音视频/story/*/script.json（共 24 份）",
+      "voice_engine_enum_actual": {
+        "qwen3": 18,
+        "(缺失)": 6
+      },
+      "voice_role_enum_actual": {
+        "answer": 19,
+        "(缺失/未声明)": 5
+      },
+      "mapping": {
+        "Qwen3-TTS": "qwen3"
+      },
+      "advice": "catalog.voice[].voice_engine 为知识库项目名（稳定标识）；回填 script.json 时必须写运行时 id：现网实证 Qwen3-TTS → 'qwen3'（见 voice_engine_aliases）；其余 8 个引擎产线尚未启用，无实证 id，首次启用时须登记，不得凭猜填写。"
+    }
+  },
+  "heuristic_baseline": {
+    "current_fs_scan": {
+      "voice": 24,
+      "video": 22,
+      "frontend": 26,
+      "note": "2026-10-07 实跑 `storyctl.py catalog <cat>`（未落盘时回退 _scan_category，扫 story/ 下 38 个目录）"
+    },
+    "s1b_recorded": {
+      "voice": 17,
+      "video": 16,
+      "frontend": 20,
+      "note": "回执_S1b 记录时点口径；此后 story/ 新增 easyvoice-*、github-* 等非本链路目录，启发式基数已漂移"
+    }
+  },
+  "counts": {
+    "voice": 9,
+    "video": 13,
+    "frontend": 17,
+    "registry_stories": 12,
+    "registry_outputs": 36
+  },
+  "voice": [
+    {
+      "name": "CosyVoice 2 / CosyVoice 3（阿里 FunAudioLLM）",
+      "path": "/Volumes/PSSD/RAG知识库/sources/TTS配音/CosyVoice2-3/项目资料.md",
+      "note": "开源 TTS｜指令与方言控制｜流式｜许可 Apache-2.0（代码+权重）｜商用 无门槛，允许商用（须保留版权声明）｜Mac ✅ CPU 可跑；MPS 需社区 fork（RTF>1，非实时）｜克隆 支持：3 秒零样本克隆｜回填口径 voice_role=answer，voice_engine=CosyVoice2-3（未启用，待首次登记）｜源 /Volumes/PSSD/RAG知识库/sources/TTS配音/CosyVoice2-3/项目资料.md｜抓取 2026-10-07｜sha256:e2e0b492dfaa48d0",
+      "category": "TTS配音",
+      "voice_engine": "CosyVoice2-3",
+      "voice_role": "answer",
+      "voice_role_semantic": "旁白",
+      "voice_engine_aliases": [],
+      "license": "Apache-2.0（代码+权重）",
+      "commercial": "无门槛，允许商用（须保留版权声明）",
+      "mac_runnable": "✅ CPU 可跑；MPS 需社区 fork（RTF>1，非实时）",
+      "zero_shot_clone": "支持：3 秒零样本克隆",
+      "positioning": "开源 TTS｜指令与方言控制｜流式",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/TTS配音/CosyVoice2-3/项目资料.md",
+      "source_sha256": "e2e0b492dfaa48d0",
+      "fetched_at": "2026-10-07"
+    },
+    {
+      "name": "F5-TTS（SWivid/F5-TTS）",
+      "path": "/Volumes/PSSD/RAG知识库/sources/TTS配音/F5-TTS/项目资料.md",
+      "note": "开源 TTS｜Flow Matching｜可微调角色音色｜许可 代码 MIT + 权重 Apache-2.0｜商用 可商用；自训模型须确认训练数据合规（Emilia CC BY 4.0）｜Mac ✅ MPS 可跑｜克隆 支持：零样本克隆（可微调角色音色）｜回填口径 voice_role=answer，voice_engine=F5-TTS（未启用，待首次登记）｜源 /Volumes/PSSD/RAG知识库/sources/TTS配音/F5-TTS/项目资料.md｜抓取 2026-10-07｜sha256:03f88c5435f5dfe1",
+      "category": "TTS配音",
+      "voice_engine": "F5-TTS",
+      "voice_role": "answer",
+      "voice_role_semantic": "旁白",
+      "voice_engine_aliases": [],
+      "license": "代码 MIT + 权重 Apache-2.0",
+      "commercial": "可商用；自训模型须确认训练数据合规（Emilia CC BY 4.0）",
+      "mac_runnable": "✅ MPS 可跑",
+      "zero_shot_clone": "支持：零样本克隆（可微调角色音色）",
+      "positioning": "开源 TTS｜Flow Matching｜可微调角色音色",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/TTS配音/F5-TTS/项目资料.md",
+      "source_sha256": "03f88c5435f5dfe1",
+      "fetched_at": "2026-10-07"
+    },
+    {
+      "name": "GPT-SoVITS",
+      "path": "/Volumes/PSSD/RAG知识库/sources/TTS配音/GPT-SoVITS/项目资料.md",
+      "note": "开源 TTS｜few-shot 克隆｜可训练角色音色｜许可 MIT（代码+权重）｜商用 无门槛，可商用；声音权/人格权须自行授权｜Mac ✅ CPU+MPS 可推理与轻量微调｜克隆 支持：few-shot 克隆｜回填口径 voice_role=answer，voice_engine=GPT-SoVITS（未启用，待首次登记）｜源 /Volumes/PSSD/RAG知识库/sources/TTS配音/GPT-SoVITS/项目资料.md｜抓取 2026-10-07｜sha256:b8e46709aa898a70",
+      "category": "TTS配音",
+      "voice_engine": "GPT-SoVITS",
+      "voice_role": "answer",
+      "voice_role_semantic": "旁白",
+      "voice_engine_aliases": [],
+      "license": "MIT（代码+权重）",
+      "commercial": "无门槛，可商用；声音权/人格权须自行授权",
+      "mac_runnable": "✅ CPU+MPS 可推理与轻量微调",
+      "zero_shot_clone": "支持：few-shot 克隆",
+      "positioning": "开源 TTS｜few-shot 克隆｜可训练角色音色",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/TTS配音/GPT-SoVITS/项目资料.md",
+      "source_sha256": "b8e46709aa898a70",
+      "fetched_at": "2026-10-07"
+    },
+    {
+      "name": "Kokoro-82M（hexgrad/kokoro）",
+      "path": "/Volumes/PSSD/RAG知识库/sources/TTS配音/Kokoro-82M/项目资料.md",
+      "note": "开源 TTS｜82M 超轻量｜54 预设音色｜许可 Apache-2.0｜商用 无门槛，允许商用（需保留版权与 LICENSE）｜Mac ✅ CPU 可实时；MLX 最佳｜克隆 不支持：仅 54 预设音色（8 语言）｜回填口径 voice_role=answer，voice_engine=Kokoro-82M（未启用，待首次登记）｜源 /Volumes/PSSD/RAG知识库/sources/TTS配音/Kokoro-82M/项目资料.md｜抓取 2026-10-07｜sha256:385aa43fb5c41479",
+      "category": "TTS配音",
+      "voice_engine": "Kokoro-82M",
+      "voice_role": "answer",
+      "voice_role_semantic": "旁白",
+      "voice_engine_aliases": [],
+      "license": "Apache-2.0",
+      "commercial": "无门槛，允许商用（需保留版权与 LICENSE）",
+      "mac_runnable": "✅ CPU 可实时；MLX 最佳",
+      "zero_shot_clone": "不支持：仅 54 预设音色（8 语言）",
+      "positioning": "开源 TTS｜82M 超轻量｜54 预设音色",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/TTS配音/Kokoro-82M/项目资料.md",
+      "source_sha256": "385aa43fb5c41479",
+      "fetched_at": "2026-10-07"
+    },
+    {
+      "name": "MegaTTS3（字节跳动 ByteDance）",
+      "path": "/Volumes/PSSD/RAG知识库/sources/TTS配音/MegaTTS3/项目资料.md",
+      "note": "开源 TTS｜半开源零样本克隆｜官方预提取音色可完全本地合成｜许可 Apache-2.0｜商用 许可层面可商用（须保留 NOTICE）；自定义音色受未公开 WaveVAE Encoder 工程限制｜Mac ✅ MPS 可跑（社区验证）｜克隆 半开源：零样本克隆自定义音色须经官方审核｜回填口径 voice_role=answer，voice_engine=MegaTTS3（未启用，待首次登记）｜源 /Volumes/PSSD/RAG知识库/sources/TTS配音/MegaTTS3/项目资料.md｜抓取 2026-10-07｜sha256:93b580cb60c8e2d6",
+      "category": "TTS配音",
+      "voice_engine": "MegaTTS3",
+      "voice_role": "answer",
+      "voice_role_semantic": "旁白",
+      "voice_engine_aliases": [],
+      "license": "Apache-2.0",
+      "commercial": "许可层面可商用（须保留 NOTICE）；自定义音色受未公开 WaveVAE Encoder 工程限制",
+      "mac_runnable": "✅ MPS 可跑（社区验证）",
+      "zero_shot_clone": "半开源：零样本克隆自定义音色须经官方审核",
+      "positioning": "开源 TTS｜半开源零样本克隆｜官方预提取音色可完全本地合成",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/TTS配音/MegaTTS3/项目资料.md",
+      "source_sha256": "93b580cb60c8e2d6",
+      "fetched_at": "2026-10-07"
+    },
+    {
+      "name": "OmniVoice（k2-fsa / 小米团队）",
+      "path": "/Volumes/PSSD/RAG知识库/sources/TTS配音/OmniVoice/项目资料.md",
+      "note": "开源 TTS｜0.8B｜零样本多语言克隆｜许可 Apache-2.0（含 HiggsAudioV2 tokenizer）｜商用 无门槛，可免费商用、本地部署，无字符/次数限制｜Mac ✅ MPS+CPU 可跑｜克隆 支持：零样本多语言克隆（646 语言）｜回填口径 voice_role=answer，voice_engine=OmniVoice（未启用，待首次登记）｜源 /Volumes/PSSD/RAG知识库/sources/TTS配音/OmniVoice/项目资料.md｜抓取 2026-10-07｜sha256:a2685f1f5a97f3f2",
+      "category": "TTS配音",
+      "voice_engine": "OmniVoice",
+      "voice_role": "answer",
+      "voice_role_semantic": "旁白",
+      "voice_engine_aliases": [],
+      "license": "Apache-2.0（含 HiggsAudioV2 tokenizer）",
+      "commercial": "无门槛，可免费商用、本地部署，无字符/次数限制",
+      "mac_runnable": "✅ MPS+CPU 可跑",
+      "zero_shot_clone": "支持：零样本多语言克隆（646 语言）",
+      "positioning": "开源 TTS｜0.8B｜零样本多语言克隆",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/TTS配音/OmniVoice/项目资料.md",
+      "source_sha256": "a2685f1f5a97f3f2",
+      "fetched_at": "2026-10-07"
+    },
+    {
+      "name": "Qwen3-TTS（阿里通义千问 TTS）",
+      "path": "/Volumes/PSSD/RAG知识库/sources/TTS配音/Qwen3-TTS/项目资料.md",
+      "note": "开源 TTS｜零样本克隆｜支持微调｜许可 Apache-2.0（模型与 Tokenizer 同协议）｜商用 允许免费商用、本地部署、二次开发、API 调用｜Mac ✅ MPS+MLX 可推理｜克隆 支持：零样本克隆｜回填口径 voice_role=answer，voice_engine=qwen3｜源 /Volumes/PSSD/RAG知识库/sources/TTS配音/Qwen3-TTS/项目资料.md｜抓取 2026-10-07｜sha256:fa02e2e4edfcc9f6",
+      "category": "TTS配音",
+      "voice_engine": "Qwen3-TTS",
+      "voice_role": "answer",
+      "voice_role_semantic": "旁白",
+      "voice_engine_aliases": [
+        "qwen3"
+      ],
+      "license": "Apache-2.0（模型与 Tokenizer 同协议）",
+      "commercial": "允许免费商用、本地部署、二次开发、API 调用",
+      "mac_runnable": "✅ MPS+MLX 可推理",
+      "zero_shot_clone": "支持：零样本克隆",
+      "positioning": "开源 TTS｜零样本克隆｜支持微调",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/TTS配音/Qwen3-TTS/项目资料.md",
+      "source_sha256": "fa02e2e4edfcc9f6",
+      "fetched_at": "2026-10-07"
+    },
+    {
+      "name": "VibeVoice（微软 Microsoft）",
+      "path": "/Volumes/PSSD/RAG知识库/sources/TTS配音/VibeVoice/项目资料.md",
+      "note": "开源 TTS｜长音频多说话人（最多 4 人）｜成品自带 AI 水印｜许可 MIT（Copyright 2025 Microsoft）｜商用 允许商用；成品强制内嵌 AI 声明+水印，官方口径「研究优先」｜Mac ✅ MPS+CPU 可跑｜克隆 支持：1-shot 克隆（多说话人）｜回填口径 voice_role=answer，voice_engine=VibeVoice（未启用，待首次登记）｜源 /Volumes/PSSD/RAG知识库/sources/TTS配音/VibeVoice/项目资料.md｜抓取 2026-10-07｜sha256:ef27a60bf35e506c",
+      "category": "TTS配音",
+      "voice_engine": "VibeVoice",
+      "voice_role": "answer",
+      "voice_role_semantic": "旁白",
+      "voice_engine_aliases": [],
+      "license": "MIT（Copyright 2025 Microsoft）",
+      "commercial": "允许商用；成品强制内嵌 AI 声明+水印，官方口径「研究优先」",
+      "mac_runnable": "✅ MPS+CPU 可跑",
+      "zero_shot_clone": "支持：1-shot 克隆（多说话人）",
+      "positioning": "开源 TTS｜长音频多说话人（最多 4 人）｜成品自带 AI 水印",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/TTS配音/VibeVoice/项目资料.md",
+      "source_sha256": "ef27a60bf35e506c",
+      "fetched_at": "2026-10-07"
+    },
+    {
+      "name": "VoxCPM / VoxCPM2（OpenBMB）",
+      "path": "/Volumes/PSSD/RAG知识库/sources/TTS配音/VoxCPM2/项目资料.md",
+      "note": "开源 TTS｜Tokenizer-Free｜30 语 + 9 中文方言｜许可 Apache-2.0｜商用 无门槛，可商用、可闭源再分发；约束为使用政策声明（非许可条款）｜Mac ✅ MPS+CPU 可跑｜克隆 支持：零样本与「全真克隆」｜回填口径 voice_role=answer，voice_engine=VoxCPM2（未启用，待首次登记）｜源 /Volumes/PSSD/RAG知识库/sources/TTS配音/VoxCPM2/项目资料.md｜抓取 2026-10-07｜sha256:ff1dd84771cf6962",
+      "category": "TTS配音",
+      "voice_engine": "VoxCPM2",
+      "voice_role": "answer",
+      "voice_role_semantic": "旁白",
+      "voice_engine_aliases": [],
+      "license": "Apache-2.0",
+      "commercial": "无门槛，可商用、可闭源再分发；约束为使用政策声明（非许可条款）",
+      "mac_runnable": "✅ MPS+CPU 可跑",
+      "zero_shot_clone": "支持：零样本与「全真克隆」",
+      "positioning": "开源 TTS｜Tokenizer-Free｜30 语 + 9 中文方言",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/TTS配音/VoxCPM2/项目资料.md",
+      "source_sha256": "ff1dd84771cf6962",
+      "fetched_at": "2026-10-07"
+    }
+  ],
+  "video": [
+    {
+      "name": "Wan2.2 / Wan2.1 通义万相",
+      "path": "/Volumes/PSSD/RAG知识库/sources/视频生成/Wan2.2-通义万相/项目资料.md",
+      "note": "中文语境首选，ComfyUI 原生支持｜许可 Apache-2.0｜商用 无门槛｜Mac ⚠️ 可用（须量化，1.3B/5B 优先）｜源 /Volumes/PSSD/RAG知识库/sources/视频生成/Wan2.2-通义万相/项目资料.md｜抓取 2026-10-07｜sha256:42e360e061c4215d",
+      "category": "视频生成",
+      "subcategory": "① 本地文生视频 / 图生视频模型",
+      "license": "Apache-2.0",
+      "commercial": "无门槛",
+      "mac_usability": "⚠️ 可用（须量化，1.3B/5B 优先）",
+      "positioning": "中文语境首选，ComfyUI 原生支持",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/视频生成/Wan2.2-通义万相/项目资料.md",
+      "source_sha256": "42e360e061c4215d",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/视频生成/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "LTX-Video / LTX-2",
+      "path": "/Volumes/PSSD/RAG知识库/sources/视频生成/LTX-Video-Lightricks/项目资料.md",
+      "note": "速度最快，有 MLX 原生路径｜许可 LTXV Open Weights / LTX-2 Community License｜商用 年营收 <1000 万美元免费商用｜Mac ✅ 可用（Q4 量化，Mac 最友好）｜源 /Volumes/PSSD/RAG知识库/sources/视频生成/LTX-Video-Lightricks/项目资料.md｜抓取 2026-10-07｜sha256:aa8f018baed0236b",
+      "category": "视频生成",
+      "subcategory": "① 本地文生视频 / 图生视频模型",
+      "license": "LTXV Open Weights / LTX-2 Community License",
+      "commercial": "年营收 <1000 万美元免费商用",
+      "mac_usability": "✅ 可用（Q4 量化，Mac 最友好）",
+      "positioning": "速度最快，有 MLX 原生路径",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/视频生成/LTX-Video-Lightricks/项目资料.md",
+      "source_sha256": "aa8f018baed0236b",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/视频生成/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "CogVideoX 智谱",
+      "path": "/Volumes/PSSD/RAG知识库/sources/视频生成/CogVideoX-智谱/项目资料.md",
+      "note": "许可最干净的入门款｜许可 2B=Apache-2.0；5B=自定义 CogVideoX License｜商用 2B 无门槛；5B 需免费注册、月访问≤100 万｜Mac ✅ 可用（2B 流畅，5B 偏慢）｜源 /Volumes/PSSD/RAG知识库/sources/视频生成/CogVideoX-智谱/项目资料.md｜抓取 2026-10-07｜sha256:4c895aed88aa3a6c",
+      "category": "视频生成",
+      "subcategory": "① 本地文生视频 / 图生视频模型",
+      "license": "2B=Apache-2.0；5B=自定义 CogVideoX License",
+      "commercial": "2B 无门槛；5B 需免费注册、月访问≤100 万",
+      "mac_usability": "✅ 可用（2B 流畅，5B 偏慢）",
+      "positioning": "许可最干净的入门款",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/视频生成/CogVideoX-智谱/项目资料.md",
+      "source_sha256": "4c895aed88aa3a6c",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/视频生成/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "AnimateDiff",
+      "path": "/Volumes/PSSD/RAG知识库/sources/视频生成/AnimateDiff/项目资料.md",
+      "note": "短动画、循环动效｜许可 代码/运动模块 Apache-2.0 + 基座 CreativeML OpenRAIL-M｜商用 无营收门槛，含用途限制｜Mac ✅ 最轻量（8GB 可起）｜源 /Volumes/PSSD/RAG知识库/sources/视频生成/AnimateDiff/项目资料.md｜抓取 2026-10-07｜sha256:b80e06fec29e5ffe",
+      "category": "视频生成",
+      "subcategory": "① 本地文生视频 / 图生视频模型",
+      "license": "代码/运动模块 Apache-2.0 + 基座 CreativeML OpenRAIL-M",
+      "commercial": "无营收门槛，含用途限制",
+      "mac_usability": "✅ 最轻量（8GB 可起）",
+      "positioning": "短动画、循环动效",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/视频生成/AnimateDiff/项目资料.md",
+      "source_sha256": "b80e06fec29e5ffe",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/视频生成/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "HunyuanVideo 混元",
+      "path": "/Volumes/PSSD/RAG知识库/sources/视频生成/HunyuanVideo-混元/项目资料.md",
+      "note": "画质高，但非 Mac 友好｜许可 Tencent Hunyuan Community License｜商用 月活 ≤1 亿免费商用；排除欧盟/英国/韩国｜Mac ⚠️ 边界可用（须 INT4/GGUF）｜源 /Volumes/PSSD/RAG知识库/sources/视频生成/HunyuanVideo-混元/项目资料.md｜抓取 2026-10-07｜sha256:466d85ccb871253b",
+      "category": "视频生成",
+      "subcategory": "① 本地文生视频 / 图生视频模型",
+      "license": "Tencent Hunyuan Community License",
+      "commercial": "月活 ≤1 亿免费商用；排除欧盟/英国/韩国",
+      "mac_usability": "⚠️ 边界可用（须 INT4/GGUF）",
+      "positioning": "画质高，但非 Mac 友好",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/视频生成/HunyuanVideo-混元/项目资料.md",
+      "source_sha256": "466d85ccb871253b",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/视频生成/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Stable Video Diffusion",
+      "path": "/Volumes/PSSD/RAG知识库/sources/视频生成/Stable-Video-Diffusion/项目资料.md",
+      "note": "图生视频经典款，风险提示见文｜许可 Stability AI Community License｜商用 年营收 <100 万美元免费商用，须注册｜Mac ⚠️ 技术可跑，但已停更｜源 /Volumes/PSSD/RAG知识库/sources/视频生成/Stable-Video-Diffusion/项目资料.md｜抓取 2026-10-07｜sha256:ab061d06dd38ea67",
+      "category": "视频生成",
+      "subcategory": "① 本地文生视频 / 图生视频模型",
+      "license": "Stability AI Community License",
+      "commercial": "年营收 <100 万美元免费商用，须注册",
+      "mac_usability": "⚠️ 技术可跑，但已停更",
+      "positioning": "图生视频经典款，风险提示见文",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/视频生成/Stable-Video-Diffusion/项目资料.md",
+      "source_sha256": "ab061d06dd38ea67",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/视频生成/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "FramePack",
+      "path": "/Volumes/PSSD/RAG知识库/sources/视频生成/FramePack/项目资料.md",
+      "note": "长视频思路参考，不建议本机部署｜许可 代码 Apache-2.0 + 权重 HunyuanVideo 许可｜商用 月活 ≤1 亿免费商用｜Mac ❌ 32GB 实测跑不动｜源 /Volumes/PSSD/RAG知识库/sources/视频生成/FramePack/项目资料.md｜抓取 2026-10-07｜sha256:7f28e509239584e9",
+      "category": "视频生成",
+      "subcategory": "① 本地文生视频 / 图生视频模型",
+      "license": "代码 Apache-2.0 + 权重 HunyuanVideo 许可",
+      "commercial": "月活 ≤1 亿免费商用",
+      "mac_usability": "❌ 32GB 实测跑不动",
+      "positioning": "长视频思路参考，不建议本机部署",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/视频生成/FramePack/项目资料.md",
+      "source_sha256": "7f28e509239584e9",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/视频生成/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "MoviePy",
+      "path": "/Volumes/PSSD/RAG知识库/sources/视频生成/MoviePy/项目资料.md",
+      "note": "Python 侧合成主力，与现有 FFmpeg 流水线同构｜许可 MIT｜商用 无门槛｜Mac ✅ 完全可用｜源 /Volumes/PSSD/RAG知识库/sources/视频生成/MoviePy/项目资料.md｜抓取 2026-10-07｜sha256:34ded479dbf09714",
+      "category": "视频生成",
+      "subcategory": "② 程序化 / 模板化视频合成框架",
+      "license": "MIT",
+      "commercial": "无门槛",
+      "mac_usability": "✅ 完全可用",
+      "positioning": "Python 侧合成主力，与现有 FFmpeg 流水线同构",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/视频生成/MoviePy/项目资料.md",
+      "source_sha256": "34ded479dbf09714",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/视频生成/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Revideo",
+      "path": "/Volumes/PSSD/RAG知识库/sources/视频生成/Revideo/项目资料.md",
+      "note": "Node 侧批量模板化出片（自动化渲染 API）｜许可 MIT｜商用 无门槛｜Mac ✅ 可用｜源 /Volumes/PSSD/RAG知识库/sources/视频生成/Revideo/项目资料.md｜抓取 2026-10-07｜sha256:f7670827360a4680",
+      "category": "视频生成",
+      "subcategory": "② 程序化 / 模板化视频合成框架",
+      "license": "MIT",
+      "commercial": "无门槛",
+      "mac_usability": "✅ 可用",
+      "positioning": "Node 侧批量模板化出片（自动化渲染 API）",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/视频生成/Revideo/项目资料.md",
+      "source_sha256": "f7670827360a4680",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/视频生成/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Motion Canvas",
+      "path": "/Volumes/PSSD/RAG知识库/sources/视频生成/Motion-Canvas/项目资料.md",
+      "note": "动画/图表类画面，逐帧确定性渲染｜许可 MIT｜商用 无门槛｜Mac ✅ 可用｜源 /Volumes/PSSD/RAG知识库/sources/视频生成/Motion-Canvas/项目资料.md｜抓取 2026-10-07｜sha256:fdfca2a2d1f9c005",
+      "category": "视频生成",
+      "subcategory": "② 程序化 / 模板化视频合成框架",
+      "license": "MIT",
+      "commercial": "无门槛",
+      "mac_usability": "✅ 可用",
+      "positioning": "动画/图表类画面，逐帧确定性渲染",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/视频生成/Motion-Canvas/项目资料.md",
+      "source_sha256": "fdfca2a2d1f9c005",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/视频生成/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Remotion",
+      "path": "/Volumes/PSSD/RAG知识库/sources/视频生成/Remotion/项目资料.md",
+      "note": "React 生态最强，但许可有门槛｜许可 Remotion License（自定义，非开源）｜商用 个人及 ≤3 人公司免费商用；4 人以上需付费｜Mac ✅ 可用（需 macOS ≥13）｜源 /Volumes/PSSD/RAG知识库/sources/视频生成/Remotion/项目资料.md｜抓取 2026-10-07｜sha256:5efb149ee0a7cb98",
+      "category": "视频生成",
+      "subcategory": "② 程序化 / 模板化视频合成框架",
+      "license": "Remotion License（自定义，非开源）",
+      "commercial": "个人及 ≤3 人公司免费商用；4 人以上需付费",
+      "mac_usability": "✅ 可用（需 macOS ≥13）",
+      "positioning": "React 生态最强，但许可有门槛",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/视频生成/Remotion/项目资料.md",
+      "source_sha256": "5efb149ee0a7cb98",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/视频生成/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "HyperFrames",
+      "path": "/Volumes/PSSD/RAG知识库/sources/视频生成/HyperFrames/项目资料.md",
+      "note": "Agent-native HTML/CSS/JS 渲染，许可最干净，与 Remotion 互为替代｜许可 Apache-2.0｜商用 无门槛（无人数/营收限制）｜Mac ✅ 完全可用（实测 10 秒竖屏 11.2 秒渲完）｜源 /Volumes/PSSD/RAG知识库/sources/视频生成/HyperFrames/项目资料.md｜抓取 2026-10-07｜sha256:b281040a17e02e25",
+      "category": "视频生成",
+      "subcategory": "② 程序化 / 模板化视频合成框架",
+      "license": "Apache-2.0",
+      "commercial": "无门槛（无人数/营收限制）",
+      "mac_usability": "✅ 完全可用（实测 10 秒竖屏 11.2 秒渲完）",
+      "positioning": "Agent-native HTML/CSS/JS 渲染，许可最干净，与 Remotion 互为替代",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/视频生成/HyperFrames/项目资料.md",
+      "source_sha256": "b281040a17e02e25",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/视频生成/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Manim",
+      "path": "/Volumes/PSSD/RAG知识库/sources/视频生成/Manim/项目资料.md",
+      "note": "数学/数据动画，知识科普赛道｜许可 MIT｜商用 无门槛｜Mac ✅ 可用｜源 /Volumes/PSSD/RAG知识库/sources/视频生成/Manim/项目资料.md｜抓取 2026-10-07｜sha256:9937fb80a10ac5ab",
+      "category": "视频生成",
+      "subcategory": "② 程序化 / 模板化视频合成框架",
+      "license": "MIT",
+      "commercial": "无门槛",
+      "mac_usability": "✅ 可用",
+      "positioning": "数学/数据动画，知识科普赛道",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/视频生成/Manim/项目资料.md",
+      "source_sha256": "9937fb80a10ac5ab",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/视频生成/00-分类总览与筛选标准.md"
+    }
+  ],
+  "frontend": [
+    {
+      "name": "Tailwind CSS v4",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Tailwind-CSS/项目资料.md",
+      "note": "原子化 CSS 框架，排版/间距/色彩的基线层；HyperFrames init --tailwind 官方支持｜许可 MIT｜商用 无门槛｜接入 L1 直接可用｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/Tailwind-CSS/项目资料.md｜抓取 2026-10-07｜sha256:d9f1376bffc29967",
+      "category": "网页提升质量",
+      "subcategory": "① 排版与设计体系",
+      "license": "MIT",
+      "commercial": "无门槛",
+      "integration_level": "L1 直接可用",
+      "positioning": "原子化 CSS 框架，排版/间距/色彩的基线层；HyperFrames init --tailwind 官方支持",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Tailwind-CSS/项目资料.md",
+      "source_sha256": "d9f1376bffc29967",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Open Props",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Open-Props/项目资料.md",
+      "note": "纯 CSS 设计 token 变量（尺寸/圆角/阴影/缓动），零构建一行引入｜许可 MIT｜商用 无门槛｜接入 L1 直接可用｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/Open-Props/项目资料.md｜抓取 2026-10-07｜sha256:dc743dd278113fee",
+      "category": "网页提升质量",
+      "subcategory": "① 排版与设计体系",
+      "license": "MIT",
+      "commercial": "无门槛",
+      "integration_level": "L1 直接可用",
+      "positioning": "纯 CSS 设计 token 变量（尺寸/圆角/阴影/缓动），零构建一行引入",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Open-Props/项目资料.md",
+      "source_sha256": "dc743dd278113fee",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Radix Colors",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Radix-Colors/项目资料.md",
+      "note": "12 档语义色阶，明暗双模 + 透明变体，对比度经校验｜许可 MIT｜商用 无门槛｜接入 L1 直接可用｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/Radix-Colors/项目资料.md｜抓取 2026-10-07｜sha256:b33d5e347960f3a8",
+      "category": "网页提升质量",
+      "subcategory": "① 排版与设计体系",
+      "license": "MIT",
+      "commercial": "无门槛",
+      "integration_level": "L1 直接可用",
+      "positioning": "12 档语义色阶，明暗双模 + 透明变体，对比度经校验",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Radix-Colors/项目资料.md",
+      "source_sha256": "b33d5e347960f3a8",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Fontsource",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Fontsource/项目资料.md",
+      "note": "自托管 Web 字体分发，解决无头渲染「方框字」的标准方案｜许可 MIT（字体本身多为 OFL-1.1，需逐包核对）｜商用 无门槛｜接入 L1 直接可用｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/Fontsource/项目资料.md｜抓取 2026-10-07｜sha256:1ea5213b64850bed",
+      "category": "网页提升质量",
+      "subcategory": "① 排版与设计体系",
+      "license": "MIT（字体本身多为 OFL-1.1，需逐包核对）",
+      "commercial": "无门槛",
+      "integration_level": "L1 直接可用",
+      "positioning": "自托管 Web 字体分发，解决无头渲染「方框字」的标准方案",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Fontsource/项目资料.md",
+      "source_sha256": "1ea5213b64850bed",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "GSAP",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/GSAP/项目资料.md",
+      "note": "HyperFrames 官方指定动画引擎，paused 时间线 + 逐帧 seek｜许可 GSAP No Charge（非 OSI 开源，含商用；禁止用于与 Webflow 竞争的无代码动画搭建器）｜商用 无营收/人数门槛｜接入 L3 原生支持｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/GSAP/项目资料.md｜抓取 2026-10-07｜sha256:30ce9eb575309641",
+      "category": "网页提升质量",
+      "subcategory": "② 动效与转场库",
+      "license": "GSAP No Charge（非 OSI 开源，含商用；禁止用于与 Webflow 竞争的无代码动画搭建器）",
+      "commercial": "无营收/人数门槛",
+      "integration_level": "L3 原生支持",
+      "positioning": "HyperFrames 官方指定动画引擎，paused 时间线 + 逐帧 seek",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/GSAP/项目资料.md",
+      "source_sha256": "30ce9eb575309641",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Motion",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Motion/项目资料.md",
+      "note": "统一动画引擎（vanilla/React），补间与交错节奏的参数来源｜许可 MIT｜商用 无门槛｜接入 L2 参数与视觉移植｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/Motion/项目资料.md｜抓取 2026-10-07｜sha256:21fce17b2d978f60",
+      "category": "网页提升质量",
+      "subcategory": "② 动效与转场库",
+      "license": "MIT",
+      "commercial": "无门槛",
+      "integration_level": "L2 参数与视觉移植",
+      "positioning": "统一动画引擎（vanilla/React），补间与交错节奏的参数来源",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Motion/项目资料.md",
+      "source_sha256": "21fce17b2d978f60",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Anime.js v4",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Anime.js/项目资料.md",
+      "note": "轻量时间轴 + SVG 动画，顺序编排顺手；v4 与 v3 API 不兼容｜许可 MIT｜商用 无门槛｜接入 L2 参数与视觉移植｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/Anime.js/项目资料.md｜抓取 2026-10-07｜sha256:242dfdbcabb83349",
+      "category": "网页提升质量",
+      "subcategory": "② 动效与转场库",
+      "license": "MIT",
+      "commercial": "无门槛",
+      "integration_level": "L2 参数与视觉移植",
+      "positioning": "轻量时间轴 + SVG 动画，顺序编排顺手；v4 与 v3 API 不兼容",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Anime.js/项目资料.md",
+      "source_sha256": "242dfdbcabb83349",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Lenis",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Lenis/项目资料.md",
+      "note": "平滑滚动，落地页质感加分项；视频侧不适用，仅借其缓动曲线｜许可 MIT｜商用 无门槛｜接入 L2 参数与视觉移植｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/Lenis/项目资料.md｜抓取 2026-10-07｜sha256:b58618539f94bafe",
+      "category": "网页提升质量",
+      "subcategory": "② 动效与转场库",
+      "license": "MIT",
+      "commercial": "无门槛",
+      "integration_level": "L2 参数与视觉移植",
+      "positioning": "平滑滚动，落地页质感加分项；视频侧不适用，仅借其缓动曲线",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Lenis/项目资料.md",
+      "source_sha256": "b58618539f94bafe",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "shadcn/ui",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/shadcn-ui/项目资料.md",
+      "note": "源码复制型组件集合，视觉层可剥离到静态 HTML 模板｜许可 MIT（依赖 Radix/CVA/tailwind-merge 均为宽松许可）｜商用 无门槛｜接入 L2 参数与视觉移植｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/shadcn-ui/项目资料.md｜抓取 2026-10-07｜sha256:a1add14faae29213",
+      "category": "网页提升质量",
+      "subcategory": "③ 组件系统",
+      "license": "MIT（依赖 Radix/CVA/tailwind-merge 均为宽松许可）",
+      "commercial": "无门槛",
+      "integration_level": "L2 参数与视觉移植",
+      "positioning": "源码复制型组件集合，视觉层可剥离到静态 HTML 模板",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/shadcn-ui/项目资料.md",
+      "source_sha256": "a1add14faae29213",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Radix Primitives",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Radix-Primitives/项目资料.md",
+      "note": "无样式无障碍 React 原语；语义与 data-state 命名可迁移｜许可 MIT｜商用 无门槛｜接入 L2 参数与视觉移植｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/Radix-Primitives/项目资料.md｜抓取 2026-10-07｜sha256:7b67dbad30c6487d",
+      "category": "网页提升质量",
+      "subcategory": "③ 组件系统",
+      "license": "MIT",
+      "commercial": "无门槛",
+      "integration_level": "L2 参数与视觉移植",
+      "positioning": "无样式无障碍 React 原语；语义与 data-state 命名可迁移",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Radix-Primitives/项目资料.md",
+      "source_sha256": "7b67dbad30c6487d",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "daisyUI 5",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/daisyUI/项目资料.md",
+      "note": "Tailwind 纯 CSS 组件插件，30+ 主题，零 JS 出界面｜许可 MIT（官方另有独立付费模板，与库许可无关）｜商用 无门槛｜接入 L1 直接可用｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/daisyUI/项目资料.md｜抓取 2026-10-07｜sha256:04a650fed9f45fcb",
+      "category": "网页提升质量",
+      "subcategory": "③ 组件系统",
+      "license": "MIT（官方另有独立付费模板，与库许可无关）",
+      "commercial": "无门槛",
+      "integration_level": "L1 直接可用",
+      "positioning": "Tailwind 纯 CSS 组件插件，30+ 主题，零 JS 出界面",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/daisyUI/项目资料.md",
+      "source_sha256": "04a650fed9f45fcb",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "View Transitions API",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/View-Transitions-API/项目资料.md",
+      "note": "原生页面/元素转场，零依赖零体积；视频端复刻其转场语法｜许可 浏览器原生（无许可约束）｜商用 无门槛｜接入 L2 参数与视觉移植｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/View-Transitions-API/项目资料.md｜抓取 2026-10-07｜sha256:e543e36cd5058f73",
+      "category": "网页提升质量",
+      "subcategory": "④ 浏览器原生转场与资源优化",
+      "license": "浏览器原生（无许可约束）",
+      "commercial": "无门槛",
+      "integration_level": "L2 参数与视觉移植",
+      "positioning": "原生页面/元素转场，零依赖零体积；视频端复刻其转场语法",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/View-Transitions-API/项目资料.md",
+      "source_sha256": "e543e36cd5058f73",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Sharp",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Sharp/项目资料.md",
+      "note": "Node.js 高性能图像处理，素材规格化与瘦身｜许可 Apache-2.0（libvips 为 LGPL-2.1+，动态链接无附加义务）｜商用 无门槛｜接入 L1 直接可用｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/Sharp/项目资料.md｜抓取 2026-10-07｜sha256:0ea8016f71c4ad60",
+      "category": "网页提升质量",
+      "subcategory": "④ 浏览器原生转场与资源优化",
+      "license": "Apache-2.0（libvips 为 LGPL-2.1+，动态链接无附加义务）",
+      "commercial": "无门槛",
+      "integration_level": "L1 直接可用",
+      "positioning": "Node.js 高性能图像处理，素材规格化与瘦身",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Sharp/项目资料.md",
+      "source_sha256": "0ea8016f71c4ad60",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "SVGO",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/SVGO/项目资料.md",
+      "note": "SVG 压缩优化，图标/logo 出片前标准预处理｜许可 MIT｜商用 无门槛｜接入 L1 直接可用｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/SVGO/项目资料.md｜抓取 2026-10-07｜sha256:2e96256ce05e56a2",
+      "category": "网页提升质量",
+      "subcategory": "④ 浏览器原生转场与资源优化",
+      "license": "MIT",
+      "commercial": "无门槛",
+      "integration_level": "L1 直接可用",
+      "positioning": "SVG 压缩优化，图标/logo 出片前标准预处理",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/SVGO/项目资料.md",
+      "source_sha256": "2e96256ce05e56a2",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "axe-core",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/axe-core/项目资料.md",
+      "note": "无障碍规则引擎，对比度/语义检查，可作可读性门禁｜许可 MPL-2.0（仅修改源码并分发时需开源被改文件）｜商用 无门槛｜接入 质量层｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/axe-core/项目资料.md｜抓取 2026-10-07｜sha256:0fd03376717e941b",
+      "category": "网页提升质量",
+      "subcategory": "⑤ 无障碍与质量检测",
+      "license": "MPL-2.0（仅修改源码并分发时需开源被改文件）",
+      "commercial": "无门槛",
+      "integration_level": "质量层",
+      "positioning": "无障碍规则引擎，对比度/语义检查，可作可读性门禁",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/axe-core/项目资料.md",
+      "source_sha256": "0fd03376717e941b",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Lighthouse",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Lighthouse/项目资料.md",
+      "note": "网页质量审计（Performance/A11y/Best Practices/SEO）｜许可 Apache-2.0｜商用 无门槛｜接入 质量层｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/Lighthouse/项目资料.md｜抓取 2026-10-07｜sha256:9244c0e51010456d",
+      "category": "网页提升质量",
+      "subcategory": "⑤ 无障碍与质量检测",
+      "license": "Apache-2.0",
+      "commercial": "无门槛",
+      "integration_level": "质量层",
+      "positioning": "网页质量审计（Performance/A11y/Best Practices/SEO）",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Lighthouse/项目资料.md",
+      "source_sha256": "9244c0e51010456d",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    },
+    {
+      "name": "Stylelint",
+      "path": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Stylelint/项目资料.md",
+      "note": "CSS Linter，模板样式规范门禁｜许可 MIT｜商用 无门槛｜接入 质量层｜源 /Volumes/PSSD/RAG知识库/sources/网页提升质量/Stylelint/项目资料.md｜抓取 2026-10-07｜sha256:07d2f0989d0224dc",
+      "category": "网页提升质量",
+      "subcategory": "⑤ 无障碍与质量检测",
+      "license": "MIT",
+      "commercial": "无门槛",
+      "integration_level": "质量层",
+      "positioning": "CSS Linter，模板样式规范门禁",
+      "source_file": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/Stylelint/项目资料.md",
+      "source_sha256": "07d2f0989d0224dc",
+      "fetched_at": "2026-10-07",
+      "overview_ref": "/Volumes/PSSD/RAG知识库/sources/网页提升质量/00-分类总览与筛选标准.md"
+    }
+  ],
+  "registry": {
+    "generated_at": "2026-10-07",
+    "stories": [
+      {
+        "name": "ace-step-ui",
+        "path": "/Volumes/PSSD/抖音视频/story/ace-step-ui",
+        "cluster": "dual_script",
+        "evidence": [
+          "build_audio.py",
+          "build_html.py",
+          "script.json",
+          "hyperframes.json",
+          "index.html"
+        ],
+        "script_voice": {
+          "voice_role": "answer",
+          "voice_engine": "qwen3",
+          "source_present": true
+        }
+      },
+      {
+        "name": "aicomicbuilder",
+        "path": "/Volumes/PSSD/抖音视频/story/aicomicbuilder",
+        "cluster": "dual_script",
+        "evidence": [
+          "build_audio.py",
+          "build_html.py",
+          "script.json",
+          "hyperframes.json",
+          "index.html"
+        ],
+        "script_voice": {
+          "voice_role": "answer",
+          "voice_engine": "qwen3",
+          "source_present": true
+        }
+      },
+      {
+        "name": "autoclip",
+        "path": "/Volumes/PSSD/抖音视频/story/autoclip",
+        "cluster": "dual_script",
+        "evidence": [
+          "build_audio.py",
+          "build_html.py",
+          "script.json",
+          "hyperframes.json",
+          "index.html"
+        ],
+        "script_voice": {
+          "voice_role": "answer",
+          "voice_engine": "qwen3",
+          "source_present": true
+        }
+      },
+      {
+        "name": "compositor-mac",
+        "path": "/Volumes/PSSD/抖音视频/story/compositor-mac",
+        "cluster": "dual_script",
+        "evidence": [
+          "build_audio.py",
+          "build_html.py",
+          "script.json",
+          "hyperframes.json",
+          "index.html"
+        ],
+        "script_voice": {
+          "voice_role": "answer",
+          "voice_engine": "qwen3",
+          "source_present": true
+        }
+      },
+      {
+        "name": "gods-eye-view",
+        "path": "/Volumes/PSSD/抖音视频/story/gods-eye-view",
+        "cluster": "dual_script",
+        "evidence": [
+          "build_audio.py",
+          "build_html.py",
+          "script.json",
+          "hyperframes.json",
+          "index.html"
+        ],
+        "script_voice": {
+          "voice_role": "answer",
+          "voice_engine": "qwen3",
+          "source_present": false
+        }
+      },
+      {
+        "name": "howtolivebetter",
+        "path": "/Volumes/PSSD/抖音视频/story/howtolivebetter",
+        "cluster": "dual_script",
+        "evidence": [
+          "build_audio.py",
+          "build_html.py",
+          "script.json",
+          "hyperframes.json",
+          "index.html"
+        ],
+        "script_voice": {
+          "voice_role": "answer",
+          "voice_engine": "qwen3",
+          "source_present": true
+        }
+      },
+      {
+        "name": "immich",
+        "path": "/Volumes/PSSD/抖音视频/story/immich",
+        "cluster": "dual_script",
+        "evidence": [
+          "build_audio.py",
+          "build_html.py",
+          "script.json",
+          "hyperframes.json",
+          "index.html"
+        ],
+        "script_voice": {
+          "voice_role": "answer",
+          "voice_engine": "qwen3",
+          "source_present": true
+        }
+      },
+      {
+        "name": "insta360-nyc",
+        "path": "/Volumes/PSSD/抖音视频/story/insta360-nyc",
+        "cluster": "dual_script",
+        "evidence": [
+          "build_audio.py",
+          "build_html.py",
+          "script.json",
+          "hyperframes.json",
+          "index.html"
+        ],
+        "script_voice": {
+          "voice_role": "answer",
+          "voice_engine": "qwen3",
+          "source_present": true
+        }
+      },
+      {
+        "name": "needle",
+        "path": "/Volumes/PSSD/抖音视频/story/needle",
+        "cluster": "dual_script",
+        "evidence": [
+          "build_audio.py",
+          "build_html.py",
+          "script.json",
+          "hyperframes.json",
+          "index.html"
+        ],
+        "script_voice": {
+          "voice_role": "answer",
+          "voice_engine": "qwen3",
+          "source_present": true
+        }
+      },
+      {
+        "name": "news-shake-ad",
+        "path": "/Volumes/PSSD/抖音视频/story/news-shake-ad",
+        "cluster": "dual_script",
+        "evidence": [
+          "build_audio.py",
+          "build_html.py",
+          "script.json",
+          "hyperframes.json",
+          "index.html"
+        ],
+        "script_voice": {
+          "voice_role": "answer",
+          "voice_engine": "qwen3",
+          "source_present": true
+        }
+      },
+      {
+        "name": "paperclip",
+        "path": "/Volumes/PSSD/抖音视频/story/paperclip",
+        "cluster": "dual_script",
+        "evidence": [
+          "build_audio.py",
+          "build_html.py",
+          "script.json",
+          "hyperframes.json",
+          "index.html"
+        ],
+        "script_voice": {
+          "voice_role": "answer",
+          "voice_engine": "qwen3",
+          "source_present": true
+        }
+      },
+      {
+        "name": "turbo-fieldfare",
+        "path": "/Volumes/PSSD/抖音视频/story/turbo-fieldfare",
+        "cluster": "dual_script",
+        "evidence": [
+          "build_audio.py",
+          "build_html.py",
+          "script.json",
+          "hyperframes.json",
+          "index.html"
+        ],
+        "script_voice": {
+          "voice_role": "answer",
+          "voice_engine": "qwen3",
+          "source_present": true
+        }
+      }
+    ],
+    "outputs": [
+      {
+        "name": "10次打开8次跳转_1790050009",
+        "path": "/Volumes/PSSD/抖音视频/output/10次打开8次跳转_1790050009",
+        "kind": "delivery_partial",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "8MB装进任何小设备needle_1790072798",
+        "path": "/Volumes/PSSD/抖音视频/output/8MB装进任何小设备needle_1790072798",
+        "kind": "delivery_partial",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "AI能替代程序员吗_1789555652",
+        "path": "/Volumes/PSSD/抖音视频/output/AI能替代程序员吗_1789555652",
+        "kind": "workspace",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "AI能替代程序员吗_1789555679",
+        "path": "/Volumes/PSSD/抖音视频/output/AI能替代程序员吗_1789555679",
+        "kind": "delivery_partial",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": false,
+          "index_html": true,
+          "video_mp4": false,
+          "dialogue_wav": true
+        }
+      },
+      {
+        "name": "AI能替代程序员吗_1789555743",
+        "path": "/Volumes/PSSD/抖音视频/output/AI能替代程序员吗_1789555743",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": true
+        }
+      },
+      {
+        "name": "AI能替代程序员吗_1789555948",
+        "path": "/Volumes/PSSD/抖音视频/output/AI能替代程序员吗_1789555948",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": true
+        }
+      },
+      {
+        "name": "AI能替代程序员吗_1789556358",
+        "path": "/Volumes/PSSD/抖音视频/output/AI能替代程序员吗_1789556358",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": true
+        }
+      },
+      {
+        "name": "AI能替代程序员吗_v2_1789564710",
+        "path": "/Volumes/PSSD/抖音视频/output/AI能替代程序员吗_v2_1789564710",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": true
+        }
+      },
+      {
+        "name": "AI能替代程序员吗_v3_1789568679",
+        "path": "/Volumes/PSSD/抖音视频/output/AI能替代程序员吗_v3_1789568679",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": true
+        }
+      },
+      {
+        "name": "AI能替代程序员吗_v3_1789568976",
+        "path": "/Volumes/PSSD/抖音视频/output/AI能替代程序员吗_v3_1789568976",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": true
+        }
+      },
+      {
+        "name": "Gemini_3_8_Live_发布_1789559125",
+        "path": "/Volumes/PSSD/抖音视频/output/Gemini_3_8_Live_发布_1789559125",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": true
+        }
+      },
+      {
+        "name": "backup",
+        "path": "/Volumes/PSSD/抖音视频/output/backup",
+        "kind": "workspace",
+        "timestamped": false,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "cn-llm-price-war",
+        "path": "/Volumes/PSSD/抖音视频/output/cn-llm-price-war",
+        "kind": "workspace",
+        "timestamped": false,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "guimi_dub_test",
+        "path": "/Volumes/PSSD/抖音视频/output/guimi_dub_test",
+        "kind": "workspace",
+        "timestamped": false,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "pilot-karaoke-20261003",
+        "path": "/Volumes/PSSD/抖音视频/output/pilot-karaoke-20261003",
+        "kind": "workspace",
+        "timestamped": false,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "samples",
+        "path": "/Volumes/PSSD/抖音视频/output/samples",
+        "kind": "workspace",
+        "timestamped": false,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "test_dual",
+        "path": "/Volumes/PSSD/抖音视频/output/test_dual",
+        "kind": "workspace",
+        "timestamped": false,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": true
+        }
+      },
+      {
+        "name": "theme-heat",
+        "path": "/Volumes/PSSD/抖音视频/output/theme-heat",
+        "kind": "workspace",
+        "timestamped": false,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "voice_tuning_20260917_022949",
+        "path": "/Volumes/PSSD/抖音视频/output/voice_tuning_20260917_022949",
+        "kind": "workspace",
+        "timestamped": false,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "voice_tuning_20260917_023016",
+        "path": "/Volumes/PSSD/抖音视频/output/voice_tuning_20260917_023016",
+        "kind": "workspace",
+        "timestamped": false,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "voice_tuning_fg_20260917_045103",
+        "path": "/Volumes/PSSD/抖音视频/output/voice_tuning_fg_20260917_045103",
+        "kind": "workspace",
+        "timestamped": false,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "中国相机杀疯纽约_1790088863",
+        "path": "/Volumes/PSSD/抖音视频/output/中国相机杀疯纽约_1790088863",
+        "kind": "delivery_partial",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "国产AI芯片四小龙齐聚科创板_G版_1789594416",
+        "path": "/Volumes/PSSD/抖音视频/output/国产AI芯片四小龙齐聚科创板_G版_1789594416",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "国产AI芯片四小龙齐聚科创板_final",
+        "path": "/Volumes/PSSD/抖音视频/output/国产AI芯片四小龙齐聚科创板_final",
+        "kind": "delivery_complete",
+        "timestamped": false,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "国产开源拿下GitHub月榜第一_4544211178",
+        "path": "/Volumes/PSSD/抖音视频/output/国产开源拿下GitHub月榜第一_4544211178",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "本周AI热门项目Top5_1789570079",
+        "path": "/Volumes/PSSD/抖音视频/output/本周AI热门项目Top5_1789570079",
+        "kind": "delivery_partial",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "本周AI热门项目Top5_1789570309",
+        "path": "/Volumes/PSSD/抖音视频/output/本周AI热门项目Top5_1789570309",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "浏览器里开出军用驾驶舱_1790040240",
+        "path": "/Volumes/PSSD/抖音视频/output/浏览器里开出军用驾驶舱_1790040240",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "腾讯偷偷开源的知识库_1465643929",
+        "path": "/Volumes/PSSD/抖音视频/output/腾讯偷偷开源的知识库_1465643929",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "腾讯元宝出桌宠了_1790639424",
+        "path": "/Volumes/PSSD/抖音视频/output/腾讯元宝出桌宠了_1790639424",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "腾讯把AI知识库整套开源了_1789595499",
+        "path": "/Volumes/PSSD/抖音视频/output/腾讯把AI知识库整套开源了_1789595499",
+        "kind": "workspace",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "腾讯把AI知识库整套开源了_1789595564",
+        "path": "/Volumes/PSSD/抖音视频/output/腾讯把AI知识库整套开源了_1789595564",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "阿里开源的这个代码审查神器_一行命令就能跑_1789570650",
+        "path": "/Volumes/PSSD/抖音视频/output/阿里开源的这个代码审查神器_一行命令就能跑_1789570650",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "阿里开源的这个代码审查神器_一行命令就能跑_1789571020",
+        "path": "/Volumes/PSSD/抖音视频/output/阿里开源的这个代码审查神器_一行命令就能跑_1789571020",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "阿里开源的这个代码审查神器_一行命令就能跑_1789572174",
+        "path": "/Volumes/PSSD/抖音视频/output/阿里开源的这个代码审查神器_一行命令就能跑_1789572174",
+        "kind": "workspace",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": false,
+          "hyperframes_json": false,
+          "index_html": false,
+          "video_mp4": false,
+          "dialogue_wav": false
+        }
+      },
+      {
+        "name": "阿里开源的这个代码审查神器_一行命令就能跑_1789572179",
+        "path": "/Volumes/PSSD/抖音视频/output/阿里开源的这个代码审查神器_一行命令就能跑_1789572179",
+        "kind": "delivery_complete",
+        "timestamped": true,
+        "signature": {
+          "narration_wav": true,
+          "hyperframes_json": true,
+          "index_html": true,
+          "video_mp4": true,
+          "dialogue_wav": false
+        }
+      }
+    ]
+  }
+}

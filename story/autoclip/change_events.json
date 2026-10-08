@@ -1,0 +1,24 @@
+{
+  "events": [
+    {
+      "id": "CE-20260929-01-render-window-frames",
+      "date": "2026-09-29",
+      "field": "render_window_frames",
+      "from": 2507,
+      "to": 3193,
+      "unit": "frames @30fps",
+      "reason": "跨选题变更登记：冻结基线 paperclip-1.1.0 为正片 83.56s（2507 帧），本片 autoclip 正片 98.89s、追加固定片尾后成片 106.43s（3193 帧）。帧数差异完全由选题文案时长决定，非渲染降级、非参数漂移、非画幅变更。",
+      "evidence": [
+        "reports/artifacts/diff_autoclip_vs_frozen_baseline.json",
+        "reports/artifacts/manifest_autoclip.json",
+        "story/autoclip/douyin_final.mp4"
+      ],
+      "verified": {
+        "resolution": "1080x1920 与基线一致",
+        "fps": "30/1 与基线一致",
+        "colorspace": "bt709 与基线一致"
+      },
+      "note": "产线既有约定：跨选题帧数差异须以 change_events 登记后放行（turbo-fieldfare 已开先例）"
+    }
+  ]
+}

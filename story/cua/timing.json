@@ -1,0 +1,74 @@
+[
+  {
+    "text": "如果 AI 能自己动鼠标、自己敲键盘，你电脑里那些重复动作，是不是就有人接了？",
+    "path": "/Volumes/PSSD/抖音视频/story/cua/line_00.wav",
+    "duration": 7.44,
+    "voice_start": 0.11,
+    "voice_end": 7.33,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "它给自己的定位叫 Computer-Use 2.0：同一个任务里，代码、接口和图形界面来回切。",
+    "path": "/Volumes/PSSD/抖音视频/story/cua/line_01.wav",
+    "duration": 8.14,
+    "voice_start": 0.11,
+    "voice_end": 8.02,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "干活就四步：先看屏幕，再找按钮，然后真的点下去，最后回头验证结果变了没有。",
+    "path": "/Volumes/PSSD/抖音视频/story/cua/line_02.wav",
+    "duration": 9.07,
+    "voice_start": 0.11,
+    "voice_end": 8.95,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "边界它也写在明面上：三个平台、三种接入都支持，但系统权限和平台能力，得先看清。",
+    "path": "/Volumes/PSSD/抖音视频/story/cua/line_03.wav",
+    "duration": 9.76,
+    "voice_start": 0.11,
+    "voice_end": 9.65,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "它还能在你菜单栏里养几台虚拟机，每台都是真桌面；已登录的软件搬进去，登录状态还在。",
+    "path": "/Volumes/PSSD/抖音视频/story/cua/line_04.wav",
+    "duration": 9.68,
+    "voice_start": 0.11,
+    "voice_end": 9.57,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "虚拟机工具叫 Lume，在苹果芯片上直接建本地 macOS 系统，装好之后用 SSH 连进去。",
+    "path": "/Volumes/PSSD/抖音视频/story/cua/line_05.wav",
+    "duration": 8.95,
+    "voice_start": 0.11,
+    "voice_end": 8.83,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "命令行一条 cua 起沙箱，能跑命令、能截图；四种语言都有 SDK，沙箱里不用装 agent。",
+    "path": "/Volumes/PSSD/抖音视频/story/cua/line_06.wav",
+    "duration": 9.36,
+    "voice_start": 0.11,
+    "voice_end": 9.25,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "他们还放了个专做界面决策的小模型，加一套能给任务打分的测试台，先跑起来再说。",
+    "path": "/Volumes/PSSD/抖音视频/story/cua/line_07.wav",
+    "duration": 7.32,
+    "voice_start": 0.11,
+    "voice_end": 7.2,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "评论区聊聊：你真敢让 AI，动你的鼠标吗？",
+    "path": "/Volumes/PSSD/抖音视频/story/cua/line_08.wav",
+    "duration": 4.44,
+    "voice_start": 0.11,
+    "voice_end": 4.32,
+    "silence_ge_040s": 0
+  }
+]

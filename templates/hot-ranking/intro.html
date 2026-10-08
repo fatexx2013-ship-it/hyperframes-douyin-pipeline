@@ -1,0 +1,350 @@
+<!doctype html>
+<!-- @dsCard group="hot-ranking" name="Hot Ranking Intro (Heat Theme)" path="intro.html" subtitle="热度榜单：暗底 + 红/橘红热力渐变主题" viewport="{width: 1080, height: 1920}" -->
+<!-- 主题模板 · 色标来源与推导见 _shared/tokens/theme-heat-red.css 头注释（源自 P0/P1 差异热力图生成参数） -->
+<html lang="zh-CN" class="dark dark-theme theme-heat"
+  data-composition-variables='[
+    {"id":"title","type":"string","label":"标题","default":"本周热度 TOP 5"},
+    {"id":"badge","type":"string","label":"徽章","default":"热力榜 · 09/20"},
+    {"id":"footer","type":"string","label":"脚注","default":"示例数据 · 接入时替换"},
+    {"id":"pipEnabled","type":"boolean","label":"显示画中画叠加区（上方网络视频素材）","default":true},
+    {"id":"pip","type":"string","label":"画中画素材路径（留空用内置示例素材）","default":""},
+    {"id":"pipLabel","type":"string","label":"画中画角标文案","default":"LIVE · 实时画面"},
+    {"id":"aigc","type":"string","label":"AI标识文案","default":"AI生成"},
+    {"id":"aigcVariant","type":"string","label":"AI标识样式（a无底字/b胶囊/c圆点/d左下）","default":"b"},
+    {"id":"aigcEnabled","type":"boolean","label":"显示画面AI标识角标（默认关闭）","default":false}
+  ]'
+>
+<head>
+  <meta charset="UTF-8" />
+  <script src="_shared/vendor/gsap.min.js"></script>
+  <script src="_shared/vendor/CustomEase.min.js"></script>
+  <link rel="stylesheet" href="_shared/tokens/radix-slate-dark.css" />
+  <link rel="stylesheet" href="_shared/tokens/open-props-sizes.min.css" />
+  <link rel="stylesheet" href="_shared/tokens/theme-heat-red.css" />
+  <style>
+    @font-face {
+      font-family: "PingFang SC";
+      src: local("PingFang SC"), local("PingFangSC-Regular");
+      font-weight: 400;
+      font-style: normal;
+      font-display: block;
+    }
+    @font-face {
+      font-family: "PingFang SC";
+      src: local("PingFang SC Semibold"), local("PingFangSC-Semibold"), local("PingFang SC");
+      font-weight: 600 900;
+      font-style: normal;
+      font-display: block;
+    }
+    @font-face {
+      font-family: "SF Pro Display";
+      src: local("SF Pro Display"), local("SFProDisplay-Bold");
+      font-weight: 400 900;
+      font-style: normal;
+      font-display: block;
+    }
+
+    body {
+      margin: 0; width: 1080px; height: 1920px; overflow: hidden;
+      background: var(--background); color: var(--foreground);
+      font-family: "PingFang SC", "SF Pro Display", sans-serif;
+    }
+    .scene { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; }
+
+    /* 顶部热力光晕：由主色 24% 派生 */
+    .glow {
+      position: absolute; left: -10%; right: -10%; top: -12%; height: 1180px; opacity: 0;
+      background: radial-gradient(58% 58% at 50% 0%,
+        color-mix(in oklab, var(--heat-12) 24%, transparent) 0%, transparent 68%);
+    }
+    .grid {
+      position: absolute; inset: 0; opacity: 0.5;
+      background-image:
+        linear-gradient(color-mix(in oklab, var(--heat-12) 11%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in oklab, var(--heat-12) 11%, transparent) 1px, transparent 1px);
+      background-size: 120px 120px;
+    }
+    .content {
+      position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center;
+      padding: 110px 88px 96px; box-sizing: border-box; z-index: 6;
+    }
+
+    /* ── 画中画叠加区：画面上方叠加网络视频素材 ──
+     * 做法源自成片 build_html.py 的 .gifwrap（圆角容器 + object-fit:cover 满幅
+     * + 左上角 LIVE 角标 + 入场 scale 1.06→1），仅把 HUD 青系（#35E0FF / #04101C）
+     * 换成本主题同源配色（--heat-12 / --heat-1），其余观感与动画节奏保持一致。 */
+    .pip {
+      position: relative; width: 100%; height: 600px; flex: 0 0 auto;
+      border-radius: 24px; overflow: hidden; background: var(--heat-1);
+      border: 1px solid color-mix(in oklab, var(--heat-12) 26%, transparent);
+      box-shadow: 0 24px 60px -28px rgba(0, 0, 0, 0.85), var(--heat-glow);
+      margin-bottom: 44px; opacity: 0;
+    }
+    .pip__media {
+      display: block; width: 100%; height: 100%;
+      object-fit: cover; object-position: center;
+    }
+    .pip__tag {
+      position: absolute; left: 22px; top: 22px; z-index: 2;
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 9px 18px; border-radius: 10px; background: var(--heat-12);
+      color: #1A0903; font-size: 20px; font-weight: 800; letter-spacing: 0.18em;
+      box-shadow: 0 0 20px color-mix(in oklab, var(--heat-12) 55%, transparent);
+      opacity: 0;
+    }
+    .pip__tag::before {
+      content: ""; width: 12px; height: 12px; border-radius: 999px;
+      background: #1A0903; opacity: 0.85;
+    }
+    /* 下沿渐隐：让素材底边与热力画布底色自然衔接 */
+    .pip::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 140px; z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(180deg, transparent 0%,
+        color-mix(in oklab, var(--heat-bg) 78%, transparent) 100%);
+    }
+
+    .badge {
+      align-self: flex-start; display: inline-flex; align-items: center; gap: 14px;
+      padding: 12px 26px; border-radius: 999px;
+      border: 1px solid color-mix(in oklab, var(--heat-12) 44%, transparent);
+      background: color-mix(in oklab, var(--heat-12) 12%, transparent);
+      color: var(--heat-11); font-size: 24px; font-weight: 600; letter-spacing: 0.16em;
+      opacity: 0;
+    }
+    .badge__dot {
+      width: 14px; height: 14px; border-radius: 999px; background: var(--heat-12);
+      box-shadow: 0 0 18px color-mix(in oklab, var(--heat-12) 70%, transparent);
+    }
+    .title {
+      font-size: 88px; font-weight: 900; line-height: 1.16; letter-spacing: -0.01em;
+      margin: 32px 0 0; opacity: 0;
+    }
+    .title em { font-style: normal; color: var(--heat-12); }
+    .sep { display: flex; align-items: center; gap: 20px; width: 100%; margin: 30px 0 42px; }
+    .sep__line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg,
+        color-mix(in oklab, var(--heat-12) 55%, transparent) 0%, transparent 100%);
+    }
+    .sep__accent {
+      width: 104px; height: 4px; border-radius: 999px; background: var(--heat-grad-hot);
+      transform-origin: left center;
+    }
+
+    .board { list-style: none; margin: 0; padding: 0; width: 100%; }
+    .row {
+      display: flex; align-items: center; gap: 26px; box-sizing: border-box;
+      padding: 22px 30px; margin-bottom: 18px; border-radius: 24px;
+      border: 1px solid color-mix(in oklab, var(--heat-border) 72%, transparent);
+      background: color-mix(in oklab, var(--heat-surface) 92%, transparent);
+      opacity: 0;
+    }
+    /* 榜首：热力高点 */
+    .row:first-child {
+      border-color: color-mix(in oklab, var(--heat-12) 48%, transparent);
+      background: color-mix(in oklab, var(--heat-12) 11%, var(--heat-surface));
+      box-shadow: var(--heat-glow);
+    }
+    .row__rank {
+      width: 80px; font-family: "SF Pro Display", sans-serif; font-size: 44px; font-weight: 800;
+      font-variant-numeric: tabular-nums; color: var(--heat-6);
+    }
+    .row:nth-child(1) .row__rank { color: var(--heat-12); }
+    .row:nth-child(2) .row__rank { color: var(--heat-11); }
+    .row:nth-child(3) .row__rank { color: var(--heat-9); }
+    .row:nth-child(4) .row__rank { color: var(--heat-7); }
+    .row:nth-child(5) .row__rank { color: var(--heat-6); }
+
+    .row__body { flex: 1; display: flex; flex-direction: column; gap: 14px; }
+    .row__name { font-size: 32px; font-weight: 600; color: var(--text-primary); letter-spacing: 0.01em; }
+    .row__track {
+      height: 12px; border-radius: 999px; overflow: hidden;
+      background: color-mix(in oklab, var(--heat-12) 13%, transparent);
+    }
+    .row__fill {
+      display: block; height: 100%; border-radius: 999px;
+      background: var(--heat-grad-hot); transform-origin: left center;
+    }
+    .row__value {
+      width: 146px; text-align: right; opacity: 0;
+      font-family: "SF Pro Display", sans-serif; font-size: 40px; font-weight: 800;
+      font-variant-numeric: tabular-nums; color: var(--heat-12);
+    }
+    .row:nth-child(2) .row__value { color: var(--heat-11); }
+    .row:nth-child(3) .row__value { color: var(--heat-10); }
+    .row:nth-child(4) .row__value { color: var(--heat-9); }
+    .row:nth-child(5) .row__value { color: var(--heat-8); }
+
+    .foot { margin: 20px 0 0; font-size: 24px; color: var(--text-secondary); opacity: 0; }
+    .fade-out { position: absolute; inset: 0; background: var(--bg-app); opacity: 0; z-index: 30; }
+
+    /* ── AIGC 显式标识（合规角标）——四种克制方案，默认 b ──
+     * a 极简无底字   b 半透明胶囊   c 圆点+文字   d 左下角小字（避开右下平台标识位）
+     * 全部不透明度 ≤ 0.72，字号 20px（画面高度 1.04%），仅占右下/左下角空白安全区
+     * 【默认关闭】片段内不再渲染该角标（交付平台侧已有强制 AIGC 标识）；需启用时传 aigcEnabled=true */
+    .aigc-label {
+      position: absolute; z-index: 40; opacity: 0; pointer-events: none; white-space: nowrap;
+      display: none; align-items: center; gap: 10px;
+      font-size: var(--aigc-size); font-weight: 500; letter-spacing: var(--aigc-tracking);
+      line-height: 1; color: var(--aigc-fg-soft);
+    }
+    /* 【默认关闭】仅当渲染变量 aigcEnabled=true 时，脚本为元素加 .is-on 才会渲染 */
+    .aigc-label.is-on { display: inline-flex; }
+    .aigc-label[data-variant="a"] { right: var(--aigc-inset-x); bottom: var(--aigc-inset-y); }
+    .aigc-label[data-variant="b"] {
+      right: 44px; bottom: 44px; padding: 9px 20px; border-radius: 999px;
+      color: var(--aigc-fg-strong); background: var(--aigc-surface);
+      border: 1px solid var(--aigc-border);
+    }
+    .aigc-label[data-variant="c"] { right: var(--aigc-inset-x); bottom: var(--aigc-inset-y); }
+    .aigc-label[data-variant="c"]::before {
+      content: ""; width: 8px; height: 8px; border-radius: 999px; background: var(--aigc-dot);
+    }
+    .aigc-label[data-variant="d"] { left: var(--aigc-inset-x); bottom: var(--aigc-inset-y); }
+  </style>
+</head>
+<body class="theme-heat">
+  <div id="root" data-composition-id="intro" data-width="1080" data-height="1920"
+       data-start="0" data-duration="5" data-track-index="0">
+    <div class="scene">
+      <div class="glow" id="glow-el"></div>
+      <div class="grid"></div>
+      <div class="content">
+        <!-- 画中画叠加区：画面上方网络视频素材（可动图/GIF/短视频静帧） -->
+        <div class="pip" id="pip-el">
+          <img class="pip__media" id="pip-img" src="assets/pip-sample.gif"
+               data-alt-src="hot-ranking/assets/pip-sample.gif" alt="" />
+          <span class="pip__tag" id="pip-tag">LIVE · 实时画面</span>
+        </div>
+        <div class="badge"><span class="badge__dot"></span><span id="badge-text">热力榜 · 09/20</span></div>
+        <h1 class="title" id="title-el">本周热度 <em>TOP 5</em></h1>
+        <div class="sep">
+          <div class="sep__line"></div>
+          <div class="sep__accent" id="sep-accent"></div>
+        </div>
+        <ol class="board">
+          <li class="row">
+            <span class="row__rank">01</span>
+            <span class="row__body">
+              <span class="row__name">端侧大模型</span>
+              <span class="row__track"><span class="row__fill" data-w="0.98"></span></span>
+            </span>
+            <span class="row__value">98.6</span>
+          </li>
+          <li class="row">
+            <span class="row__rank">02</span>
+            <span class="row__body">
+              <span class="row__name">AI 视频生成</span>
+              <span class="row__track"><span class="row__fill" data-w="0.92"></span></span>
+            </span>
+            <span class="row__value">92.4</span>
+          </li>
+          <li class="row">
+            <span class="row__rank">03</span>
+            <span class="row__body">
+              <span class="row__name">具身智能</span>
+              <span class="row__track"><span class="row__fill" data-w="0.881"></span></span>
+            </span>
+            <span class="row__value">88.1</span>
+          </li>
+          <li class="row">
+            <span class="row__rank">04</span>
+            <span class="row__body">
+              <span class="row__name">数字人直播</span>
+              <span class="row__track"><span class="row__fill" data-w="0.795"></span></span>
+            </span>
+            <span class="row__value">79.5</span>
+          </li>
+          <li class="row">
+            <span class="row__rank">05</span>
+            <span class="row__body">
+              <span class="row__name">空间计算</span>
+              <span class="row__track"><span class="row__fill" data-w="0.713"></span></span>
+            </span>
+            <span class="row__value">71.3</span>
+          </li>
+        </ol>
+        <p class="foot" id="foot-el">示例数据 · 接入时替换</p>
+      </div>
+      <div class="aigc-label" id="aigc-el" data-variant="b">AI生成</div>
+      <div class="fade-out" id="fade-el"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var vars = window.__hyperframes ? window.__hyperframes.getVariables() : {};
+      document.getElementById("title-el").innerHTML = vars.title || "本周热度 <em>TOP 5</em>";
+      document.getElementById("badge-text").textContent = vars.badge || "热力榜 · 09/20";
+      document.getElementById("foot-el").textContent = vars.footer || "示例数据 · 接入时替换";
+      var aigcEl = document.getElementById("aigc-el");
+      aigcEl.textContent = vars.aigc || "AI生成";
+      aigcEl.setAttribute("data-variant", vars.aigcVariant || "b");
+      /* 画面角标默认关闭；仅显式传入 aigcEnabled=true 时渲染 */
+      var aigcOn = vars.aigcEnabled === true || vars.aigcEnabled === "true" || vars.aigcEnabled === 1;
+      if (aigcOn) { aigcEl.classList.add("is-on"); } else { aigcEl.style.display = "none"; }
+
+      /* ── 画中画叠加区：变量化控制 + 渲染根路径兼容 ──
+       * pip       素材路径（留空 → 用内置示例素材）
+       * pipLabel  左上角角标文案
+       * pipEnabled 默认 true；传 false 时整区不渲染（回到纯榜单版式） */
+      var pipEl = document.getElementById("pip-el");
+      var pipImg = document.getElementById("pip-img");
+      var pipTag = document.getElementById("pip-tag");
+      pipTag.textContent = vars.pipLabel || "LIVE · 实时画面";
+      var pipOn = !(vars.pipEnabled === false || vars.pipEnabled === "false" || vars.pipEnabled === 0);
+      if (!pipOn) {
+        pipEl.style.display = "none";
+      } else if (vars.pip) {
+        pipImg.setAttribute("src", vars.pip);
+      } else {
+        /* 兼容两种渲染根：以模板目录为项目根（assets/…）或以上级 templates/ 为项目根（hot-ranking/assets/…） */
+        pipImg.addEventListener("error", function () {
+          var alt = pipImg.getAttribute("data-alt-src");
+          if (alt && pipImg.getAttribute("src") !== alt) { pipImg.setAttribute("src", alt); }
+        });
+      }
+
+      var EASE_VT = "power3.out";
+      if (window.CustomEase) {
+        gsap.registerPlugin(CustomEase);
+        CustomEase.create("vtStandard", "0.2,0.8,0.2,1");
+        EASE_VT = "vtStandard";
+      }
+
+      var rows = gsap.utils.toArray(".row");
+      var fills = gsap.utils.toArray(".row__fill");
+      var values = gsap.utils.toArray(".row__value");
+
+      var tl = gsap.timeline({ paused: true });
+      tl.fromTo("#glow-el", { opacity: 0 }, { opacity: 1, duration: 1.2, ease: "power2.out" }, 0);
+      if (pipOn) {
+        /* 沿用原 gifwrap 入场：scale 1.06 → 1 + 淡入 */
+        tl.fromTo("#pip-el", { scale: 1.06, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 0.6, ease: "power2.out" }, 0);
+        tl.fromTo("#pip-tag", { opacity: 0, y: -10 },
+          { opacity: 1, y: 0, duration: 0.45, ease: "power2.out" }, 0.5);
+      }
+      tl.fromTo(".badge", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power1.out" }, 0.35);
+      tl.fromTo("#title-el", { y: 110, opacity: 0 }, { y: 0, opacity: 1, duration: 1.0, ease: "expo.out" }, 0.5);
+      tl.fromTo("#sep-accent", { scaleX: 0 }, { scaleX: 1, duration: 0.6, ease: EASE_VT }, 1.0);
+      tl.fromTo(rows, { y: 34, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.55, ease: "power3.out", stagger: 0.15 }, 1.15);
+      tl.fromTo(fills, { scaleX: 0 }, {
+        scaleX: function (i, el) { return parseFloat(el.getAttribute("data-w")); },
+        duration: 0.85, ease: "power3.out", stagger: 0.15,
+      }, 1.7);
+      tl.fromTo(values, { opacity: 0, y: 12 },
+        { opacity: 1, y: 0, duration: 0.4, ease: "power1.out", stagger: 0.15 }, 2.1);
+      /* 榜首热力脉冲（transform 由 GSAP 接管，CSS 不预设） */
+      tl.fromTo(rows[0], { scale: 1 }, { scale: 1.015, duration: 0.5, ease: "power2.inOut", yoyo: true, repeat: 1, immediateRender: false }, 3.4);
+      tl.fromTo("#foot-el", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 3.65);
+      if (aigcOn) tl.fromTo("#aigc-el", { opacity: 0 }, { opacity: 1, duration: 0.5, ease: "power2.out" }, 3.85);
+      tl.to("#fade-el", { opacity: 0.18, duration: 0.55, ease: "power2.in" }, 4.4);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["intro"] = tl;
+    })();
+  </script>
+</body>
+</html>

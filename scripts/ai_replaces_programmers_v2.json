@@ -1,0 +1,50 @@
+{
+  "title": "AI能替代程序员吗-v2",
+  "date": "2026.09.16",
+  "bgm": "/Volumes/PSSD/抖音视频/1/主题BGM-lofi科技.mp3",
+  "watermark": "@大瑞",
+  "hook": {
+    "badge": "AI 科普小课堂",
+    "icon": "🤖",
+    "text": "AI 会抢走程序员的饭碗吗？",
+    "sub": "两个女生 60 秒说清楚",
+    "duration": 3.0
+  },
+  "end_card": {
+    "icon": "🔥",
+    "title": "你会让 AI 帮你写代码吗？",
+    "cta": "评论区聊聊！",
+    "sub": "关注大瑞，每天一个 AI 小知识",
+    "duration": 3.0
+  },
+  "dialogue": [
+    {"role": "question", "text": "诶，我最近看新闻说AI能自己写代码了，这是真的吗？"},
+    {"role": "answer", "text": "是真的。像GitHub Copilot、Claude Code这些工具，已经能帮你写大部分常规代码了。"},
+    {"role": "question", "text": "那程序员会不会因此失业啊？我有点慌。"},
+    {"role": "answer", "text": "短期内不会。AI写代码就像自动驾驶，能处理80%的常规路况，但遇到复杂架构设计、业务逻辑判断，还是得靠人。"},
+    {"role": "question", "text": "那我现在学编程还有意义吗？还是说应该去学别的？"},
+    {"role": "answer", "text": "当然有意义。学会编程，你就能驾驭AI，让它帮你干活。你想想，是会开车的人容易失业，还是不会开车的人？"},
+    {"role": "question", "text": "有道理诶！那我应该学什么语言比较好？"},
+    {"role": "answer", "text": "Python入门最友好，应用也广。但更重要的是学会用AI工具，比如Cursor、Claude Code，这些才是未来程序员的核心竞争力。"}
+  ],
+  "images": [
+    {
+      "after_dialogue": 1,
+      "path": "/Volumes/PSSD/抖音视频/1/插图1-AI代码编辑器.png",
+      "duration": 2.5,
+      "caption": "GitHub Copilot · Claude Code · Cursor"
+    },
+    {
+      "after_dialogue": 3,
+      "path": "/Volumes/PSSD/抖音视频/1/插图2-自动驾驶夜街.png",
+      "duration": 2.5,
+      "caption": "AI 写代码 ≈ 自动驾驶：80% 常规路况能搞定"
+    },
+    {
+      "after_dialogue": 5,
+      "path": "/Volumes/PSSD/抖音视频/1/插图3-程序员与AI握手-1.png",
+      "duration": 2.5,
+      "caption": "会驾驭 AI 的人，才是未来的赢家"
+    }
+  ]
+}

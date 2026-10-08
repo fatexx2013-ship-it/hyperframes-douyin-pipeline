@@ -1,0 +1,104 @@
+<!-- @dsCard group="结尾" name="Science Outro" path="outro.html" subtitle="CTA + Logo" viewport="{width: 1080, height: 1920}" -->
+<!doctype html>
+<html lang="zh-CN"
+  data-composition-variables='[
+    {"id":"cta","type":"string","label":"行动号召","default":"关注我 获取更多AI干货"},
+    {"id":"channel","type":"string","label":"频道名","default":"AI探索者"}
+  ]'
+>
+<head>
+  <meta charset="UTF-8" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: #0a0a0f;
+      font-family: "PingFang SC", "SF Pro Display", sans-serif;
+    }
+    .scene {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1080px;
+      height: 1920px;
+    }
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 120px;
+      box-sizing: border-box;
+      gap: 40px;
+    }
+    .cta-text {
+      font-size: 64px;
+      font-weight: 700;
+      color: #00d4ff;
+      text-align: center;
+      opacity: 0;
+    }
+    .channel-name {
+      font-size: 36px;
+      color: #888899;
+      opacity: 0;
+    }
+    .logo-circle {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 3px solid #00d4ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 48px;
+      font-weight: 900;
+      color: #ffffff;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="root" data-composition-id="outro" data-width="1080" data-height="1920"
+       data-start="0" data-duration="4" data-track-index="0">
+    <div class="scene">
+      <div class="content">
+        <div class="logo-circle" id="logo">AI</div>
+        <p class="cta-text" id="cta-el">关注我 获取更多AI干货</p>
+        <p class="channel-name" id="channel-el">AI探索者</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const vars = window.__hyperframes ? window.__hyperframes.getVariables() : {};
+      var cta = vars.cta || "关注我 获取更多AI干货";
+      var channel = vars.channel || "";
+
+      document.getElementById("cta-el").textContent = cta;
+      document.getElementById("channel-el").textContent = channel;
+
+      var tl = gsap.timeline({ paused: true });
+
+      // Logo 弹入
+      tl.from("#logo", { scale: 0, opacity: 1, duration: 0.6, ease: "back.out(1.7)" }, 0.3);
+
+      // CTA 淡入
+      tl.from("#cta-el", { y: 40, opacity: 0, duration: 0.5, ease: "power2.out" }, 1.0);
+
+      // 频道名淡入
+      tl.from("#channel-el", { y: 20, opacity: 0, duration: 0.4, ease: "power2.out" }, 1.5);
+
+      // 最后缓慢淡出
+      tl.to(".content", { opacity: 0, duration: 0.5 }, 3.2);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["outro"] = tl;
+    })();
+  </script>
+</body>
+</html>

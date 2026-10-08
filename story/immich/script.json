@@ -1,0 +1,196 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#2BB8FF",
+      "purpose": "免费价格大数字渐变（0 元/月 强调，用主题蓝 #2BB8FF）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "delivery_spec_waiver": [],
+  "title": "11.5 万星的谷歌相册替代，一行命令搬回自己家",
+  "date": "2026.10.03",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "voice_desc": "慵懒御姐音（Qwen3-TTS 本地 MLX，情绪自动匹配）",
+  "tts_line": "solo-yujie",
+  "source": "github.com/immich-app/immich · 官方 README + 官网 immich.app（AGPL-3.0）· 数据核验 2026-10-03",
+  "facts": [
+    "定位：高性能自托管照片 / 视频管理方案（High performance self-hosted photo and video management solution），Google Photos 的开源替代",
+    "数据（2026-09-29 核验 Stars / 2026-10-03 核验版本与协议）：Stars 115,239 · 最新稳定版 v3.2.4 · 协议 AGPL-3.0",
+    "移动端：iOS 与 Android 均有原生 App，支持整库自动备份、可选相册备份、后台增量备份、断点续传与防重复检测",
+    "搜索能力：人脸识别聚类、CLIP 语义搜索（自然语言找图）、物体识别、图内文字搜索、地图足迹与「N 年前的今天」回忆",
+    "本地 AI：机器学习服务以独立容器在本机运行，推理不出网（一张照片都不出网）",
+    "成本对比：Google Photos 2TB 档公开定价约 9.99 美元/月；Immich 无订阅费，仅有一次性硬件成本，数据以标准文件存储，可随时迁出",
+    "部署：Docker Compose 一键启动，默认端口 2283，官方在线 Demo demo.immich.app 可先试后装",
+    "合规提示：官方明确提醒不得作为唯一备份，需遵循 3-2-1 备份原则"
+  ],
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你还想拆哪个项目。",
+    "emotion": "thoughtful",
+    "gap_before": 0.4,
+    "tail_silence": 0.5,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你还想拆哪个项目？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "album",
+      "card": {
+        "eyebrow": "GitHub 11.5 万星 · 自托管照片管理",
+        "title": "把你的照片，<accent>从大厂手里搬回来</accent>",
+        "subtitle": "自托管照片 / 视频管理 · Google Photos 的开源替代",
+        "stats": [
+          {
+            "k": "GitHub Stars",
+            "v": "115,239"
+          },
+          {
+            "k": "开源协议",
+            "v": "AGPL-3.0"
+          },
+          {
+            "k": "最新稳定版",
+            "v": "v3.2.4"
+          }
+        ]
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "你手机里几万张照片，可能正躺在别人的服务器上，还得按月交钱。GitHub 上有个 11.5 万星的开源项目 Immich，能把整个谷歌相册，搬回你自己家。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 13.91
+    },
+    {
+      "type": "feature",
+      "visual": "backup",
+      "card": {
+        "eyebrow": "核心能力 · 手机自动备份",
+        "title": "App 一装，<accent>整库照片自己往上跑</accent>",
+        "subtitle": "iOS / Android 原生 App · 后台增量备份 · 断点续传 · 防重复"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "它最狠的是手机端。iOS 和安卓都有原生 App，打开就自动备份整库，断点续传、防重复，还能只挑几个相册。这一步，就刷掉了九成自建相册。"
+        }
+      ],
+      "_start": 15.11,
+      "_end": 30.63
+    },
+    {
+      "type": "feature",
+      "visual": "search",
+      "card": {
+        "eyebrow": "核心能力 · 本地 AI 搜索",
+        "title": "搜「海滩上的狗」，<accent>它真给你翻出来</accent>",
+        "subtitle": "人脸聚类 · CLIP 语义搜索 · 物体识别 · 图内文字搜索"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "更离谱的是搜索。人脸自动认人聚类，你搜「海滩上的狗」，它真能给你翻出来，连图里的文字都搜得到。重点是，这些 AI 全部跑在你自己机器上，一张照片都不出网。"
+        }
+      ],
+      "_start": 31.83,
+      "_end": 48.44
+    },
+    {
+      "type": "stat",
+      "visual": "compare",
+      "card": {
+        "eyebrow": "算笔账 · Google Photos vs Immich",
+        "title": "同样是 2TB，<accent>它不要你一分订阅费</accent>",
+        "big": "0 元 / 月",
+        "big_label": "对比 Google Photos 2TB 约 9.99 美元/月；Immich 只有一次性硬件成本，之后只剩电费"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "算笔账。谷歌相册 2TB，一个月 9 块 9 美金，一年小一千。Immich 的订阅费是零，只要你有一台能跑 Docker 的机器，旧电脑、NAS 都行。数据还是标准文件，随时能搬走，不锁死。"
+        }
+      ],
+      "_start": 49.64,
+      "_end": 67.64
+    },
+    {
+      "type": "outro",
+      "visual": "terminal",
+      "card": {
+        "title": "Docker 一行命令就跑起来",
+        "cta": "GitHub 搜 immich-app/immich",
+        "sub": "11.5 万星 · AGPL-3.0 开源 · demo.immich.app 可先试后装"
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "部署就一行 docker compose up，官方还挂了在线 Demo，能先试后装。不过它迭代很快，官方自己提醒：别当成唯一的备份，老老实实做 3-2-1。11.5 万星，AGPL 协议。你的照片，该回家了。"
+        }
+      ],
+      "_start": 68.84,
+      "_end": 89.08
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "你手机里几万张照片，可能正躺在别人的服务器上，还得按月交钱。GitHub 上有个 11.5 万星的开源项目 Immich，能把整个谷歌相册，搬回你自己家。",
+      "start": 0.0,
+      "end": 13.91
+    },
+    {
+      "scene_index": 1,
+      "text": "它最狠的是手机端。iOS 和安卓都有原生 App，打开就自动备份整库，断点续传、防重复，还能只挑几个相册。这一步，就刷掉了九成自建相册。",
+      "start": 15.11,
+      "end": 30.63
+    },
+    {
+      "scene_index": 2,
+      "text": "更离谱的是搜索。人脸自动认人聚类，你搜「海滩上的狗」，它真能给你翻出来，连图里的文字都搜得到。重点是，这些 AI 全部跑在你自己机器上，一张照片都不出网。",
+      "start": 31.83,
+      "end": 48.44
+    },
+    {
+      "scene_index": 3,
+      "text": "算笔账。谷歌相册 2TB，一个月 9 块 9 美金，一年小一千。Immich 的订阅费是零，只要你有一台能跑 Docker 的机器，旧电脑、NAS 都行。数据还是标准文件，随时能搬走，不锁死。",
+      "start": 49.64,
+      "end": 67.64
+    },
+    {
+      "scene_index": 4,
+      "text": "部署就一行 docker compose up，官方还挂了在线 Demo，能先试后装。不过它迭代很快，官方自己提醒：别当成唯一的备份，老老实实做 3-2-1。11.5 万星，AGPL 协议。你的照片，该回家了。",
+      "start": 68.84,
+      "end": 89.08
+    }
+  ],
+  "total_duration": 89.08,
+  "tts_params": {
+    "version": "G",
+    "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+    "ref_voice": "yujie_thoughtful.wav（慵懒御姐音）",
+    "silence_trim": "-52dB / 0.30s（句内上限）",
+    "lead_silence": 0.12,
+    "tail_silence": 0.08,
+    "pause_comma": 0.25,
+    "pause_period": 0.75,
+    "pause_paragraph": 1.2,
+    "sample_rate": 24000,
+    "channels": 1,
+    "silence_ge_040s_total": 0
+  }
+}

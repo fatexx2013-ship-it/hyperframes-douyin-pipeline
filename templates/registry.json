@@ -1,0 +1,44 @@
+{
+  "version": "A8/v1",
+  "note": "竖屏产线模板库（槽位化）。kind → 模板 story + 槽位清单。storyctl new --kind <kind> 按此表解析模板；槽位清单由 scripts/template_slots.py 落盘到新 story 的 slots.json 并校验必填槽位是否仍为占位值。默认 kind=default 时 template_story=compositor-mac，行为与加装前逐字节一致。",
+  "kinds": {
+    "default": {
+      "template_story": "compositor-mac",
+      "description": "通用六场景情报卡（默认；与既有 storyctl new 行为一致）",
+      "slots": []
+    },
+    "short-chips": {
+      "template_story": "compositor-mac",
+      "description": "短情报卡：3 场景、单点结论、强开场。槽位沿用双脚本路线，需改写 script.json 的 title/scenes/header/outro。",
+      "slots": [
+        {"path": "script.json", "key": "title", "required": true,
+         "desc": "上屏主标题（≤14 字最佳，封面标题版 A 直接取此处）"},
+        {"path": "script.json", "key": "date", "required": true,
+         "desc": "发布日期，格式 YYYY.MM.DD"},
+        {"path": "script.json", "key": "watermark", "required": true,
+         "desc": "水印/品牌名（右上与右下角共用）"},
+        {"path": "script.json", "key": "scenes", "required": true,
+         "desc": "场景数组：每项含 visual + lines[]（lines 由 build_audio 回填 start/end）"},
+        {"path": "script.json", "key": "scenes[].lines[].text", "required": true,
+         "desc": "逐句口播稿；节奏停顿用 beat 声明（A1），无意义停顿会被 A6 检出"},
+        {"path": "script.json", "key": "scenes[].light", "required": false,
+         "desc": "可选 shot 级光照覆写 {bg_base_lift, glow_gain}（A7，幅度受 anchors.json 约束）"},
+        {"path": "script.json", "key": "source", "required": true,
+         "desc": "数据/情报出处，写入片内出处卡"},
+        {"path": "script.json", "key": "epilogue", "required": false,
+         "desc": "片尾文案（append_epilogue 使用）"}
+      ]
+    },
+    "data-report": {
+      "template_story": "compositor-mac",
+      "description": "数据图解卡：以 chart/table 视觉为主，适合数字型情报。同上双脚本路线。",
+      "slots": [
+        {"path": "script.json", "key": "title", "required": true, "desc": "上屏主标题"},
+        {"path": "script.json", "key": "facts", "required": true,
+         "desc": "上屏数据表（内容校验会 warn 缺表）"},
+        {"path": "script.json", "key": "source", "required": true, "desc": "数据出处"},
+        {"path": "script.json", "key": "scenes", "required": true, "desc": "场景数组"}
+      ]
+    }
+  }
+}

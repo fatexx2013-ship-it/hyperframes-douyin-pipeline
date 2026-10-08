@@ -1,0 +1,171 @@
+<!doctype html>
+<!-- @dsCard group="tech-news" name="Tech News Intro" path="intro.html" subtitle="资讯开场：遮罩揭示 + 徽章 + 大字标题 + 细线分隔" viewport="{width: 1080, height: 1920}" -->
+<!-- E9 新增模板 · 复用 P1 的 token 层 / 动效配方 / 转场配方（来源见 design.md） -->
+<html lang="zh-CN" class="dark dark-theme"
+  data-composition-variables='[
+    {"id":"title","type":"string","label":"标题","default":"新模型发布 端侧推理提速 3 倍"},
+    {"id":"subtitle","type":"string","label":"副标题","default":"来自发布现场的 3 个关键信息"},
+    {"id":"badge","type":"string","label":"徽章","default":"科技快讯 · 每日精选"}
+  ]'
+>
+<head>
+  <meta charset="UTF-8" />
+  <script src="_shared/vendor/gsap.min.js"></script>
+  <script src="_shared/vendor/CustomEase.min.js"></script>
+  <link rel="stylesheet" href="_shared/tokens/radix-slate-dark.css" />
+  <link rel="stylesheet" href="_shared/tokens/radix-cyan-dark.css" />
+  <link rel="stylesheet" href="_shared/tokens/radix-slate-alpha.css" />
+  <link rel="stylesheet" href="_shared/tokens/open-props-sizes.min.css" />
+  <link rel="stylesheet" href="_shared/tokens/open-props-shadows.min.css" />
+  <link rel="stylesheet" href="_shared/tokens/open-props-borders.min.css" />
+  <style>
+    /* 系统字体显式声明（lint 要求；中文用系统 PingFang SC，杜绝渲染回退不确定） */
+    @font-face {
+      font-family: "PingFang SC";
+      src: local("PingFang SC"), local("PingFangSC-Regular");
+      font-weight: 400;
+      font-style: normal;
+      font-display: block;
+    }
+    @font-face {
+      font-family: "PingFang SC";
+      src: local("PingFang SC Semibold"), local("PingFangSC-Semibold"), local("PingFang SC");
+      font-weight: 600 900;
+      font-style: normal;
+      font-display: block;
+    }
+    @font-face {
+      font-family: "SF Pro Display";
+      src: local("SF Pro Display"), local("SFProDisplay-Bold");
+      font-weight: 400 900;
+      font-style: normal;
+      font-display: block;
+    }
+
+    :root {
+      --bg-app: var(--slate-1);
+      --card: var(--slate-3);
+      --border-subtle: var(--slate-6);
+      --text-primary: var(--slate-12);
+      --text-secondary: var(--slate-11);
+      --primary: var(--cyan-9);
+      --background: var(--bg-app);
+      --foreground: var(--text-primary);
+      --muted-foreground: var(--text-secondary);
+      --border: var(--border-subtle);
+      --radius: var(--radius-3);
+      --shadow-color: 220 40% 2%;
+      --shadow-strength: 30%;
+      --shadow-card: var(--shadow-4);
+    }
+    body {
+      margin: 0; width: 1080px; height: 1920px; overflow: hidden;
+      background: var(--background); color: var(--foreground);
+      font-family: "PingFang SC", "SF Pro Display", sans-serif;
+    }
+    .scene { position: absolute; inset: 0; width: 1080px; height: 1920px; overflow: hidden; }
+    /* 静态底纹：纯 CSS，零素材依赖，避免"H.264 渐变带纹"（design.md 不做项） */
+    .grid {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(color-mix(in oklab, var(--border-subtle) 45%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in oklab, var(--border-subtle) 45%, transparent) 1px, transparent 1px);
+      background-size: 120px 120px;
+      opacity: 0.35;
+    }
+    /* E11 Slide 转场层 */
+    .wipe {
+      position: absolute; inset: 0; z-index: 40;
+      background: linear-gradient(135deg, var(--cyan-9) 0%, var(--slate-2) 100%);
+      transform-origin: left center;
+    }
+    .fade-out { position: absolute; inset: 0; background: var(--bg-app); opacity: 0; z-index: 30; }
+    /* CSS 品牌印记（无图片依赖） */
+    .mark {
+      position: absolute; top: 80px; right: 80px; width: 96px; height: 96px;
+      border-radius: var(--radius-2); background: var(--primary); opacity: 0; z-index: 5;
+    }
+    .mark::after {
+      content: ""; position: absolute; left: 50%; top: 50%; width: 40px; height: 40px;
+      transform: translate(-50%, -50%); border-radius: var(--radius-1);
+      background: var(--slate-1);
+    }
+    .content {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: flex-start; justify-content: center; padding: var(--size-px-11);
+      box-sizing: border-box; z-index: 6;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: var(--size-px-2);
+      padding: var(--size-px-2) var(--size-px-4);
+      border: 1px solid var(--border); border-radius: var(--radius-round);
+      background: color-mix(in oklab, var(--card) 55%, transparent);
+      color: var(--text-secondary); font-size: 26px; font-weight: 500; letter-spacing: 0.14em;
+      opacity: 0;
+    }
+    .badge__dot { width: var(--size-px-2); height: var(--size-px-2); border-radius: var(--radius-round); background: var(--primary); }
+    .title {
+      font-size: 112px; font-weight: 900; line-height: 1.18; letter-spacing: -0.01em;
+      margin: var(--size-px-6) 0 0; opacity: 0;
+    }
+    .sep { display: flex; align-items: center; gap: var(--size-px-3); width: 100%; margin: var(--size-px-5) 0; }
+    .sep__line { flex: 1; height: 1px; background: var(--border); transform-origin: left center; }
+    .sep__accent { width: 96px; height: 3px; border-radius: var(--radius-round); background: var(--primary); transform-origin: left center; }
+    .subtitle { font-size: 46px; font-weight: 500; color: var(--text-secondary); margin: 0; opacity: 0; }
+  </style>
+</head>
+<body>
+  <div id="root" data-composition-id="intro" data-width="1080" data-height="1920"
+       data-start="0" data-duration="5" data-track-index="0">
+    <div class="scene">
+      <div class="grid"></div>
+      <div class="mark" id="mark-el"></div>
+      <div class="content">
+        <div class="badge" id="badge-el"><span class="badge__dot"></span><span id="badge-text">科技快讯 · 每日精选</span></div>
+        <h1 class="title" id="title-el">新模型发布 端侧推理提速 3 倍</h1>
+        <div class="sep">
+          <div class="sep__line" id="sep-line"></div>
+          <div class="sep__accent" id="sep-accent"></div>
+        </div>
+        <p class="subtitle" id="subtitle-el">来自发布现场的 3 个关键信息</p>
+      </div>
+      <div class="wipe" id="wipe-el"></div>
+      <div class="fade-out" id="fade-el"></div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var vars = window.__hyperframes ? window.__hyperframes.getVariables() : {};
+      document.getElementById("title-el").textContent = vars.title || "新模型发布 端侧推理提速 3 倍";
+      document.getElementById("subtitle-el").textContent = vars.subtitle || "来自发布现场的 3 个关键信息";
+      document.getElementById("badge-text").textContent = vars.badge || "科技快讯 · 每日精选";
+
+      var EASE_VT = "power3.out";
+      if (window.CustomEase) {
+        gsap.registerPlugin(CustomEase);
+        CustomEase.create("vtStandard", "0.2,0.8,0.2,1");
+        EASE_VT = "vtStandard";
+      }
+
+      var tl = gsap.timeline({ paused: true });
+      /* E11 Slide：遮罩揭示 */
+      tl.fromTo("#wipe-el", { scaleX: 1 }, { scaleX: 0, duration: 0.65, ease: EASE_VT }, 0);
+      /* E11 Morph：CSS 印记从画面左上放大位移至右上角 */
+      tl.fromTo("#mark-el", { x: -600, y: 620, scale: 3, opacity: 0 },
+        { x: 0, y: 0, scale: 1, opacity: 1, duration: 1.0, ease: "expo.out" }, 0.3);
+      /* E10 交错入场（Anime.js stagger(80) → 0.08） */
+      tl.fromTo("#badge-el", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: "power1.out" }, 0.5);
+      /* E12 惯性缓动 */
+      tl.fromTo("#title-el", { y: 120, opacity: 0 }, { y: 0, opacity: 1, duration: 1.0, ease: "expo.out" }, 0.65);
+      tl.fromTo(["#sep-line", "#sep-accent"], { scaleX: 0 },
+        { scaleX: 1, duration: 0.55, ease: "power2.out", stagger: 0.08 }, 1.3);
+      tl.fromTo("#subtitle-el", { y: 40, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, ease: "power2.out" }, 1.65);
+      /* E11 Fade：尾段交叠 */
+      tl.to("#fade-el", { opacity: 0.16, duration: 0.55, ease: "power2.in" }, 4.45);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["intro"] = tl;
+    })();
+  </script>
+</body>
+</html>

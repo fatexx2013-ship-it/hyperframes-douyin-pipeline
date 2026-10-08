@@ -1,0 +1,12 @@
+{
+  "kind": "default",
+  "template_story": "compositor-mac",
+  "description": "通用六场景情报卡（默认；与既有 storyctl new 行为一致）",
+  "registry": "/Volumes/PSSD/抖音视频/templates/registry.json",
+  "emitted_at": "2026-10-08 04:16:57",
+  "slot_count": 0,
+  "filled": 0,
+  "todo_required": 0,
+  "slots": [],
+  "ready": true
+}

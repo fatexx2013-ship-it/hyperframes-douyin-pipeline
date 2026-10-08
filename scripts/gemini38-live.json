@@ -1,0 +1,18 @@
+{
+  "title": "Gemini 3.8 Live 发布",
+  "date": "2026.09.16",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/Fight-BeatBrothers.flac",
+  "dialogue": [
+    {"role": "question", "text": "诶，我刚看到新闻说 Google 又发新模型了？"},
+    {"role": "answer", "text": "对，Gemini 3.8 Live，刚刚发布的，近实时语音对话，体验有点像打电话了。"},
+    {"role": "question", "text": "等等，近实时是什么概念？是说能像打电话一样吗？"},
+    {"role": "answer", "text": "差不多！但比打电话更厉害的是，它有两个模式。"},
+    {"role": "question", "text": "哪两个？"},
+    {"role": "answer", "text": "一个是普通实时对话，另一个叫 Extended Thinking，就是边思考边说话，遇到复杂问题会慢下来认真想，想清楚了再回答你。"},
+    {"role": "question", "text": "哇，这听起来好强啊！能解决多复杂的问题？"},
+    {"role": "answer", "text": "Google 官方说，多轮对话能保持上下文连贯，长对话也不会忘词，这在之前是不太可能的。"},
+    {"role": "question", "text": "那这个模型现在能用吗？哪里可以试试？"},
+    {"role": "answer", "text": "已经可以在 AI Studio 上试用了，Google DeepMind 的官方博客也有详细介绍。"}
+  ]
+}

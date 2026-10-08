@@ -1,0 +1,50 @@
+[
+  {
+    "text": "Photoshop 太贵，GIMP 又不够顺手，于是作者干脆自己写了一个：Compositor，一款完全免费开源的 Mac 图像编辑器。",
+    "path": "/Volumes/PSSD/抖音视频/story/compositor-mac/line_00.wav",
+    "duration": 11.04,
+    "voice_start": 0.11,
+    "voice_end": 10.93,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "图层和文件夹能嵌套，不透明度、全套混合模式都跟 Photoshop 一致。蒙版能画能填、能反相能羽化，剪贴蒙版也有。",
+    "path": "/Volumes/PSSD/抖音视频/story/compositor-mac/line_01.wav",
+    "duration": 12.96,
+    "voice_start": 0.11,
+    "voice_end": 12.85,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "色阶、曲线、曝光、渐变映射、颗粒、黑白，全做成调整层；描边、投影、内外发光跑在 GPU 上，随时能改回来。",
+    "path": "/Volumes/PSSD/抖音视频/story/compositor-mac/line_02.wav",
+    "duration": 13.28,
+    "voice_start": 0.11,
+    "voice_end": 13.17,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "矩形椭圆选框、自由套索、多边形套索、魔棒和对象工具，按 Tab 就能切换。内容识别填充，还能把画面扩展到画布外面。",
+    "path": "/Volumes/PSSD/抖音视频/story/compositor-mac/line_03.wav",
+    "duration": 12.71,
+    "voice_start": 0.12,
+    "voice_end": 12.6,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "PSD、PSB 直接开，图层、蒙版、混合模式和水平文字都还能改；导入前先给你一份转换报告，Camera Raw、HEIC、SVG 也支持。",
+    "path": "/Volumes/PSSD/抖音视频/story/compositor-mac/line_04.wav",
+    "duration": 13.68,
+    "voice_start": 0.11,
+    "voice_end": 13.57,
+    "silence_ge_040s": 0
+  },
+  {
+    "text": "MIT 协议开源，需要 macOS 26.5 和 Xcode 26，下载 Xcode 工程就能自己加功能。",
+    "path": "/Volumes/PSSD/抖音视频/story/compositor-mac/line_05.wav",
+    "duration": 8.32,
+    "voice_start": 0.11,
+    "voice_end": 8.21,
+    "silence_ge_040s": 0
+  }
+]

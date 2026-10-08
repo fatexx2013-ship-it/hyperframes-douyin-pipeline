@@ -1,0 +1,82 @@
+# ==================== 系统 / 编辑器 ====================
+.DS_Store
+Thumbs.db
+*.swp
+
+# ==================== 运行时与依赖 ====================
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+node_modules/
+
+# ==================== 模型权重（体积过大，需自行下载）====================
+models/
+
+# ==================== 凭据（严禁入库）====================
+.env
+*.env
+config/api_keys.env
+
+# ==================== 备份文件 ====================
+*.bak
+*.bak-*
+# 例外：保留模板 story 的关键脚本备份
+!story/*/*.bak-20261008
+
+# ==================== 运行期工作目录 / 临时文件 ====================
+.temp/
+temp/
+.trae/
+.trae-html-share-packages/
+.uploads/
+.claude/
+.codebuddy/
+.codegraph/
+.mimocode/
+.omo/
+.reasonix/
+.hyperframes/
+
+# ==================== 成片与媒体产出物 ====================
+output/
+*.mp4
+*.mov
+*.wav
+*.mp3
+*.m4a
+*.aac
+*.flac
+
+# ==================== story 运行产出（脚本 / 配置 / 文案保留）====================
+story/*/renders/
+story/*/covers/
+story/*/qc/
+story/*/frames/
+story/*/materials/
+story/*/audio/
+story/*/hyperframes.json
+story/*/index.html
+story/output/
+story/*/*.png
+story/*/*.jpg
+story/*/*.jpeg
+story/*/*.webp
+story/*/*.gif
+story/*/*.log
+
+# ==================== 根目录非产线资料（保留在磁盘，不入库）====================
+AGENTS.md
+IDEA.md
+AgentVerse-OS介绍.mp4
+0成本有产出的GitHub项目_*.html
+GitHub今日热门项目_*.md
+GitHub本周热门项目_*.md
+GitHub热门项目_抖音选题策划_*.html
+
+
+# 运行期日志
+*.log

@@ -1,0 +1,483 @@
+{
+  "design_registry": [
+    {
+      "selector": ".bignum",
+      "rule": "GRADIENT_TEXT",
+      "theme_color": "#00A2C7",
+      "purpose": "电光青蓝主题渐变文字（VIS 强调数字，统一取主题色 #00A2C7）",
+      "approved_by": "marvis-side"
+    }
+  ],
+  "title": "擦掉路人水印，这个开源 AI 修图工具免费还自托管",
+  "date": "2026.10.07",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/A Game - Michael Ramir C [mixkit 777].mp3",
+  "voice_mode": "single_narrator",
+  "voice_engine": "qwen3",
+  "voice_role": "answer",
+  "tts_emotion": "thoughtful",
+  "tts_emotion_desc": "慵懒御姐音：全片唯一音色来源（yujie_thoughtful.wav），build_audio.py 只认此键，逐句 emotion 已禁用",
+  "voice_desc": "慵懒御姐音（Qwen3-TTS 本地 MLX，句间气口压缩）",
+  "tts_line": "solo-yujie",
+  "tts_tuning": "G版（逐句·短篇压缩）：-52dB/0.30s 句内静音上限，句首留白 0.12s，段落停顿 0.85s",
+  "source": "github.com/Sanster/IOPaint · 官方 README（仓库主分支 raw 原文，抓取于 2026-10-07）",
+  "facts": [
+    "自述：A free and open-source inpainting & outpainting tool powered by SOTA AI model（免费开源的图像修复与扩图工具，由最新 AI 模型驱动）",
+    "四种任务：擦除（Erase，LaMa）/ 替换物体（PowerPaint）/ 图上写字（AnyText）/ 扩图（Out-painting，PowerPaint）",
+    "部署与硬件：完全免费开源、完全自托管，支持 CPU & GPU & Apple Silicon",
+    "安装：README 提供 Windows 一键安装器；另有 OptiClean（macOS & iOS App）用于物体擦除",
+    "模型：Erase 模型可去物体、瑕疵、水印、人物；扩散模型含 SD-inpainting、SDXL-inpainting、Realistic Vision V3.0、dreamshaper-8、anything-4.0、BrushNet、PowerPaintV2、AnyText、Paint-by-Example",
+    "插件（README 列出 6 个）：Segment Anything 交互式分割、RemoveBG 去背景、Anime Segmentation 动漫分割、RealESRGAN 超分、GFPGAN 人脸修复、RestoreFormer 人脸修复",
+    "FileManager：浏览图片并直接保存到输出目录",
+    "快速开始：pip3 install iopaint；iopaint start --model=lama --device=cpu --port=8080；浏览器访问 http://localhost:8080；模型启动时自动下载，--model-dir 可改下载目录",
+    "命令行批量：iopaint run --model=lama --device=cpu --image=输入文件夹 --mask=遮罩文件夹 --output=输出目录；--mask 传单文件时全批共用该遮罩",
+    "开发：前端在 web_app 用 nodejs + npm 构建，.env.local 填 VITE_BACKEND=http://127.0.0.1:8080，npm run dev 后访问 localhost:5173"
+  ],
+  "epilogue": {
+    "enabled": true,
+    "text": "关注 jerrychen2001，评论区聊聊你手机里最想修掉的那张图。",
+    "emotion": "thoughtful",
+    "gap_before": 0.35,
+    "tail_silence": 0.4,
+    "lead_silence": 0.12,
+    "inner_cap": 0.3,
+    "bgm_volume": 0.18,
+    "card": {
+      "title": "关注 jerrychen2001",
+      "cta": "评论区聊聊",
+      "sub": "你手机里最想修掉的是哪张图？"
+    }
+  },
+  "scenes": [
+    {
+      "type": "header",
+      "visual": "chip",
+      "card": {
+        "eyebrow": "开源情报站 · AI 图像工具",
+        "title": "路人水印随手擦，<accent>它还免费开源</accent>",
+        "subtitle": "IOPaint · 免费开源的图像修复与扩图工具 · 完全自托管",
+        "stats": [
+          {
+            "k": "部署方式",
+            "v": "自托管"
+          },
+          {
+            "k": "硬件支持",
+            "v": "CPU / GPU / 苹果芯"
+          },
+          {
+            "k": "使用成本",
+            "v": "0 元"
+          }
+        ],
+        "vis": {
+          "left": "原图",
+          "right": [
+            "擦干净",
+            "往外扩"
+          ],
+          "small": "inpaint",
+          "footer": "erase / replace / outpaint",
+          "label": "免费开源 · 自托管 · 本地跑",
+          "badge": "素材：IOPaint 官方 README"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "想擦掉照片里的路人或水印，又不想花钱？这个开源项目，把模型直接装进你自己电脑。"
+        }
+      ],
+      "_start": 0.0,
+      "_end": 8.8
+    },
+    {
+      "type": "feature",
+      "visual": "quote",
+      "card": {
+        "eyebrow": "它的自述",
+        "title": "一句话：<accent>免费开源，模型驱动</accent>",
+        "subtitle": "README 首屏原文 · 由最新 AI 模型驱动",
+        "vis": {
+          "quote": "免费开源的图像修复与扩图工具",
+          "accent": "A free and open-source inpainting tool",
+          "badge": "README · 首屏自述"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "它的自述就一句：免费开源的图像修复和扩图工具，背后跑的是最新 AI 模型。"
+        }
+      ],
+      "_start": 9.65,
+      "_end": 17.97
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "四种玩法",
+        "title": "擦除、替换、写字，<accent>还能往外扩</accent>",
+        "subtitle": "README 四张演示图 · 一个网页全搞定",
+        "vis": {
+          "left_who": "你想做的事",
+          "left_lines": [
+            "擦掉路人和水印",
+            "换掉画面里的物体",
+            "在图上写一行字"
+          ],
+          "right_who": "它给的模型",
+          "right_rows": [
+            [
+              "擦除去水印",
+              "LaMa"
+            ],
+            [
+              "替换物体",
+              "PowerPaint"
+            ],
+            [
+              "图上加字",
+              "AnyText"
+            ],
+            [
+              "把图往外扩",
+              "PowerPaint"
+            ]
+          ],
+          "badge": "Erase / Replace / Draw Text / Out-painting"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "四种玩法：擦掉多余的东西，替换画面里的物体，在图上写字，还有把图往外扩一圈。"
+        }
+      ],
+      "_start": 18.82,
+      "_end": 28.1
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "你担心的三件事",
+        "title": "没显卡也能跑，<accent>苹果芯片也行</accent>",
+        "subtitle": "完全自托管 · 图片不出本机",
+        "vis": {
+          "left_who": "常见顾虑",
+          "left_lines": [
+            "没有独立显卡",
+            "不想配一堆环境",
+            "担心图片传出去"
+          ],
+          "right_who": "README 的答案",
+          "right_rows": [
+            [
+              "CPU",
+              "可以跑"
+            ],
+            [
+              "GPU",
+              "可以跑"
+            ],
+            [
+              "Apple Silicon",
+              "可以跑"
+            ],
+            [
+              "Windows",
+              "一键安装包"
+            ]
+          ],
+          "badge": "免费开源 · 完全离线自托管"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "担心没显卡？它 CPU、GPU 和苹果芯片都能跑，Windows 还有一键安装包。"
+        }
+      ],
+      "_start": 28.95,
+      "_end": 36.15
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "自带六个插件",
+        "title": "抠图、去背景、超分，<accent>顺手全配好</accent>",
+        "subtitle": "插件随启动参数开关 · README 全部列出",
+        "vis": {
+          "left_who": "交互类插件",
+          "left_lines": [
+            "Segment Anything 分割",
+            "RemoveBG 去背景",
+            "动漫图专用分割"
+          ],
+          "right_who": "增强类插件",
+          "right_rows": [
+            [
+              "超分",
+              "RealESRGAN"
+            ],
+            [
+              "人脸修复",
+              "GFPGAN"
+            ],
+            [
+              "人脸修复",
+              "RestoreFormer"
+            ],
+            [
+              "看图存图",
+              "FileManager"
+            ]
+          ],
+          "badge": "插件能力见 README · Plugins 章节"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "还带六个插件：交互式抠图、去背景、动漫分割，连超分和人脸修复都给你配好了。"
+        }
+      ],
+      "_start": 37.0,
+      "_end": 44.76
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "开始用只要三步",
+        "title": "装一行，启一行，<accent>打开网页就修图</accent>",
+        "subtitle": "README Quick Start 原文 · 模型启动时自动下载",
+        "vis": {
+          "left_who": "命令就这几条",
+          "left_lines": [
+            "pip3 install iopaint",
+            "iopaint start",
+            "打开 localhost:8080"
+          ],
+          "right_who": "常用参数",
+          "right_rows": [
+            [
+              "指定模型",
+              "--model=lama"
+            ],
+            [
+              "用 CPU",
+              "--device=cpu"
+            ],
+            [
+              "换端口",
+              "--port=8080"
+            ],
+            [
+              "开插件",
+              "--enable-interactive-seg"
+            ]
+          ],
+          "badge": "模型自动下载 · --model-dir 可改目录"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "用法只要一条安装命令，一条启动命令，浏览器打开本地地址就能开始修图。"
+        }
+      ],
+      "_start": 45.61,
+      "_end": 53.53
+    },
+    {
+      "type": "feature",
+      "visual": "extract",
+      "card": {
+        "eyebrow": "图多也不怕",
+        "title": "整批图片，<accent>一条命令跑完</accent>",
+        "subtitle": "README 批量处理章节 · 命令行模式",
+        "vis": {
+          "left_who": "网页一张张点",
+          "left_lines": [
+            "几百张图点不过来",
+            "重复操作最费手"
+          ],
+          "right_who": "命令行批量跑",
+          "right_rows": [
+            [
+              "输入",
+              "--image 文件夹"
+            ],
+            [
+              "遮罩",
+              "--mask 文件夹"
+            ],
+            [
+              "输出",
+              "--output 目录"
+            ],
+            [
+              "共用遮罩",
+              "--mask 传单文件"
+            ]
+          ],
+          "badge": "iopaint run · 整批一次过"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "图片多也不怕，命令行指一下输入、遮罩和输出目录，整批图片一次跑完。"
+        }
+      ],
+      "_start": 54.38,
+      "_end": 62.54
+    },
+    {
+      "type": "feature",
+      "visual": "stats",
+      "card": {
+        "eyebrow": "一句话总结",
+        "title": "四种玩法、六个插件，<accent>全部本地跑</accent>",
+        "subtitle": "IOPaint · 免费开源 · 完全自托管",
+        "stats": [
+          {
+            "k": "任务类型",
+            "v": "4 种"
+          },
+          {
+            "k": "插件",
+            "v": "6 个"
+          },
+          {
+            "k": "硬件支持",
+            "v": "3 类"
+          },
+          {
+            "k": "使用成本",
+            "v": "0 元"
+          }
+        ],
+        "vis": {
+          "badge": "数据来源：IOPaint 官方 README"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "四种任务、六个插件，全部跑在你自己电脑上，图片一张都不用往外传。"
+        }
+      ],
+      "_start": 63.39,
+      "_end": 70.67
+    },
+    {
+      "type": "outro",
+      "visual": "chip",
+      "card": {
+        "title": "关注 jerrychen2001",
+        "cta": "评论区聊聊",
+        "sub": "你手机里最想修掉的是哪张图？",
+        "vis": {
+          "left": "刷到这里",
+          "right": [
+            "点个关注",
+            "下期继续"
+          ],
+          "small": "see you",
+          "footer": "开源情报站",
+          "label": "每周一个开源项目 · 只讲能用的",
+          "badge": "免费开源 · 本地自托管"
+        }
+      },
+      "lines": [
+        {
+          "role": "answer",
+          "text": "评论区聊聊：你手机里最想修掉的那张图，是缺了谁还是多了谁？"
+        }
+      ],
+      "_start": 71.52,
+      "_end": 78.4
+    }
+  ],
+  "lines": [
+    {
+      "scene_index": 0,
+      "text": "想擦掉照片里的路人或水印，又不想花钱？这个开源项目，把模型直接装进你自己电脑。",
+      "start": 0.0,
+      "end": 8.8
+    },
+    {
+      "scene_index": 1,
+      "text": "它的自述就一句：免费开源的图像修复和扩图工具，背后跑的是最新 AI 模型。",
+      "start": 9.65,
+      "end": 17.97
+    },
+    {
+      "scene_index": 2,
+      "text": "四种玩法：擦掉多余的东西，替换画面里的物体，在图上写字，还有把图往外扩一圈。",
+      "start": 18.82,
+      "end": 28.1
+    },
+    {
+      "scene_index": 3,
+      "text": "担心没显卡？它 CPU、GPU 和苹果芯片都能跑，Windows 还有一键安装包。",
+      "start": 28.95,
+      "end": 36.15
+    },
+    {
+      "scene_index": 4,
+      "text": "还带六个插件：交互式抠图、去背景、动漫分割，连超分和人脸修复都给你配好了。",
+      "start": 37.0,
+      "end": 44.76
+    },
+    {
+      "scene_index": 5,
+      "text": "用法只要一条安装命令，一条启动命令，浏览器打开本地地址就能开始修图。",
+      "start": 45.61,
+      "end": 53.53
+    },
+    {
+      "scene_index": 6,
+      "text": "图片多也不怕，命令行指一下输入、遮罩和输出目录，整批图片一次跑完。",
+      "start": 54.38,
+      "end": 62.54
+    },
+    {
+      "scene_index": 7,
+      "text": "四种任务、六个插件，全部跑在你自己电脑上，图片一张都不用往外传。",
+      "start": 63.39,
+      "end": 70.67
+    },
+    {
+      "scene_index": 8,
+      "text": "评论区聊聊：你手机里最想修掉的那张图，是缺了谁还是多了谁？",
+      "start": 71.52,
+      "end": 78.4
+    }
+  ],
+  "total_duration": 78.4,
+  "tts_params": {
+    "version": "G-short",
+    "engine": "Qwen3-TTS-12Hz-1.7B-Base-8bit (local MLX)",
+    "ref_voice": "yujie_thoughtful.wav（慵懒御姐音）",
+    "emotion": "thoughtful",
+    "voice_role": "answer",
+    "voice_source": "script.json.tts_emotion（全片单一来源，逐句 emotion 已禁用）",
+    "voice_guard": "build_audio.py 启动即校验 voice_role / tts_emotion / 片尾 emotion 三者一致，冲突直接拒绝出片",
+    "silence_trim": "-52dB / 0.30s（句内上限）",
+    "lead_silence": 0.12,
+    "tail_silence": 0.08,
+    "pause_comma": 0.25,
+    "pause_period": 0.75,
+    "pause_paragraph": 0.85,
+    "note": "短篇压缩版：段落停顿 1.20s→0.85s，尾静音 0.4s→0.35s",
+    "sample_rate": 24000,
+    "channels": 1,
+    "silence_ge_040s_total": 0
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "title": "腾讯把AI知识库整套开源了",
+  "date": "2026.09.17",
+  "watermark": "jerrychen2001",
+  "bgm": "/Volumes/PSSD/视频/BGM/抖音候选BGM-20260916/Karma - Michael Ramir C. [mixkit 1183].mp3",
+  "voice_mode": "single_narrator",
+  "voice_role": "answer",
+  "total_duration_target": 80,
+  "note": "全片仅御姐音单人独播，所有 lines 的 role 统一为 answer，不切情绪；不要问答交替，不要角色前缀字幕。竖屏1080x1920卡片式场景（非图片背景），字幕烧录，音画严格同帧，首句必须有画面与字幕。节奏：开场钩子6秒→三段卡片→结尾卡。英文品牌名 WeKnora 不入台词，只在卡片视觉里出现。",
+  "scenes": [
+    {
+      "type": "header",
+      "duration_hint": 12,
+      "card": {
+        "eyebrow": "腾讯开源 · AI 知识库",
+        "title": "腾讯把<accent>AI知识库</accent>整套开源了",
+        "subtitle": "WeKnora · 2.5万星 · MIT协议 · 可自部署",
+        "stats": [
+          { "k": "GitHub 星标", "v": "25,204" },
+          { "k": "最新版本", "v": "v0.8.0" },
+          { "k": "协议", "v": "MIT 免费商用" }
+        ]
+      },
+      "lines": [
+        { "role": "answer", "text": "把一堆文档扔给它，它自己建一个能问答的AI知识库，腾讯把这套东西，整套开源了。" },
+        { "role": "answer", "text": "项目叫WeKnora，两万五千颗星，免费还能自己部署。" }
+      ]
+    },
+    {
+      "type": "stat",
+      "duration_hint": 18,
+      "card": {
+        "eyebrow": "三大核心能力",
+        "title": "不是搜索，是「活」的知识库",
+        "big": "3",
+        "big_label": "核心能力",
+        "items": [
+          { "k": "知识问答", "v": "文档扔进去 直接问" },
+          { "k": "自主推理", "v": "Agent 多步任务自己拆" },
+          { "k": "自动Wiki", "v": "文档自动提炼成知识库" }
+        ]
+      },
+      "lines": [
+        { "role": "answer", "text": "它有三大本事。第一，问答——合同、报告、说明书，扔进去直接问。" },
+        { "role": "answer", "text": "第二，推理。复杂任务它自己拆步骤，调用工具，联网搜索，一条龙。" },
+        { "role": "answer", "text": "第三，最狠的，自动Wiki。文档丢进去，它自己提炼成一套互相链接的知识库，还带知识图谱。" }
+      ]
+    },
+    {
+      "type": "stat",
+      "duration_hint": 15,
+      "card": {
+        "eyebrow": "为什么值得关注",
+        "title": "企业级开源 · 20+模型随便接",
+        "big": "20+",
+        "big_label": "可接入的大模型",
+        "items": [
+          { "k": "数据来源", "v": "飞书/Notion/语雀/RSS…" },
+          { "k": "权限管理", "v": "多空间 · 四级角色" },
+          { "k": "部署", "v": "Docker 一键自托管" }
+        ]
+      },
+      "lines": [
+        { "role": "answer", "text": "文档来源，飞书、Notion、语雀、钉钉全支持，二十多种大模型随便接。" },
+        { "role": "answer", "text": "企业级权限管理、审计日志都有，Docker一条命令，部署在自己服务器，数据不出门。" }
+      ]
+    },
+    {
+      "type": "endcard",
+      "duration_hint": 10,
+      "card": {
+        "eyebrow": "开源地址",
+        "title": "GitHub 搜 <accent>WeKnora</accent>",
+        "subtitle": "腾讯出品 · 白嫖党狂喜",
+        "stats": []
+      },
+      "lines": [
+        { "role": "answer", "text": "公司想搭自己的AI知识库，别再花钱买服务了，这个白嫖它不香吗？" },
+        { "role": "answer", "text": "开源地址放评论区了，关注大瑞，每天带你白嫖好东西。" }
+      ]
+    }
+  ]
+}

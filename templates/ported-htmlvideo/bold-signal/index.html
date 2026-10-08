@@ -1,0 +1,94 @@
+<!doctype html>
+<!-- @dsCard group="ported-htmlvideo" name="Bold Signal (竖屏)" path="index.html" subtitle="暗场卡片：高饱和大色块 + 章节号 + 面包屑" viewport="{width: 1080, height: 1920}" -->
+<!-- 来源：nexu-io/html-video templates/frame-bold-signal（上游 heygen-com/hyperframes，Apache-2.0）
+     适配：1920×1080 → 1080×1920 竖屏重排（右侧卡片改为底部通栏卡）/ 移除 Google Fonts / PingFang SC 回退 / GSAP 时间轴 -->
+<html lang="zh-CN" data-composition-variables='[
+  {"id":"nav1","type":"string","label":"导航1","default":"信号"},
+  {"id":"nav2","type":"string","label":"导航2","default":"构建"},
+  {"id":"nav3","type":"string","label":"导航3","default":"发布"},
+  {"id":"nav4","type":"string","label":"导航4","default":"放大"},
+  {"id":"label","type":"string","label":"卡片眉标","default":"上线 · 2026"},
+  {"id":"title","type":"string","label":"卡片标题","default":"把你的<br>Agent<br>带上来。"},
+  {"id":"footer","type":"string","label":"页脚","default":"竖屏卡片 · 章节开场"}
+]'>
+<head>
+<meta charset="UTF-8" />
+<title>Bold Signal · 竖屏暗场卡片</title>
+<style>
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC"), local("PingFangSC-Regular"); font-weight:400; font-display:block; }
+  @font-face { font-family:"PingFang SC"; src:local("PingFang SC Semibold"), local("PingFangSC-Semibold"), local("PingFang SC"); font-weight:600 900; font-display:block; }
+  @font-face { font-family:"SF Pro Display"; src:local("SF Pro Display"), local("SFProDisplay-Bold"); font-weight:400 900; font-display:block; }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1080px; height:1920px; overflow:hidden; position:relative;
+    background:#1a1a1a; background-image:linear-gradient(150deg,#141414 0%,#2d2d2d 52%,#131313 100%);
+    color:#fff; font-family:"PingFang SC","SF Pro Display","Helvetica Neue",Arial,sans-serif;
+  }
+
+  /* 装饰性编号段落标记（01/04 序号块）已按 AK-hyperframes-design-bans 的 numbered_section_marker 禁用项移除 */
+
+  .nav { position:absolute; top:150px; right:88px; display:flex; flex-direction:column; align-items:flex-end; gap:14px;
+    font-size:24px; font-weight:700; letter-spacing:3px; text-transform:uppercase; }
+  .nav span { opacity:0.32; }
+  .nav span.active { color:#FF5722; opacity:1; }
+
+  /* 装饰性 eyebrow 引导小标已按 AK-hyperframes-design-bans 的 eyebrow/kicker 禁用项移除 */
+
+  /* 底部通栏卡片（原版为右侧 1180×600 卡片，竖屏改为底部通栏） */
+  .card { position:absolute; left:0; right:0; top:900px; bottom:0; background:#FF5722; color:#141414;
+    border-radius:56px 56px 0 0; padding:96px 92px 130px; display:flex; flex-direction:column; justify-content:flex-end;
+    box-shadow:0 -30px 90px rgba(255,87,34,0.18); }
+  .card-label { font-size:26px; font-weight:700; letter-spacing:6px; text-transform:uppercase; }
+  .card-title { font-size:132px; font-weight:900; line-height:1.04; letter-spacing:-3px; margin-top:32px; }
+
+  .footer { position:absolute; bottom:820px; left:88px; display:flex; gap:18px; align-items:center;
+    font-size:22px; font-weight:700; letter-spacing:3px; text-transform:uppercase; }
+  .footer .tick { width:48px; height:4px; background:#FF5722; }
+</style>
+</head>
+<body data-composition-id="bold-signal" data-width="1080" data-height="1920">
+  <div class="nav">
+    <span class="active" data-var="nav1">信号</span>
+    <span data-var="nav2">构建</span>
+    <span data-var="nav3">发布</span>
+    <span data-var="nav4">放大</span>
+  </div>
+
+  <div class="card">
+    <div class="card-label" data-var="label">上线 · 2026</div>
+    <div class="card-title" data-var="title">把你的<br>Agent<br>带上来。</div>
+  </div>
+
+  <div class="footer"><span class="tick"></span><span data-var="footer">竖屏卡片 · 章节开场</span></div>
+
+  <script src="_shared/vendor/gsap.min.js"></script>
+  <script>window.gsap||document.write('<script src="../_vendor/gsap.min.js"><\/script>');</script>
+  <script>
+    (function () {
+      var params = new URLSearchParams(location.search);
+      document.querySelectorAll('[data-var]').forEach(function (el) {
+        var v = params.get(el.getAttribute('data-var'));
+        if (v) el.innerHTML = v;
+      });
+      var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var tl = gsap.timeline({ paused: true, defaults: { ease: 'expo.out' } });
+
+      // 原 0.2s 章节号 / 0.6s 眉标补间：随装饰性编号块与 eyebrow 标签一并移除（AK 禁用项）
+      tl.from('.nav span',    { opacity: 0, x: 24, duration: 0.5, stagger: 0.1, ease: 'power2.out' }, 0.4)
+        .from('.card',        { yPercent: 100, duration: 0.9 }, 0.75)
+        .from('.card-label',  { opacity: 0, y: 24, duration: 0.6, ease: 'power2.out' }, 1.15)
+        .from('.card-title',  { opacity: 0, y: 34, duration: 0.8 }, 1.3)
+        .from('.footer',      { opacity: 0, y: 16, duration: 0.6, ease: 'power2.out' }, 1.6);
+
+      if (reduced) tl.progress(1);
+      window.__timelines = window.__timelines || {};
+      window.__timelines['bold-signal'] = tl;
+      window.__timelines['main-comp'] = tl;
+
+      var t = parseFloat(params.get('t'));
+      if (!isNaN(t)) tl.seek(t);
+    })();
+  </script>
+</body>
+</html>

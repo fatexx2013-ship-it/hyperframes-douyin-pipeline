@@ -1,0 +1,29 @@
+[Script Info]
+Title: Auto-generated
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default, PingFang SC, 36, &H00FFFFFF, &H000000FF, &H00000000, &H00000000, 0, 0, 0, 0, 100, 100, 0, 0, 3, 2, 1, 2, 30, 30, 150, 1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,00:00:00.000,00:00:04.840,Default,,0,0,0,,别再忙目发视频了,90%的创作者都在给平台送人头。
+Dialogue: 0,00:00:04.840,00:00:06.740,Default,,0,0,0,,你以为抖音是看脸?
+Dialogue: 0,00:00:06.740,00:00:09.840,Default,,0,0,0,,错,它其实是个极度势力的势力眼。
+Dialogue: 0,00:00:09.840,00:00:14.560,Default,,0,0,0,,算法根本不在乎你多努力,只在乎用户愿不愿意为你停留。
+Dialogue: 0,00:00:14.560,00:00:16.800,Default,,0,0,0,,想让系统疯狂给你推留?
+Dialogue: 0,00:00:16.800,00:00:18.800,Default,,0,0,0,,记住这三个核心逻辑。
+Dialogue: 0,00:00:18.800,00:00:21.320,Default,,0,0,0,,第一,黄金三秒定生死。
+Dialogue: 0,00:00:21.320,00:00:25.760,Default,,0,0,0,,如果你的前三秒不能像耳光一样删刑观众,视频就死了。
+Dialogue: 0,00:00:25.760,00:00:27.960,Default,,0,0,0,,第二,玩波率是王道。
+Dialogue: 0,00:00:27.960,00:00:32.960,Default,,0,0,0,,把干货切碎,每十秒设置一个反转或知识点,让人欲罢不能。
+Dialogue: 0,00:00:32.960,00:00:35.480,Default,,0,0,0,,第三,互动率是催化剂。
+Dialogue: 0,00:00:35.480,00:00:41.200,Default,,0,0,0,,在视频里,故意留个草点或问句,诱导评论区吵起来,热度瞬间翻倍。
+Dialogue: 0,00:00:41.200,00:00:45.680,Default,,0,0,0,,记住,你不是在拍视频,你是在设计用户的情绪曲线。
+Dialogue: 0,00:00:45.680,00:00:50.240,Default,,0,0,0,,点赞收藏这条视频,下次拍片前拿出来对照检查。
+Dialogue: 0,00:00:50.240,00:00:54.840,Default,,0,0,0,,关注我,带你拆解更多底层流量密码,让算法为你打工。

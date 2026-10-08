@@ -1,0 +1,127 @@
+<!-- @dsCard group="开场" name="Science Intro" path="intro.html" subtitle="粒子背景 + 标题淡入" viewport="{width: 1080, height: 1920}" -->
+<!doctype html>
+<html lang="zh-CN"
+  data-composition-variables='[
+    {"id":"title","type":"string","label":"标题","default":"AI 改变世界"},
+    {"id":"subtitle","type":"string","label":"副标题","default":"2025年最值得关注的方向"},
+    {"id":"accent","type":"color","label":"强调色","default":"#00d4ff"}
+  ]'
+>
+<head>
+  <meta charset="UTF-8" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      width: 1080px;
+      height: 1920px;
+      overflow: hidden;
+      background: #0a0a0f;
+      font-family: "PingFang SC", "SF Pro Display", sans-serif;
+    }
+    .scene {
+      position: absolute;
+      top: 0; left: 0;
+      width: 1080px;
+      height: 1920px;
+    }
+    /* 粒子背景 */
+    .particles {
+      width: 100%;
+      height: 100%;
+      background-image:
+        radial-gradient(circle 2px at 100px 200px, rgba(0,212,255,0.3) 0%, transparent 100%),
+        radial-gradient(circle 1px at 300px 500px, rgba(255,255,255,0.2) 0%, transparent 100%),
+        radial-gradient(circle 2px at 600px 150px, rgba(0,212,255,0.2) 0%, transparent 100%),
+        radial-gradient(circle 1px at 800px 800px, rgba(255,255,255,0.15) 0%, transparent 100%),
+        radial-gradient(circle 2px at 200px 1000px, rgba(0,212,255,0.25) 0%, transparent 100%),
+        radial-gradient(circle 1px at 900px 1200px, rgba(255,255,255,0.2) 0%, transparent 100%),
+        radial-gradient(circle 2px at 400px 1600px, rgba(0,212,255,0.2) 0%, transparent 100%),
+        radial-gradient(circle 1px at 700px 1800px, rgba(255,255,255,0.15) 0%, transparent 100%);
+      background-size: 1080px 1920px;
+    }
+    .content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 120px;
+      box-sizing: border-box;
+    }
+    .title {
+      font-size: 120px;
+      font-weight: 900;
+      color: #ffffff;
+      text-align: center;
+      line-height: 1.2;
+      opacity: 0;
+    }
+    .divider {
+      width: 80px;
+      height: 4px;
+      background: #00d4ff;
+      margin: 40px 0;
+      opacity: 0;
+      border-radius: 2px;
+    }
+    .subtitle {
+      font-size: 48px;
+      font-weight: 500;
+      color: #888899;
+      text-align: center;
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="root" data-composition-id="intro" data-width="1080" data-height="1920"
+       data-start="0" data-duration="5" data-track-index="0">
+    <div class="scene">
+      <div class="particles"></div>
+      <div class="content">
+        <h1 class="title" id="title-el">AI 改变世界</h1>
+        <div class="divider" id="divider"></div>
+        <p class="subtitle" id="subtitle-el">2025年最值得关注的方向</p>
+      </div>
+    </div>
+  </div>
+  <script>
+    (function () {
+      const vars = window.__hyperframes ? window.__hyperframes.getVariables() : {};
+      var title = vars.title || "AI 改变世界";
+      var subtitle = vars.subtitle || "";
+
+      var titleEl = document.getElementById("title-el");
+      var subtitleEl = document.getElementById("subtitle-el");
+      var divider = document.getElementById("divider");
+
+      titleEl.textContent = title;
+      subtitleEl.textContent = subtitle;
+
+      var tl = gsap.timeline({ paused: true });
+
+      // 粒子微动
+      tl.to(".particles", {
+        opacity: 0.6,
+        duration: 2,
+        ease: "none",
+        repeat: Math.ceil(5 / 2) - 1,
+      });
+
+      // 标题淡入上移
+      tl.from(titleEl, { y: 60, opacity: 0, duration: 0.8, ease: "power3.out" }, 0.5);
+
+      // 分隔线展开
+      tl.from(divider, { scaleX: 0, duration: 0.5, ease: "power2.out" }, 1.2);
+
+      // 副标题淡入
+      tl.from(subtitleEl, { y: 30, opacity: 0, duration: 0.6, ease: "power2.out" }, 1.6);
+
+      window.__timelines = window.__timelines || {};
+      window.__timelines["intro"] = tl;
+    })();
+  </script>
+</body>
+</html>

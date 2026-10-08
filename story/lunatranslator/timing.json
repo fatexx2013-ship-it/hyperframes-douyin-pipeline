@@ -1,0 +1,47 @@
+[
+  {
+    "text": "好游戏没中文怎么办？这个开源翻译器叫 LunaTranslator，游戏照常跑，它在旁边实时翻译，不改游戏本体。",
+    "path": "/Volumes/PSSD/抖音视频/story/lunatranslator/line_00.wav",
+    "duration": 10.72,
+    "voice_start": 0.11,
+    "voice_end": 10.61,
+    "silence_ge_040s": 0,
+    "ref_audio": "yujie_thoughtful.wav"
+  },
+  {
+    "text": "原理叫 HOOK：游戏显示文字时底层会调用一个函数，它把钩子挂上去，游戏每显示一句话就先被截下来，翻成中文再显示。游戏本体一个字节都不用改。",
+    "path": "/Volumes/PSSD/抖音视频/story/lunatranslator/line_01.wav",
+    "duration": 14.48,
+    "voice_start": 0.11,
+    "voice_end": 14.37,
+    "silence_ge_040s": 0,
+    "ref_audio": "yujie_thoughtful.wav"
+  },
+  {
+    "text": "拦不住的也有办法：OCR 模式直接对游戏画面截图做文字识别，万能但慢一点。翻译引擎随你选，接本地大模型的话全程零成本。",
+    "path": "/Volumes/PSSD/抖音视频/story/lunatranslator/line_02.wav",
+    "duration": 13.52,
+    "voice_start": 0.11,
+    "voice_end": 13.4,
+    "silence_ge_040s": 0,
+    "ref_audio": "yujie_thoughtful.wav"
+  },
+  {
+    "text": "模拟器玩家也照顾到了：NS、PSP、PSV、PS2、PS3 都在官方支持列表里。但说清楚，GBA 不在列表，想玩 GBA 只能用 OCR 慢慢认。",
+    "path": "/Volumes/PSSD/抖音视频/story/lunatranslator/line_03.wav",
+    "duration": 15.12,
+    "voice_start": 0.11,
+    "voice_end": 15.01,
+    "silence_ge_040s": 0,
+    "ref_audio": "yujie_thoughtful.wav"
+  },
+  {
+    "text": "GPL 开源，本地跑。你想拿它玩哪款游戏？",
+    "path": "/Volumes/PSSD/抖音视频/story/lunatranslator/line_04.wav",
+    "duration": 5.91,
+    "voice_start": 0.12,
+    "voice_end": 5.8,
+    "silence_ge_040s": 0,
+    "ref_audio": "yujie_thoughtful.wav"
+  }
+]

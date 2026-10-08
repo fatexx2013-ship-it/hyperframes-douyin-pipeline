@@ -1,0 +1,26 @@
+{
+  "events": [
+    {
+      "id": "CE-20261003-01-render-window-frames",
+      "date": "2026-10-03",
+      "field": "render_window_frames",
+      "from": 2507,
+      "to": 2861,
+      "unit": "frames @30fps",
+      "reason": "跨选题变更登记：冻结基线 paperclip-1.1.0 为正片 83.56s（2507 帧），本片 immich 正片 89.08s、追加固定片尾后成片 95.36s（2861 帧）。帧数差异完全由选题文案时长决定，非渲染降级、非参数漂移、非画幅变更（4.7 字/秒口播节奏下 5 场景口播 389 字对应 89.08s，属产线既有区间）。",
+      "evidence": [
+        "reports/artifacts/diff_immich_vs_frozen_baseline.json",
+        "reports/artifacts/manifest_immich.json",
+        "story/immich/douyin_final.mp4",
+        "story/immich/script.json"
+      ],
+      "verified": {
+        "resolution": "1080x1920 与基线一致",
+        "fps": "30/1 与基线一致",
+        "colorspace": "bt709 与基线一致",
+        "duration": "95.36s = 正片 89.50s（2685 帧）+ 片尾段 5.87s（176 帧）"
+      },
+      "note": "产线既有约定：跨选题帧数差异须以 change_events 登记后放行（turbo-fieldfare、autoclip 已开先例）"
+    }
+  ]
+}
