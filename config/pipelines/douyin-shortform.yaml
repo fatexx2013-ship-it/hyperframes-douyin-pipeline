@@ -1,0 +1,144 @@
+# 抖音竖屏产线 · 声明式流水线清单（借鉴 OpenMontage 设计思想：YAML 清单 + 阶段门 + 产物 schema 化 + 运行时冻结）
+# 说明：本文件是「产线可执行路径」的声明式描述，供 scripts/absorb_r2.py 做三方对账
+#       （清单 × 工具注册表 × 产物 schema）。清单不是编排器：真源编排仍在 scripts/storyctl.py。
+# 仓库镜像差异（如实留痕）：本仓库只同步 R2 层（v1.16.0），不包含产线真源侧 v1.14.0/v1.15.0
+#       层脚本（scripts/tts_seed_locked.py / loudness_match.py / voice_consistency.py），
+#       故 audio 阶段仅声明本仓库实际随附的工具，避免「清单声明 > 仓库能力」的假对账。
+manifest_version: "1.0.0"
+pipeline: douyin-shortform
+layer: r2-1.0.0
+created_at: "2026-10-09"
+runtime:
+  render_runtime: hyperframes
+  render_runtime_frozen: true
+  output_contract:
+    resolution: [1080, 1920]
+    fps: 30
+    audio: true
+  invariants:
+    - id: aspect
+      rule: "1080x1920 / fps=30 / 编码链不变"
+    - id: published_story_immutable
+      rule: "禁覆盖已发布成片（红线 3）"
+
+# 无 JSON schema 的产物（非 JSON 形态）：由既有专用门替代校验，故 R8 对账时豁免 schema 检查
+#   story/<name>/index.html           → design_ai_gate（渲染前）
+#   story/<name>/douyin*.mp4          → post_process profile 门 + frame_audit（渲染后）
+schema_exempt:
+  - story/<name>/index.html
+  - story/<name>/douyin.mp4
+  - story/<name>/douyin_epilogue.mp4
+
+stages:
+  - id: scaffold
+    title: 建片
+    tools:
+      - {path: scripts/storyctl.py, subcommand: new, kind: shared}
+      - {path: scripts/template_slots.py, kind: shared}
+    artifacts: []
+    gate: {blocking: [], advisory: []}
+    approval: {human_approval_default: false}
+
+  - id: script
+    title: 脚本与分镜
+    tools:
+      - {path: scripts/generate_script.py, kind: shared}
+      - {path: scripts/split_scenes.py, kind: shared}
+      - {path: scripts/rhythm.py, kind: shared}
+    artifacts:
+      - story/<name>/script.json
+    gate:
+      blocking: [content_check]
+      advisory: [deai_lint]
+    approval: {human_approval_default: true, note: "文案为创意决策点"}
+
+  - id: audio
+    title: 配音合成 / 逐段响度归一化 / 音色一致性
+    tools:
+      - {path: story/<name>/build_audio.py, kind: per_story}
+    artifacts:
+      - story/<name>/timing.json
+    gate:
+      blocking: [voice_consistency_ref_uniqueness]
+      advisory: [pause_audit, voice_drift_f0, deai_lint]
+    approval: {human_approval_default: false}
+
+  - id: visual
+    title: HTML/GSAP 合成层
+    tools:
+      - {path: story/<name>/build_html.py, kind: per_story}
+      - {path: scripts/anchors_check.py, kind: shared}
+      - {path: scripts/design_ai_gate.py, kind: shared}
+    artifacts:
+      - story/<name>/index.html
+    gate:
+      blocking: [design_ai_gate_pre_render]
+      advisory: [anchors_drift_kb_a2, anchors_lighting_kb_a7]
+    approval: {human_approval_default: false}
+
+  - id: render
+    title: HyperFrames 渲染（运行时冻结）
+    tools:
+      - {path: scripts/storyctl.py, subcommand: build, kind: shared}
+    artifacts: []
+    gate:
+      blocking: []
+      advisory: []
+    approval: {human_approval_default: false}
+
+  - id: post
+    title: 后处理与收口
+    tools:
+      - {path: post_process.py, kind: shared}
+      - {path: scripts/encode_profile.py, kind: shared}
+    artifacts:
+      - story/<name>/douyin.mp4
+    gate:
+      blocking: [profile_1080x1920_30fps]
+      advisory: [loudness_normalize_target]
+    approval: {human_approval_default: false}
+
+  - id: epilogue
+    title: 片尾与 BGM 混音
+    tools:
+      - {path: append_epilogue.py, kind: shared}
+    artifacts:
+      - story/<name>/douyin_epilogue.mp4
+    gate:
+      blocking: []
+      advisory: [bgm_volume_cap]
+    approval: {human_approval_default: false}
+
+  - id: audit
+    title: 后渲染自审
+    tools:
+      - {path: scripts/frame_audit.py, kind: shared}
+      - {path: scripts/semantic_axis.py, kind: shared}
+      - {path: scripts/nondeterminism.py, kind: shared}
+    artifacts:
+      - story/<name>/qc/report.json
+    gate:
+      blocking: [frame_audit_blocked_eq_0, design_ai_gate_post_render]
+      advisory: [semantic_axis_kb_a4, nondeterminism_kb_a5]
+    approval: {human_approval_default: false}
+
+  - id: publish
+    title: 发布前审批门
+    tools:
+      - {path: scripts/make_covers.py, kind: shared}
+    artifacts:
+      - story/<name>/qc/content.json
+    gate:
+      blocking: [content_check]
+      advisory: []
+    approval: {human_approval_default: true, note: "借鉴预算与审批门：发布为人工审批决策点"}
+
+audit_stage_map:
+  story/<name>/script.json: script
+  story/<name>/timing.json: audio
+  story/<name>/qc/content.json: script
+  story/<name>/qc/deai.json: script
+  story/<name>/qc/voice_consistency.json: audio
+  story/<name>/qc/report.json: audit
+  reports/negcontrol/last_run.json: audit
+  reports/canons/last_check.json: audit

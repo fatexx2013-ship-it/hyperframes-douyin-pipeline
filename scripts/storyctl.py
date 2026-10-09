@@ -86,6 +86,8 @@ KB_PAUSE_PY = ROOT / "scripts" / "pause_audit.py"          # KB-A6 无意义停�
 KB_SEMANTIC_PY = ROOT / "scripts" / "semantic_axis.py"     # KB-A4 语义轴（ASR 回读）
 KB_NONDET_PY = ROOT / "scripts" / "nondeterminism.py"      # KB-A5 渲染非确定段单列
 KB_SLOTS_PY = ROOT / "scripts" / "template_slots.py"       # KB-A8 模板库槽位化
+# v1.16.0 R2 跨边界对账层（对等交换吸纳；与两段门禁「只增不改」）
+ABSORB_PY = ROOT / "scripts" / "absorb_r2.py"              # 段1.7：R1–R8 跨边界对账
 CATALOG_JSON = ROOT / "config" / "selection_catalog.json"
 
 # ── 可调外部命令（环境变量可覆盖，便于换 venv / 本地 CLI） ────────────────
@@ -326,6 +328,36 @@ def run_kb_axes(sd: Path, name: str, dry_run: bool = False, semantic: bool = Tru
             continue
         if rc == EXIT_DETECT and not strict:
             _err(f"⚠ {step} 存在检出项（advisory 默认不拦；加 {hint} 可升级为阻断）")
+    return EXIT_OK
+
+
+def run_absorb_layer(sd: Path, name: str, dry_run: bool = False,
+                     skip: bool = False, strict: bool = False) -> int:
+    """1.7 R2 跨边界对账层（v1.16.0）：对真实留档跑 R1~R8 八项对账。
+
+    与两段门禁的关系：**只增不改**。默认 advisory（不参与段1/段2 判据、不改变
+    `_run_qc` 退出码语义）；`strict=True`（--strict-absorb）时检出阻断项升级为 rc=2。
+    检定逻辑与阈值全部真源于 scripts/absorb_r2.py + config/absorb_r2.json，
+    本函数只做编排与 per-story 留档复制。
+    """
+    if skip:
+        return EXIT_OK
+    if not ABSORB_PY.is_file():
+        _err(f"⚠ 已跳过 absorb_r2（脚本缺失：{ABSORB_PY}）")
+        return EXIT_OK
+    (sd / "qc").mkdir(parents=True, exist_ok=True)
+    cmd = [PY, str(ABSORB_PY), "check", "--story", name, "--json",
+           str(sd / "qc" / "absorb_r2.json"), "--quiet"]
+    rc = run_step("1.7 absorb_r2.py（R2 八项对账 · advisory）", cmd, cwd=ROOT,
+                  dry_run=dry_run)
+    if rc == EXIT_ORCH:
+        _err("⚠ absorb_r2 未完成（脚本故障/用法问题）—— 该轴跳过，不影响两段门禁结论")
+        return EXIT_OK
+    if rc == EXIT_DETECT:
+        if strict:
+            _err("absorb_r2 检出阻断项（--strict-absorb 已升级为阻断）")
+            return EXIT_DETECT
+        _err("⚠ absorb_r2 存在检出项（advisory 默认不拦；加 --strict-absorb 可升级为阻断）")
     return EXIT_OK
 
 
@@ -965,7 +997,8 @@ def cmd_build(args) -> int:
     #    内容校验已在上游 0/6 做过（--no-check 时同样不重复校），故此处 check=False。
     if args.qc:
         rc = _run_qc(sd, name, dry_run=dry, check=False, semantic=args.semantic,
-                     nondet=args.nondet, strict_kb=args.strict_kb)
+                     nondet=args.nondet, strict_kb=args.strict_kb,
+                     absorb=not args.no_absorb, strict_absorb=args.strict_absorb)
         if rc != EXIT_OK:
             _err("build --qc：串联的两段门禁未通过（1=编排器侧故障 / 2=成片检出问题）")
             return rc
@@ -982,11 +1015,14 @@ def cmd_build(args) -> int:
 
 def _run_qc(sd: Path, name: str, ref=None, baseline=None, store_baseline: bool = False,
             dry_run: bool = False, check: bool = False, semantic: bool = True,
-            nondet: bool = True, strict_kb: bool = False) -> int:
+            nondet: bool = True, strict_kb: bool = False, absorb: bool = True,
+            strict_absorb: bool = False) -> int:
     """两段门禁主体。`storyctl qc` 与 `storyctl build --qc` **共用同一实现**，
     退出码语义与 rc 翻译点完全一致（0 通过 / 1 编排器侧故障 / 2 成片检出问题）。
 
     check=True 时在段1 之前先跑内容层校验（qc 侧为显式 opt-in，保持 qc 原语义）。
+    absorb=True（默认）时在 KB 增强轴之后跑段 1.7 R2 跨边界对账：默认 advisory，
+    不改变退出码语义；`strict_absorb=True`（--strict-absorb）时检出阻断项升级为 rc=2。
     """
     _log(f"qc {name} · 两段门禁（段1 渲染前 + 段2 渲染后），可单独重跑")
 
@@ -1012,6 +1048,14 @@ def _run_qc(sd: Path, name: str, ref=None, baseline=None, store_baseline: bool =
     run_kb_axes(sd, name, dry_run=dry_run, semantic=semantic, nondet=nondet,
                 strict=strict_kb)
 
+    # 1.7 R2 吸纳层（v1.16.0，只增不改）：R1~R8 跨边界对账。默认 advisory，
+    # 不改变退出码语义；--strict-absorb 才把检出项升级为 rc=2。
+    rc = run_absorb_layer(sd, name, dry_run=dry_run, skip=not absorb,
+                          strict=strict_absorb)
+    if rc != EXIT_OK:
+        _err("qc 1.7 absorb_r2 检出阻断项（--strict-absorb）")
+        return rc
+
     _log(f"✔ qc {name} 两段全绿" + ("（含 KB 增强轴走查）" if (semantic or nondet) else ""))
     _log(f"  段1 报告: {sd / 'qc' / 'pre.json'}")
     _log(f"  段2 报告: {sd / 'qc' / 'report.json'}")
@@ -1030,7 +1074,8 @@ def cmd_qc(args) -> int:
     return _run_qc(sd, name, ref=args.ref, baseline=args.baseline,
                    store_baseline=args.store_baseline, dry_run=args.dry_run,
                    check=args.check, semantic=args.semantic, nondet=args.nondet,
-                   strict_kb=args.strict_kb)
+                   strict_kb=args.strict_kb, absorb=not args.no_absorb,
+                   strict_absorb=args.strict_absorb)
 
 
 # ══════════════════════════════════════════════════════════════════════════
@@ -1178,6 +1223,10 @@ def build_parser() -> _Parser:
                          help="--qc 串联时跳过 KB-A5 渲染非确定段单列")
     p_build.add_argument("--strict-kb", dest="strict_kb", action="store_true",
                          help="把 KB-A4/KB-A5 检出项升级为拦截（退出码 2）")
+    p_build.add_argument("--no-absorb", dest="no_absorb", action="store_true",
+                         help="跳过 1.7 R2 吸纳层对账（默认开启，advisory，不参与两段门禁判据）")
+    p_build.add_argument("--strict-absorb", dest="strict_absorb", action="store_true",
+                         help="把 1.7 R2 吸纳层检出项升级为阻断（退出码 2）")
     p_build.add_argument("--qc", action="store_true",
                          help="显式 opt-in：build 出片后**串联**两段门禁（默认只跑 build "
                               "内联的段1，默认行为不变）。退出码语义同 storyctl qc")
@@ -1207,6 +1256,10 @@ def build_parser() -> _Parser:
                       help="跳过 KB-A5 渲染非确定段单列")
     p_qc.add_argument("--strict-kb", dest="strict_kb", action="store_true",
                       help="把 KB-A4/KB-A5 检出项升级为拦截（退出码 2）")
+    p_qc.add_argument("--no-absorb", dest="no_absorb", action="store_true",
+                      help="跳过 1.7 R2 吸纳层对账（默认开启，advisory，不参与两段门禁判据）")
+    p_qc.add_argument("--strict-absorb", dest="strict_absorb", action="store_true",
+                      help="把 1.7 R2 吸纳层检出项升级为阻断（退出码 2）")
     p_qc.add_argument("--dry-run", action="store_true", help="只打印链路不执行")
     p_qc.set_defaults(func=cmd_qc)
 

@@ -1,0 +1,497 @@
+{
+  "layer_version": "r2-1.2.0",
+  "layer_name": "工程口径吸纳层 R2（AI-Film-Studio 第 N 轮 13 条 + OpenMontage 设计思想）",
+  "created_at": "2026-10-09",
+  "author": "file-agent",
+  "sources": [
+    {
+      "id": "AI-Film-Studio",
+      "kind": "broadcast",
+      "payload_count": 13,
+      "window": "2026-10-08T00:37:11 ~ 2026-10-09T11:07:33",
+      "handle": "EigenFlux 广播（外部交换所得）",
+      "note": "13 条均为工程判据文本，无源码；只吸纳可机器化校验的判据"
+    },
+    {
+      "id": "OpenMontage",
+      "kind": "repo",
+      "license": "AGPL-3.0",
+      "note": "仅借鉴设计思想（YAML 流水线清单 / 阶段 director 技能 / 工具注册表 / 7 维加权资源评分 / 渲染运行时冻结 / 预合成验证 + 后渲染自审 / 产物 schema 化 / 预算与审批门）。未复制、未移植其任何源代码，未引入其依赖。"
+    }
+  ],
+  "scope": {
+    "only_new_files": true,
+    "existing_scripts_touched": [],
+    "existing_configs_touched": [],
+    "published_story_touched": [],
+    "red_line_ref": "docs/产线规范.md 红线 3/4（禁覆盖已发布成片；改动前逐文件备份）"
+  },
+  "checks": [
+    {
+      "id": "R1",
+      "name": "eof_anchor_integrity",
+      "source_note": "366326255814967296",
+      "title": "终界锚：零退出码不得作为成功判据"
+    },
+    {
+      "id": "R2",
+      "name": "receipt_unknown_state",
+      "source_note": "366326255814967296",
+      "title": "已发送/回执未知独立成态 + 幂等重试"
+    },
+    {
+      "id": "R3",
+      "name": "noise_floor_binding",
+      "source_note": "366462825331163136",
+      "title": "噪声地板是仪器元数据，不可当可调参"
+    },
+    {
+      "id": "R4",
+      "name": "criteria_provenance",
+      "source_note": "366783537942102016 + 366591752208908288",
+      "title": "判据溯源 + 阈值/revision 变更必须附负控"
+    },
+    {
+      "id": "R5",
+      "name": "enum_sink_declared",
+      "source_note": "366527530804445184",
+      "title": "闭集枚举必须声明越界 sink，禁静默塌缩"
+    },
+    {
+      "id": "R6",
+      "name": "derived_raw_only",
+      "source_note": "366655106990473216",
+      "title": "派生指标只存原始观测 + 因果失效"
+    },
+    {
+      "id": "R7",
+      "name": "state_temporal_bounds",
+      "source_note": "366751047512752128",
+      "title": "状态迁移三时界，区分 scheduled / active"
+    },
+    {
+      "id": "R8",
+      "name": "pipeline_manifest_consistency",
+      "source_note": "OpenMontage 借鉴①-③",
+      "title": "声明式清单 × 工具注册表 × 产物 schema 三方对齐"
+    }
+  ],
+  "eof_anchor": {
+    "policy_version": "eof-1.0.0",
+    "rationale": "无人值守链路上 exit code=0 掩盖 stdout 截断；成功判据必须落在跨边界完整性证明（锚）上，而非本地进程状态。",
+    "anchor_required_fields": [
+      "anchor_version",
+      "artifact",
+      "declared_bytes",
+      "declared_sha256",
+      "end_marker",
+      "seq",
+      "issuer",
+      "sealed_at"
+    ],
+    "end_marker": "__EOF__",
+    "end_marker_required": false,
+    "end_marker_required_note": "存量留档（config/reports/story 产物）由外部工序产出，尾部无本产线约定标记，故仅登记 end_marker_present 不作阻断；本产线新写的流式长输出应置 true（层内新增能力，不改存量工序）",
+    "verdicts": [
+      "OK",
+      "TRUNCATED",
+      "ANCHOR_MISMATCH",
+      "ABSENT"
+    ],
+    "exit_code_is_not_success_criterion": true,
+    "zero_exit_with_truncation_verdict": "TRUNCATED",
+    "issuer": "eof_anchor.py@eof-1.0.0",
+    "anchored_artifacts": [
+      "config/engineering_canons.json",
+      "reports/negcontrol/last_run.json",
+      "reports/canons/last_check.json",
+      "reports/observability/obs_paperclip_v110_positive.json",
+      "story/howtolivebetter-54k/qc/content.json",
+      "story/howtolivebetter-54k/qc/report.json",
+      "story/howtolivebetter-54k/qc/deai.json"
+    ],
+    "anchor_dir": "reports/absorb-r2/anchors"
+  },
+  "eof_anchor_volatile": {
+    "policy_version": "eof-volatile-1.0.0",
+    "content_identity": "not_asserted",
+    "byte_count_asserted": true,
+    "rationale": "被例行工序（storyctl qc/build）重写、且正文含 wall-clock 运行期字段的产物不具备内容稳定性，不能充当跨边界完整性锚；强行内容寻址会让例行重跑产生周期性假红。",
+    "admission_rule": "此类产物一律从 anchored_artifacts 移入 volatile_artifacts，仅断言字节数（截断检测），不断言 sha256。",
+    "observed_evidence": "2026-10-09 实跑 storyctl qc 后 R1 报 anchor_mismatch_sha256：story/howtolivebetter-54k/qc/voice_consistency.json 仅 generated_at 时间戳不同（14:04:41→14:12:59），字节数一致（4212），sha256 不同。",
+    "counterfactual": "同一文件真截断（字节数变小）在 volatile 清单下仍必须 FAIL，证明 volatile 化只去掉内容同一性断言，未削弱截断检测。",
+    "anchor_dir": "reports/absorb-r2/anchors-volatile",
+    "volatile_artifacts": [
+      "story/howtolivebetter-54k/qc/voice_consistency.json"
+    ]
+  },
+  "receipt_states": {
+    "states": [
+      "OK",
+      "FAILED",
+      "SENT_RECEIPT_UNKNOWN"
+    ],
+    "sink": "UNKNOWN",
+    "merge_forbidden": [
+      "SENT_RECEIPT_UNKNOWN->OK",
+      "SENT_RECEIPT_UNKNOWN->FAILED"
+    ],
+    "idempotent_retry": {
+      "required": true,
+      "key": "request_id",
+      "rule": "同 request_id 重放不得产生第二条副作用（side_effects_created <= 1）"
+    },
+    "required_fields": [
+      "request_id",
+      "state",
+      "occurred_at"
+    ]
+  },
+  "noise_floor": {
+    "policy": "比值型指标必须绑定噪声地板元数据；地板属于仪器规格，与结果回执一并冻结，不得作为可调参出现在 tuning 列表中。",
+    "required_floor_fields": [
+      "instrument_id",
+      "spec_rev",
+      "floor_value",
+      "unit",
+      "bound_to",
+      "mutable"
+    ],
+    "required_bound_to": [
+      "instrument_spec",
+      "result_receipt"
+    ],
+    "bindings": [
+      {
+        "metric_id": "slideshow_risk",
+        "ratio_based": true,
+        "instrument_id": "ffmpeg-tblend-yavg",
+        "instrument_version": "r2-1.0.0",
+        "spec_rev": "r2-1.1.0",
+        "floor_value": 0.0005,
+        "unit": "GL/帧（270x480 8bit 灰阶，原生帧率 tblend=difference + signalstats.YAVG 均值）",
+        "operational_threshold": 0.1275,
+        "threshold_unit": "GL/帧（几何中点，仅登记，未启用）",
+        "bound_to": [
+          "instrument_spec",
+          "result_receipt"
+        ],
+        "mutable": false,
+        "floor_source": "零运动负控 NEG-A（单静帧冻结 20s @30fps）实测逐帧差分中位，取自 reports/absorb-r2/slideshow_risk.json → calibration.floor_measured（非上游常数、非人工指定）",
+        "cross_instrument_reference": {
+          "value": 5.2,
+          "unit": "px",
+          "source_note": "366462825331163136",
+          "usage": "仅作量级参照，禁止直接参与本指标判定（跨仪器读数必须显式标注，不得混用）"
+        },
+        "status": "rejected",
+        "rejection_reason": "非判别性（实验否决）：负控 NEG-B（单静帧 + 缓慢推近，经典「PPT 动画」陷阱）原生帧率差分中位 1.1946 GL，高于全部真实成片中位（0.0136~0.0173 GL）；真实正例 vs 负控分界裕度 0.011 < 1.20，判据方向与「有运动=非幻灯片」的假设相反。结论：帧差幅度不能作为幻灯片风险判据，不并入产线门禁，仅留档为仪器实验与负控证据。",
+        "calibration": {
+          "event": "calibration-20261009",
+          "evidence": "reports/absorb-r2/slideshow_risk.json",
+          "real_videos_median_range": [
+            0.0136,
+            0.0173
+          ],
+          "negatives": {
+            "NEG-A-frozen-frame": 0.0005,
+            "NEG-B-kenburns-still": 1.1946,
+            "NEG-C-hardcut-stills": 0.0014
+          },
+          "negcontrols_caught": "2/3",
+          "separation_margin": 0.011,
+          "discriminative": false,
+          "false_positive_rate_on_real_outputs": 1.0,
+          "note": "若启用该判据，会把全部真实成片误判为幻灯片（假阳性 100%），且放过 NEG-B，故否决"
+        }
+      }
+    ],
+    "known_ratio_metrics_pending_binding": [
+      {
+        "metric_id": "pause_ratio",
+        "owner_script": "scripts/pause_audit.py",
+        "status": "pending_binding",
+        "note": "存量指标，本轮不臆造仪器规格；登记待补绑定"
+      },
+      {
+        "metric_id": "mib_per_s",
+        "owner_script": "scripts/frame_audit.py",
+        "status": "warn_only",
+        "note": "警告级比值，不参与阻断"
+      }
+    ]
+  },
+  "criteria_registry": {
+    "policy": {
+      "criteria_carry": [
+        "criteria_id",
+        "source",
+        "revision",
+        "issuer_domain",
+        "threshold"
+      ],
+      "threshold_or_revision_change_requires": "paired_negative_control（阈值或 revision 变更必须附新负控用例，否则 REJECT）",
+      "issuer_domain_separation": "签发域(pipeline-audit) 与被审域(pipeline-*) 必须不同，禁止同域自证"
+    },
+    "criteria": [
+      {
+        "criteria_id": "R1-truncation",
+        "source": "366326255814967296",
+        "revision": "r2-1.0.0",
+        "issuer_domain": "pipeline-audit",
+        "threshold": "declared_bytes == actual_bytes AND sha256 匹配 AND end_marker 命中",
+        "negative_control": [
+          "R1-neg-truncated-zero-exit",
+          "R1-neg-anchor-mismatch",
+          "R1-neg-absent"
+        ]
+      },
+      {
+        "criteria_id": "R3-noise-floor",
+        "source": "366462825331163136",
+        "revision": "r2-1.0.0",
+        "issuer_domain": "pipeline-audit",
+        "threshold": "floor 绑定齐全 + mutable=false + 不在 tunables + 测量时与规格时同值",
+        "negative_control": [
+          "R3-neg-missing-binding",
+          "R3-neg-floor-mutated",
+          "R3-neg-floor-in-tunables"
+        ]
+      },
+      {
+        "criteria_id": "R4-provenance",
+        "source": "366783537942102016",
+        "revision": "r2-1.0.0",
+        "issuer_domain": "pipeline-audit",
+        "threshold": "provenance 齐全；阈值/revision 变更须带变更事件 + 负控绑定",
+        "negative_control": [
+          "R4-neg-threshold-change-no-negcontrol",
+          "R4-neg-missing-source"
+        ]
+      },
+      {
+        "criteria_id": "R7-state-bounds",
+        "source": "366751047512752128",
+        "revision": "r2-1.0.0",
+        "issuer_domain": "pipeline-audit",
+        "threshold": "occurred_at + effective_from + effective_until 齐全",
+        "negative_control": [
+          "R7-neg-only-occurred-at"
+        ]
+      },
+      {
+        "criteria_id": "R3-noise-floor-calibration-20261009",
+        "source": "366462825331163136",
+        "revision": "r2-1.1.0",
+        "issuer_domain": "pipeline-audit",
+        "threshold": "floor 由 2.0（未标定假设）→ 0.0005 GL（零运动负控实测）；仪器由 1fps 采样器改为原生帧率 tblend+signalstats",
+        "threshold_changed": true,
+        "change_event": "calibration-20261009",
+        "negative_control": [
+          "NEG-A-frozen-frame",
+          "NEG-B-kenburns-still",
+          "NEG-C-hardcut-stills"
+        ],
+        "outcome": "criterion_rejected_non_discriminative",
+        "outcome_evidence": "裕度 0.011；真实成片假阳性率 100%；未并入产线门禁"
+      }
+    ]
+  },
+  "enum_sink": {
+    "policy": "闭集枚举必须显式声明越界 sink；未识别值落 sink，不得塌缩进任一已知桶。",
+    "enums": [
+      {
+        "enum_id": "eof_verdict",
+        "values": [
+          "OK",
+          "TRUNCATED",
+          "ANCHOR_MISMATCH",
+          "ABSENT"
+        ],
+        "sink": "ABSENT",
+        "sink_explicit": true,
+        "revision": "r2-1.0.0"
+      },
+      {
+        "enum_id": "receipt_state",
+        "values": [
+          "OK",
+          "FAILED",
+          "SENT_RECEIPT_UNKNOWN"
+        ],
+        "sink": "UNKNOWN",
+        "sink_explicit": true,
+        "revision": "r2-1.0.0"
+      },
+      {
+        "enum_id": "check_verdict",
+        "values": [
+          "OK",
+          "WARN",
+          "FAIL",
+          "SKIP"
+        ],
+        "sink": "SKIP",
+        "sink_explicit": true,
+        "revision": "r2-1.0.0"
+      }
+    ]
+  },
+  "derived_metrics": {
+    "policy": "只存原始观测；派生值（间隔/占比/速率）在查询时算，带 observer + revision；源变更即因果失效，禁缓存。",
+    "metrics": [
+      {
+        "metric_id": "slideshow_motion_ratio",
+        "raw_sources": [
+          "sampled_frames_digest",
+          "per_pair_graydiff"
+        ],
+        "formula": "count(diff > noise_floor) / count(diff)",
+        "cached": false,
+        "observer": "absorb_r2.slideshow",
+        "observer_revision": "r2-1.0.0",
+        "causal_invalidation": "source_digest 变更则弃用旧派生值重算"
+      },
+      {
+        "metric_id": "static_floor_estimate",
+        "raw_sources": [
+          "per_pair_graydiff"
+        ],
+        "formula": "quantile(per_pair_graydiff, 0.05)",
+        "cached": false,
+        "observer": "absorb_r2.slideshow",
+        "observer_revision": "r2-1.0.0",
+        "causal_invalidation": "source_digest 变更则弃用旧派生值重算"
+      }
+    ]
+  },
+  "state_bounds": {
+    "policy": "状态迁移必须记全 occurred_at / effective_from / effective_until；仅记发生时刻时 scheduled 与 active 不可区分。",
+    "machines": [
+      {
+        "machine_id": "receipt_lifecycle",
+        "states": [
+          "created",
+          "sent",
+          "receipt_unknown",
+          "confirmed",
+          "failed"
+        ],
+        "bounds_required": [
+          "occurred_at",
+          "effective_from",
+          "effective_until"
+        ],
+        "kind_field": "state_kind"
+      }
+    ]
+  },
+  "pipeline_manifest": {
+    "manifest": "config/pipelines/douyin-shortform.yaml",
+    "registry_artifact": "reports/absorb-r2/tool_envelope.json",
+    "borrowed_from": "OpenMontage（设计思想）：YAML 声明阶段 / 工具注册表 / 产物 schema 化 / 渲染运行时冻结 / 审批门",
+    "render_runtime": {
+      "value": "hyperframes",
+      "frozen": true,
+      "locked_in": "manifest",
+      "note": "借鉴「渲染运行时在提案期锁定」；本产线口径为 hyperframes（HTML/CSS/GSAP）"
+    }
+  },
+  "artifact_schemas": {
+    "story/<name>/script.json": {
+      "type": "object",
+      "required": [
+        "title",
+        "scenes",
+        "lines",
+        "voice_desc",
+        "epilogue"
+      ]
+    },
+    "story/<name>/timing.json": {
+      "type": "array",
+      "min_items": 1,
+      "item_keys": [
+        "text",
+        "path",
+        "duration",
+        "voice_start",
+        "voice_end"
+      ]
+    },
+    "story/<name>/qc/report.json": {
+      "type": "object",
+      "required": [
+        "video",
+        "script",
+        "meta",
+        "scenes",
+        "findings",
+        "blocked"
+      ]
+    },
+    "story/<name>/qc/content.json": {
+      "type": "object",
+      "required": [
+        "check",
+        "passed",
+        "errors",
+        "warns",
+        "script_sha256"
+      ]
+    },
+    "story/<name>/qc/deai.json": {
+      "type": "object",
+      "required": [
+        "schema",
+        "score",
+        "verdict",
+        "metrics",
+        "sentences"
+      ]
+    },
+    "story/<name>/qc/voice_consistency.json": {
+      "type": "object",
+      "required": [
+        "schema",
+        "story",
+        "mode",
+        "exit_code",
+        "hard_failures",
+        "drift_failures",
+        "ref_keys"
+      ]
+    },
+    "reports/negcontrol/last_run.json": {
+      "type": "object",
+      "required": [
+        "caseset_version",
+        "contract_version",
+        "results",
+        "summary"
+      ]
+    },
+    "reports/canons/last_check.json": {
+      "type": "object",
+      "required": [],
+      "note": "结构随 canon_guard 版本演进，只做存在性 + 可解析校验"
+    }
+  },
+  "changelog": [
+    {
+      "layer_version": "r2-1.0.0",
+      "date": "2026-10-09",
+      "change": "首版：R1~R8 八项可机器化校验 + 终界锚工具 + 声明式流水线清单 + 工具注册表对账；全部为新增文件，未改动任何存量脚本/配置"
+    },
+    {
+      "layer_version": "r2-1.1.0",
+      "date": "2026-10-09",
+      "change": "仪器标定与判据否决：slideshow 指标改用原生帧率 tblend+signalstats 实测；floor 由假设 2.0 改为零运动负控实测 0.0005；以三个负控（冻结/单帧推近/静帧硬切）验证判别力，实测分界裕度 0.011 → 判据非判别性，标记 rejected（不改动产线门禁）"
+    },
+    {
+      "layer_version": "r2-1.2.0",
+      "date": "2026-10-09",
+      "change": "锚点准入分层：新增 eof_anchor_volatile（eof-volatile-1.0.0），把被例行工序重写且含 wall-clock 字段的 voice_consistency.json 从 anchored_artifacts 移入 volatile_artifacts，仅断言字节数；新增判据 volatile_artifact_asserted_content_identity、selftest anchor_admission_disjoint、以及 3 条负控/正例（含真实回放态 R1-pos-volatile-byte-stable-identity-drift）。修复实跑 qc 时 R1 周期假红"
+    }
+  ]
+}

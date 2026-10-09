@@ -722,6 +722,50 @@ warn 集 = `facts` / `date` / `watermark`。回执落 `qc/content.json`（`passe
 口径对齐后才能替换 `storyctl catalog` 的启发式回退（voice 17 / video 16 / frontend 20）。
 本批**未触发** 9 个存量项目重编码。
 
+---
+
+## R2 跨边界对账层（v1.16.0，2026-10-09 迭代）
+
+> 来源：EigenFlux 广播 13 条工程判据（AI-Film-Studio，纯判据无源码）+ `calesthio/OpenMontage`（**AGPL-3.0，仅借鉴设计思想，未复制任何源码**）。
+
+### Step 7 增补段 1.7
+
+`storyctl build` / `storyctl build --qc` / `storyctl qc` 在**段1（渲染前）→ 段2（渲染后）→ KB 增强轴**之后增补段 **1.7**：跑 `scripts/absorb_r2.py check --json`，落地 R1–R8 八组跨边界对账（终界锚 / 已发送-回执未知态 / 噪声地板 / 判据溯源 / 闭集 sink / 派生指标 / 状态三时界 / 声明式清单三方对齐）。
+
+| 开关 | 行为 |
+|---|---|
+| 默认 | **advisory**：只告警，**不改变两段门禁退出码语义**（仍由段1/段2 + 既有 KB 轴决定） |
+| `--strict-absorb` | 检出（rc=2）升级为阻断，整体 rc=2 |
+| `--no-absorb` | 整步跳过（留痕） |
+| 独立跑 | `python3 scripts/absorb_r2.py check --story <name>` |
+
+留档：`story/<name>/qc/absorb_r2.json`、`reports/absorb-r2/last_run.json`、锚点 `reports/absorb-r2/{anchors,anchors-volatile}/`（均属本地运行产物，不进仓库）。锚点随运行自动生成；**锚点缺失导致 R1 报 `anchor_absent` 属预期行为**，首次 clone 后跑一次即为预热。
+
+### 锚点准入分层（本层关键设计）
+
+| 类别 | 断言内容 | 适用产物 |
+|---|---|---|
+| **anchored** | 内容同一（字节数 + sha256） | 确定性产物（成片、清单、报告） |
+| **volatile** | **仅解码字节数**（`content_identity = not_asserted`） | 含 wall-clock 字段（`generated_at`）的例行留档 |
+
+两层必须互不交集（自检 `anchor_admission_disjoint` 硬校验）；对 volatile 产物强行断言内容同一 → 直接 FAIL，防止准入分层被误用为「跳过校验」。
+
+### 量化结果（实跑产线 `story/howtolivebetter-54k`）
+
+| 指标 | 改动前 | 改动后 |
+|---|---|---|
+| `absorb_r2.py check` rc | 2（`blocked=["R1"]`，例行重跑假红） | **0**（`blocked=[]`，`rejected=["R3"]`） |
+| `storyctl qc` 段 1.7 rc | 2 | **0**（两段门禁全绿） |
+| 负控用例 / 新层命中 | 36 例，基线假绿 28 | **39 例**，新层 **39/39**，基线假绿 30 |
+| 故障注入（截断 220 字节） | — | **rc=2 命中**（`truncated_byte_count_mismatch`），还原后 rc=0 |
+| 锚点篡改（`declared_bytes` 9999） | — | advisory rc=0；`--strict-absorb` **rc=2** |
+
+**实跑暴露的真实缺陷**：首跑 `check` 抛 `FileNotFoundError`（`anchors-volatile/` 未建目录）——合成用例全绿时不可见，已修（自动建目录）。结论：新层必须对真实现场实跑一次才算验证通过。
+
+### 回滚点
+
+产线侧 `.bak-20261009-absorb2` / `.bak-20261009-absorb` 备份 + sha256 回滚清单；旧锚点保留为 `…voice_consistency.json.eof.json.orphaned-20261009`（不删除）。本层为纯追加，两段门禁判据与既有章节零改动。
+
 *（内容由AI生成，仅供参考）*
 
 > AI生成

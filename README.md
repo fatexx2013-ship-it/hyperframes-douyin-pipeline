@@ -1,3 +1,14 @@
+---
+AIGC:
+    Label: "1"
+    ContentProducer: 001191440300708461136T1XGW3
+    ProduceID: b82594f1be8e85c02fc42784acc7d5b8_67f6fb91c2f011f1884b525400cd780f
+    ReservedCode1: 9vi7Sem0u8Ioi55R+T9Lf7KYz3iKn8fioBNZ5nNLVkTbaoNARRmW/IhJTvJIHYNBENnXIAWYdBGgjPkOgkB/Nel42JpchVCOBnAQmmKPqYfqs/ZqDcdndkTEXNgpYpJiNlrMrB5CTzu62Z+hwI0qF1vHevKHS56tQTIZfr0RrguKqAvNM1E1KQ1om5U=
+    ContentPropagator: 001191440300708461136T1XGW3
+    PropagateID: b82594f1be8e85c02fc42784acc7d5b8_67f6fb91c2f011f1884b525400cd780f
+    ReservedCode2: 9vi7Sem0u8Ioi55R+T9Lf7KYz3iKn8fioBNZ5nNLVkTbaoNARRmW/IhJTvJIHYNBENnXIAWYdBGgjPkOgkB/Nel42JpchVCOBnAQmmKPqYfqs/ZqDcdndkTEXNgpYpJiNlrMrB5CTzu62Z+hwI0qF1vHevKHS56tQTIZfr0RrguKqAvNM1E1KQ1om5U=
+---
+
 <div align="center">
   <img src="assets/banner.png" alt="hyperframes-douyin-pipeline — 抖音竖屏 AI 短视频本地产线" width="100%">
 </div>
@@ -43,7 +54,7 @@
 
 - **文案即数据**：`story/<name>/script.json` 声明标题、场景、字幕、TTS 参数，一集一文件，可 diff、可评审、可回滚。
 - **画面即模板**：`index.html` 是竖屏 composition 源，配合 `templates/` 槽位化模板库，新建故事 = 复制模板 + 填槽位。
-- **质量即门禁**：9 类产线检查（A1–A9）+ 两段门禁（渲染前 / 渲染后）以「阻断项 = 0」为放行条件，不通过就不出片。
+- **质量即门禁**：9 类产线检查（A1–A9）+ 两段门禁（渲染前 / 渲染后）以「阻断项 = 0」为放行条件，不通过就不出片；另含 **R2 跨边界对账层**（v1.16.0，advisory，`--strict-absorb` 可升级阻断）。
 - **成本为零**：渲染用本机 Node + HyperFrames，配音默认走本地 TTS 模型，不产生 API 费用；需要更强音色时可切云端兼容档。
 
 ## 核心特性
@@ -61,6 +72,7 @@
 | **A7 光照阈值** | shot 级 `bg_base_lift` / `glow_gain` 覆写与越界阈值 |
 | **A8 模板库槽位化** | `kind → template_story + slots.json`，`new` 后自动校验必填槽位 |
 | **A9 去 AI 味 lint** | 连接词密度、套话、排比、句长方差等 12 类阈值 |
+| **R2 跨边界对账层** | v1.16.0：`scripts/absorb_r2.py` 对真实留档跑 R1–R8 八项对账（终界锚 / 回执状态 / 判据溯源 / 三方对账），默认 advisory，`--strict-absorb` 可升级阻断 |
 | **TTS 可插拔 provider** | 默认本地 `mlx`（Qwen3-TTS，Apple Silicon 零成本），可切 `openai` 兼容云端档；provider 由 `config/tts.json` 声明、`TTS_PROVIDER` 覆盖，凭据只读环境变量，**未配置即明确报错、不静默降级** |
 | **跨平台工具链解析** | `scripts/platform_env.py` 统一解析 ffmpeg / ffprobe / node / hyperframes / whisper-cli 与中文字体（PATH + 平台常见目录 + 环境变量覆盖，Windows 自动补 `.exe`） |
 | **仓库可整体搬迁** | `story/<name>/` 下 build 脚本按 `__file__` 自推导路径，`storyctl` 为每步子进程注入工具链 PATH，PATH 精简的 shell 也能跑通渲染 |
@@ -201,6 +213,7 @@ hyperframes-douyin-pipeline/
 │   ├── rhythm.py (A1)、anchors_check.py (A2)、make_covers.py (A3)
 │   ├── semantic_axis.py (A4)、nondeterminism.py (A5)、pause_audit.py (A6)
 │   ├── template_slots.py (A8)、deai_lint.py (A9)
+│   ├── absorb_r2.py (R2 八项对账)、eof_anchor.py (R2 终界锚)
 │   ├── render.sh、whisper_dtw.py、build_karaoke_ass.py、encode_profile.py …
 ├── config/                  ← 共享真源（canon / 参数合同 / 选择目录 / 工具链锁 / tts.json）
 ├── docs/                    ← DEPLOY.md 部署手册、产线规范.md、决策记录与技术债.md
@@ -219,6 +232,7 @@ hyperframes-douyin-pipeline/
 - [x] `scripts/doctor.py` 全项自检通过（工具链 / 中文字体 / 1080×1920 与 30fps 不变量 / TTS provider 可达）
 - [x] 本地 `mlx` provider（Qwen3-TTS）走通配音链路；`openai` 兼容档参数校验通过
 - [x] A1 情感节奏、A2 外观一致性锚点、A3 封面 × 标题 2×2、A6 停顿检测、A7 光照阈值、A8 模板槽位、A9 去 AI 味 lint 实际产出报告
+- [x] R2 跨边界对账层（v1.16.0，产线真源实跑）：`absorb_r2.py check` rc=0、`selftest` 八项全绿、负控 39/39、故障注入命中；`storyctl qc` 段 1.7 接入（advisory 不改变两段门禁语义）。本仓库镜像下：锚点随运行自动生成，锚点缺失时 R1 报 `anchor_absent`、story `timing.json` 缺 `voice_start/voice_end` 时 R8 报 `schema_drift`，均为文档标注的预期行为（advisory 不拦，对应 v1.14/v1.15 层未同步）
 - [x] A4 语义轴（whisper.cpp 回读音轨比对）、A5 非确定段单列
 - [x] 卡拉 OK 逐字字幕与片尾口播拼接
 - [x] 跨平台适配层：`git grep` 复核确认产线脚本内无 `macOS` 绝对路径残留
@@ -319,3 +333,4 @@ A4 依赖 whisper.cpp（`whisper-cli`）与对应模型。未安装或未指定 
 - `config/` 为共享真源，改动前备份 `.bak-<日期>`（已加入 `.gitignore`）
 - 1080×1920 / 30fps 为不变量，不得破坏
 - 跨平台原则：新增脚本禁止硬编码平台绝对路径，工具与字体一律走 `scripts/platform_env.py` 解析
+*（内容由AI生成，仅供参考）*
