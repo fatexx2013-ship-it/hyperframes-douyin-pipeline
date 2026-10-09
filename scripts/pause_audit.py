@@ -27,6 +27,7 @@
 """
 import argparse
 import json
+import logging
 import os
 import re
 import subprocess
@@ -142,7 +143,8 @@ def main() -> int:
     for x in raw_gaps:
         try:
             declared_gaps.append(float(x))
-        except (TypeError, ValueError):
+        except (TypeError, ValueError) as exc:
+            logging.getLogger(__name__).warning("pause_audit 声明 gap 转浮点失败 %r: %r", x, exc)
             continue
     missing = [l["i"] for l in lines if l["start"] is None or l["end"] is None]
     if missing:

@@ -9,6 +9,7 @@ Edge TTS 配音生成脚本 — 封装 edge-tts CLI，支持语速/音调调节�
 """
 
 import argparse
+import logging
 import subprocess
 import sys
 
@@ -85,8 +86,8 @@ def main():
         )
         duration = dur_result.stdout.strip()
         print(f"配音时长: {duration}s")
-    except Exception:
-        pass
+    except Exception as exc:
+        logging.getLogger(__name__).warning("edge_tts 获取配音时长失败: %r", exc)
 
     print("完成！")
 

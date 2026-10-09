@@ -43,6 +43,7 @@ frame_audit.py —— 渲染后抽帧断言（成片质量门禁第 2 段）
 import argparse
 import hashlib
 import json
+import logging
 import os
 import re
 import subprocess
@@ -573,8 +574,8 @@ def psnr_compare(video_a, video_b):
     finally:
         try:
             os.remove(stats_path)
-        except OSError:
-            pass
+        except OSError as exc:
+            logging.getLogger(__name__).warning("frame_audit 清理临时统计文件失败 %s: %r", stats_path, exc)
     if not vals:
         raise InputError("A0 未取到任何 psnr 统计行")
     finite = [v for v in vals if v != float("inf")]
@@ -1037,15 +1038,16 @@ def _story_bitrate_entries(raw):
                 continue
             try:
                 out[str(tgt)] = float(val)
-            except (TypeError, ValueError):
+            except (TypeError, ValueError) as exc:
+                logging.getLogger(__name__).warning("frame_audit 码率值转浮点失败 %s=%r: %r", tgt, val, exc)
                 continue
     for key in ("mib_per_s", "ref_mib_per_s", "bitrate_ref_mib_per_s"):
         if raw.get(key) is not None:
             try:
                 out.setdefault("__flat__", float(raw[key]) if not isinstance(raw[key], str)
                                else float(raw[key]))
-            except (TypeError, ValueError):
-                pass
+            except (TypeError, ValueError) as exc:
+                logging.getLogger(__name__).warning("frame_audit __flat__ 码率转浮点失败 %s=%r: %r", key, raw[key], exc)
             break
     return out
 
@@ -1069,8 +1071,8 @@ def write_story_bitrate_baseline(base_dir, video, meta):
                     entries[tgt] = {"target": tgt, "mib_per_s": val,
                                     "size_bytes": None, "duration_s": None,
                                     "captured_from": "preserved", "captured_sha256": None}
-        except (OSError, ValueError):
-            pass
+        except (OSError, ValueError) as exc:
+            logging.getLogger(__name__).warning("frame_audit 读取 bitrate 基线失败 %s: %r", meta_p, exc)
     raw = dict(entries.get(os.path.basename(video), {}))
     raw.update({
         "target": os.path.basename(video),

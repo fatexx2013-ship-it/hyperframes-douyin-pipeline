@@ -1,14 +1,3 @@
----
-AIGC:
-    Label: "1"
-    ContentProducer: 001191440300708461136T1XGW3
-    ProduceID: b82594f1be8e85c02fc42784acc7d5b8_67f6fb91c2f011f1884b525400cd780f
-    ReservedCode1: 9vi7Sem0u8Ioi55R+T9Lf7KYz3iKn8fioBNZ5nNLVkTbaoNARRmW/IhJTvJIHYNBENnXIAWYdBGgjPkOgkB/Nel42JpchVCOBnAQmmKPqYfqs/ZqDcdndkTEXNgpYpJiNlrMrB5CTzu62Z+hwI0qF1vHevKHS56tQTIZfr0RrguKqAvNM1E1KQ1om5U=
-    ContentPropagator: 001191440300708461136T1XGW3
-    PropagateID: b82594f1be8e85c02fc42784acc7d5b8_67f6fb91c2f011f1884b525400cd780f
-    ReservedCode2: 9vi7Sem0u8Ioi55R+T9Lf7KYz3iKn8fioBNZ5nNLVkTbaoNARRmW/IhJTvJIHYNBENnXIAWYdBGgjPkOgkB/Nel42JpchVCOBnAQmmKPqYfqs/ZqDcdndkTEXNgpYpJiNlrMrB5CTzu62Z+hwI0qF1vHevKHS56tQTIZfr0RrguKqAvNM1E1KQ1om5U=
----
-
 <div align="center">
   <img src="assets/banner.png" alt="hyperframes-douyin-pipeline — 抖音竖屏 AI 短视频本地产线" width="100%">
 </div>
@@ -334,3 +323,14 @@ A4 依赖 whisper.cpp（`whisper-cli`）与对应模型。未安装或未指定 
 - 1080×1920 / 30fps 为不变量，不得破坏
 - 跨平台原则：新增脚本禁止硬编码平台绝对路径，工具与字体一律走 `scripts/platform_env.py` 解析
 *（内容由AI生成，仅供参考）*
+
+---
+AIGC:
+    Label: "1"
+    ContentProducer: 001191440300708461136T1XGW3
+    ProduceID: b82594f1be8e85c02fc42784acc7d5b8_67f6fb91c2f011f1884b525400cd780f
+    ReservedCode1: 9vi7Sem0u8Ioi55R+T9Lf7KYz3iKn8fioBNZ5nNLVkTbaoNARRmW/IhJTvJIHYNBENnXIAWYdBGgjPkOgkB/Nel42JpchVCOBnAQmmKPqYfqs/ZqDcdndkTEXNgpYpJiNlrMrB5CTzu62Z+hwI0qF1vHevKHS56tQTIZfr0RrguKqAvNM1E1KQ1om5U=
+    ContentPropagator: 001191440300708461136T1XGW3
+    PropagateID: b82594f1be8e85c02fc42784acc7d5b8_67f6fb91c2f011f1884b525400cd780f
+    ReservedCode2: 9vi7Sem0u8Ioi55R+T9Lf7KYz3iKn8fioBNZ5nNLVkTbaoNARRmW/IhJTvJIHYNBENnXIAWYdBGgjPkOgkB/Nel42JpchVCOBnAQmmKPqYfqs/ZqDcdndkTEXNgpYpJiNlrMrB5CTzu62Z+hwI0qF1vHevKHS56tQTIZfr0RrguKqAvNM1E1KQ1om5U=
+---

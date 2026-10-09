@@ -85,6 +85,7 @@ from __future__ import annotations
 
 import argparse
 import copy
+import logging
 import glob
 import hashlib
 import json
@@ -1022,7 +1023,8 @@ def _design_scan(files, rx_rules):
             try:
                 with open(f, encoding="utf-8", errors="ignore") as fh:
                     n += len(rx.findall(fh.read()))
-            except OSError:
+            except OSError as exc:
+                logging.getLogger(__name__).warning("canon_guard 读取文件统计命中失败 %s: %r", f, exc)
                 continue
         hits[rid] = n
     return hits

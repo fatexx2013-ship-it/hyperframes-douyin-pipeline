@@ -57,6 +57,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import subprocess
 import sys
@@ -363,7 +364,8 @@ def probe_spec(path):
             if src and int(src) > 0:
                 vbitrate = int(src)
                 break
-        except Exception:  # noqa: BLE001
+        except Exception as exc:  # noqa: BLE001
+            logging.getLogger(__name__).warning("encode_profile 解析 bit_rate 失败: %r", exc)
             continue
     return {
         "vcodec": v.get("codec_name"),

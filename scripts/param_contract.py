@@ -36,6 +36,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import logging
 import os
 import re
 import shutil
@@ -150,8 +151,8 @@ def file_fingerprint(path):
         try:
             return {"sha256": sha256_file(path), "mode": "full-content",
                     "size_bytes": size, "mtime": int(st.st_mtime)}
-        except Exception:
-            pass
+        except Exception as exc:
+            logging.getLogger(__name__).warning("param_contract 文件全量哈希失败 %s: %r", path, exc)
     # 超大文件：头部 4MB + 尾部 4MB 的分段哈希
     h = hashlib.sha256()
     with open(path, "rb") as f:
@@ -177,7 +178,8 @@ def dir_fingerprint(path, deep=False):
             fp = os.path.join(root, name)
             try:
                 st = os.stat(fp)
-            except Exception:
+            except Exception as exc:
+                logging.getLogger(__name__).warning("param_contract stat 失败 %s: %r", fp, exc)
                 continue
             rel = os.path.relpath(fp, path)
             total += st.st_size
@@ -338,8 +340,8 @@ def parse_tts(root, model_dir):
             raw = m.group(1)
             try:
                 out["sampling_params"][k] = float(raw) if ("." in raw or "e" in raw.lower()) else int(raw)
-            except ValueError:
-                pass
+            except ValueError as exc:
+                logging.getLogger(__name__).warning("param_contract 采样参数解析失败 %s=%r: %r", k, raw, exc)
     if "seed" not in out["sampling_params"]:
         m = re.search(r'^\s*SEED\s*=\s*([0-9]+)', txt, re.M)
         if m:
@@ -400,7 +402,8 @@ def parse_story_dir(story_dir):
             if name.endswith((".log", ".txt")):
                 try:
                     t = open(os.path.join(root, name), "r", encoding="utf-8", errors="ignore").read()
-                except Exception:
+                except Exception as exc:
+                    logging.getLogger(__name__).warning("param_contract 读取降级日志失败 %s: %r", os.path.join(root, name), exc)
                     continue
                 if re.search(r"downgrad|降级|fallback|回退", t, re.I):
                     flags.append(os.path.relpath(os.path.join(root, name), story_dir))

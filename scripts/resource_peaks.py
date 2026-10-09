@@ -39,6 +39,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import platform
 import re
@@ -116,7 +117,8 @@ def tree_rss_bytes(root_pid):
             continue
         try:
             pid, ppid, kb = int(parts[0]), int(parts[1]), int(parts[2])
-        except ValueError:
+        except ValueError as exc:
+            logging.getLogger(__name__).warning("resource_peaks 解析 ps 行失败 %r: %r", parts, exc)
             continue
         rss[pid] = kb * 1024
         children.setdefault(ppid, []).append(pid)

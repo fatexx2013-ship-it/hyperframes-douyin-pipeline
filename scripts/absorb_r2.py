@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as _dt
+import logging
 import hashlib
 import json
 import os
@@ -362,8 +363,8 @@ def payloads_from_reality(cfg: dict, story: str) -> dict:
                 if line:
                     try:
                         receipts.append(json.loads(line))
-                    except Exception:
-                        pass
+                    except Exception as exc:
+                        logging.getLogger(__name__).warning("absorb_r2 读取回执台账: 行 JSON 解析失败: %r", exc)
     payloads["R2"] = {"allowed_states": cfg["receipt_states"]["states"],
                       "receipts": receipts,
                       "expect": "OK",
@@ -506,8 +507,8 @@ def append_receipt(state: str, request_id: str, note: str = "", retry_of: str = 
                 if line:
                     try:
                         existing.append(json.loads(line))
-                    except Exception:
-                        pass
+                    except Exception as exc:
+                        logging.getLogger(__name__).warning("absorb_r2 读取回执台账: 行 JSON 解析失败: %r", exc)
     for r in existing:
         if r.get("request_id") == request_id and r.get("state") == state:
             return dict(r, replayed=True)  # 幂等：同 request_id + 同状态不重复登记
@@ -571,8 +572,8 @@ def native_frame_diffs(mp4: str, w=270, h=480) -> list:
                 if "YAVG=" in line:
                     try:
                         vals.append(float(line.strip().split("YAVG=")[1]))
-                    except Exception:
-                        pass
+                    except Exception as exc:
+                        logging.getLogger(__name__).warning("absorb_r2 解析 YAVG 信号失败: %r", exc)
         return vals[1:]  # 第 1 帧无前帧，差分无意义
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
