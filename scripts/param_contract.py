@@ -3,7 +3,7 @@
 """
 param_contract.py —— 参数快照（snapshot）与漂移比对（diff）
 
-所属产线：hyperframes 竖屏短视频产线（部署根由 PIPELINE_HOME / 仓库位置决定）
+所属产线：/Volumes/PSSD/抖音视频（Python + FFmpeg + HyperFrames 竖屏短视频）
 参数合同：config/param_contract.json（contract_version 1.0.0）
 资料来源：AI-Film-Studio (qpzRm) 通用参数漂移清单 10 项 + 两级负控节奏
 
@@ -36,7 +36,6 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
-import logging
 import os
 import re
 import shutil
@@ -54,11 +53,7 @@ PEAKS_DIR = os.path.join(ROOT_DEFAULT, "reports", "peaks")
 DEFAULT_MODEL_DIR = os.path.expanduser(
     "~/Projects/qwen3-tts-apple-silicon/models/Qwen3-TTS-12Hz-1.7B-Base-8bit"
 )
-# 跨平台适配层（真源 scripts/platform_env.py）：PATH/which 查找 + 环境变量覆盖，
-# 不再写死 /opt/homebrew/bin 等 macOS 路径。本模块保留同名薄封装以兼容既有调用点。
-if SCRIPT_DIR not in sys.path:
-    sys.path.insert(0, SCRIPT_DIR)
-import platform_env  # noqa: E402
+BREW_BIN = "/opt/homebrew/bin"
 
 SEVERITY = {"OK": 0, "SKIP": 1, "WARN": 2, "FAIL": 3}
 
@@ -82,17 +77,21 @@ def _first_exec(cands):
 
 
 def find_tool(name: str):
-    """定位可执行文件：环境变量（PIPELINE_<TOOL> / <TOOL>）→ PATH → 平台常见路径。
-
-    跨平台实现在 platform_env.find_tool：macOS(Homebrew/MacPorts) / Linux(/usr,
-    /usr/local,snap,linuxbrew,~/.local) / Windows(WinGet Links,scoop shims,Program Files)。
-    """
-    return platform_env.find_tool(name)
+    """定位可执行文件：环境变量 → PATH → Homebrew/macOS 常见路径。"""
+    return _first_exec([
+        os.environ.get(name.upper().replace("-", "_")),
+        shutil.which(name),
+        os.path.join(BREW_BIN, name),
+        os.path.join("/usr/local/bin", name),
+        os.path.join("/opt/homebrew/opt/ffmpeg-full/bin", name),
+        os.path.join("/usr/bin", name),
+    ])
 
 
 def brew_env():
-    """PATH 已按平台补齐的环境变量副本（历史名保留；Linux/Windows 同样适用）。"""
-    return platform_env.tool_env()
+    env = dict(os.environ)
+    env["PATH"] = BREW_BIN + ":/usr/local/bin:" + env.get("PATH", "")
+    return env
 
 
 def now_iso():
@@ -151,8 +150,8 @@ def file_fingerprint(path):
         try:
             return {"sha256": sha256_file(path), "mode": "full-content",
                     "size_bytes": size, "mtime": int(st.st_mtime)}
-        except Exception as exc:
-            logging.getLogger(__name__).warning("param_contract 文件全量哈希失败 %s: %r", path, exc)
+        except Exception:
+            pass
     # 超大文件：头部 4MB + 尾部 4MB 的分段哈希
     h = hashlib.sha256()
     with open(path, "rb") as f:
@@ -178,8 +177,7 @@ def dir_fingerprint(path, deep=False):
             fp = os.path.join(root, name)
             try:
                 st = os.stat(fp)
-            except Exception as exc:
-                logging.getLogger(__name__).warning("param_contract stat 失败 %s: %r", fp, exc)
+            except Exception:
                 continue
             rel = os.path.relpath(fp, path)
             total += st.st_size
@@ -340,8 +338,8 @@ def parse_tts(root, model_dir):
             raw = m.group(1)
             try:
                 out["sampling_params"][k] = float(raw) if ("." in raw or "e" in raw.lower()) else int(raw)
-            except ValueError as exc:
-                logging.getLogger(__name__).warning("param_contract 采样参数解析失败 %s=%r: %r", k, raw, exc)
+            except ValueError:
+                pass
     if "seed" not in out["sampling_params"]:
         m = re.search(r'^\s*SEED\s*=\s*([0-9]+)', txt, re.M)
         if m:
@@ -402,8 +400,7 @@ def parse_story_dir(story_dir):
             if name.endswith((".log", ".txt")):
                 try:
                     t = open(os.path.join(root, name), "r", encoding="utf-8", errors="ignore").read()
-                except Exception as exc:
-                    logging.getLogger(__name__).warning("param_contract 读取降级日志失败 %s: %r", os.path.join(root, name), exc)
+                except Exception:
                     continue
                 if re.search(r"downgrad|降级|fallback|回退", t, re.I):
                     flags.append(os.path.relpath(os.path.join(root, name), story_dir))

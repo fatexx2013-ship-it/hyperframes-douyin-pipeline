@@ -3,7 +3,7 @@
 """
 negcontrol.py —— 两级负控执行器（不变量级 / 探索级）
 
-所属产线：hyperframes 竖屏短视频产线（部署根由 PIPELINE_HOME / 仓库位置决定）
+所属产线：/Volumes/PSSD/抖音视频
 用例集  ：config/negcontrol_cases.json（caseset 1.0.0）
 合同    ：config/param_contract.json
 

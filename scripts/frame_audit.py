@@ -3,7 +3,7 @@
 """
 frame_audit.py —— 渲染后抽帧断言（成片质量门禁第 2 段）
 
-所属产线：hyperframes 竖屏短视频产线（部署根由 PIPELINE_HOME / 仓库位置决定）
+所属产线：/Volumes/PSSD/抖音视频
 上游契约：见 proposals/方案定稿_编排器与质量门禁_v2.md §三（v3 口径）
 对齐口径：与 design_ai_gate.py 一致
   - 退出码 0 = 通过；1 = 用法/输入错误；2 = 检出问题（阻断）
@@ -43,7 +43,6 @@ frame_audit.py —— 渲染后抽帧断言（成片质量门禁第 2 段）
 import argparse
 import hashlib
 import json
-import logging
 import os
 import re
 import subprocess
@@ -54,12 +53,6 @@ import time
 import numpy as np
 from PIL import Image
 from scipy import ndimage
-# 跨平台适配层（真源 scripts/platform_env.py）：ffmpeg/ffprobe 等按 PATH + 平台常见位解析，
-# 支持环境变量覆盖（PIPELINE_FFMPEG / FFMPEG、PIPELINE_FFPROBE / FFPROBE）。
-_SDIR = os.path.dirname(os.path.abspath(__file__))
-if _SDIR not in sys.path:
-    sys.path.insert(0, _SDIR)
-import platform_env  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # 常量（全部阈值集中在此，调参只动这里）
@@ -150,18 +143,24 @@ _BIN_CACHE = {}
 
 
 def _find_bin(names):
-    """在环境变量/PATH 及平台常见安装位中查找可执行文件，返回绝对路径或 None。
-
-    跨平台解析统一委托 platform_env.find_tool（macOS Homebrew/MacPorts、Linux
-    /usr/local|snap|linuxbrew|~/.local、Windows WinGet Links/scoop shims/Program Files）。
-    """
+    """在 PATH 及常见安装位置中查找可执行文件，返回绝对路径或 None。"""
     if names in _BIN_CACHE:
         return _BIN_CACHE[names]
     found = None
     for name in names:
-        found = platform_env.find_tool(name)
+        for d in os.environ.get("PATH", "").split(os.pathsep):
+            p = os.path.join(d, name)
+            if os.path.isfile(p) and os.access(p, os.X_OK):
+                found = p
+                break
         if found:
             break
+    if not found:
+        for base in ("/opt/homebrew/bin", "/usr/local/bin", "/usr/bin"):
+            p = os.path.join(base, names[0]) if found is None else None
+            if p and os.path.isfile(p) and os.access(p, os.X_OK):
+                found = p
+                break
     _BIN_CACHE[names] = found
     return found
 
@@ -574,8 +573,8 @@ def psnr_compare(video_a, video_b):
     finally:
         try:
             os.remove(stats_path)
-        except OSError as exc:
-            logging.getLogger(__name__).warning("frame_audit 清理临时统计文件失败 %s: %r", stats_path, exc)
+        except OSError:
+            pass
     if not vals:
         raise InputError("A0 未取到任何 psnr 统计行")
     finite = [v for v in vals if v != float("inf")]
@@ -1038,16 +1037,15 @@ def _story_bitrate_entries(raw):
                 continue
             try:
                 out[str(tgt)] = float(val)
-            except (TypeError, ValueError) as exc:
-                logging.getLogger(__name__).warning("frame_audit 码率值转浮点失败 %s=%r: %r", tgt, val, exc)
+            except (TypeError, ValueError):
                 continue
     for key in ("mib_per_s", "ref_mib_per_s", "bitrate_ref_mib_per_s"):
         if raw.get(key) is not None:
             try:
                 out.setdefault("__flat__", float(raw[key]) if not isinstance(raw[key], str)
                                else float(raw[key]))
-            except (TypeError, ValueError) as exc:
-                logging.getLogger(__name__).warning("frame_audit __flat__ 码率转浮点失败 %s=%r: %r", key, raw[key], exc)
+            except (TypeError, ValueError):
+                pass
             break
     return out
 
@@ -1071,8 +1069,8 @@ def write_story_bitrate_baseline(base_dir, video, meta):
                     entries[tgt] = {"target": tgt, "mib_per_s": val,
                                     "size_bytes": None, "duration_s": None,
                                     "captured_from": "preserved", "captured_sha256": None}
-        except (OSError, ValueError) as exc:
-            logging.getLogger(__name__).warning("frame_audit 读取 bitrate 基线失败 %s: %r", meta_p, exc)
+        except (OSError, ValueError):
+            pass
     raw = dict(entries.get(os.path.basename(video), {}))
     raw.update({
         "target": os.path.basename(video),
@@ -1229,7 +1227,7 @@ def _ensure_ffprobe_on_path():
     """把本仓解析到的 ffprobe 目录补进 PATH。
 
     encode_profile.probe_spec 走裸 `ffprobe`（依赖 PATH）；非登录 shell（如
-    storyctl 经 nohup/子进程调用）下 PATH 可能不含工具安装目录，会让 A7
+    storyctl 经 nohup/子进程调用）下 PATH 可能不含 /opt/homebrew/bin，会让 A7
     误报「无法读取规格」并错记成片问题。此处只补 PATH，不复写任何探测/判据逻辑。
     找不到 ffprobe → InputError（编排器故障，exit 1），不降级成片问题。
     """

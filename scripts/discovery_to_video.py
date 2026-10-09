@@ -17,6 +17,7 @@ github-discovery → 抖音视频生成（两步工作流）
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 from datetime import datetime
@@ -503,9 +504,83 @@ def generate_video(args):
 
 # ── 主入口 ──────────────────────────────────────────────────
 
+def handle_queue(args) -> int:
+    """增量1：自动选题闭环入口 —— --from-queue 取队首，选题→文案。
+
+    消费 story/_queue/topics-YYYYMMDD.json 的队首 pending 条目，
+    调 generate_script.py --topic <title> --demo 生成 story/topic-<src>/script.txt，
+    并回写队列状态（done）。目录名以 source_ref 锚定 → 幂等（同一选题不会生成第二个目录）。
+    """
+    today = datetime.now().strftime("%Y%m%d")
+    queue_dir = STORY_BASE / "_queue"
+    queue_file = queue_dir / f"topics-{today}.json"
+    if not queue_file.is_file():
+        print(f"❌ 队列不存在：{queue_file}（请先运行 scripts/topic_intake.py --pull N）")
+        return 2
+
+    try:
+        queue = json.loads(queue_file.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        print(f"❌ 队列解析失败：{exc}")
+        return 2
+
+    pending = [it for it in queue if it.get("status", "pending") == "pending"]
+    if not pending:
+        print(f"✅ 队列已全部处理（{len(queue)} 条均为 done/skipped/failed）")
+        return 0
+
+    item = pending[0]
+    src_ref = item.get("source_ref", "unknown")
+    name = f"topic-{src_ref}" if src_ref and src_ref != "unknown" else f"topic-{today}-{len(queue)+1}"
+    if not all(c.isalnum() or c in "._-" for c in name):
+        name = re.sub(r"[^0-9A-Za-z._-]", "-", name)
+
+    target = STORY_BASE / name
+    if target.exists():
+        # 幂等：目录已存在视为已生成过，不重复生成
+        print(f"⏭️ 幂等跳过：{name} 已存在（同一选题不会生成第二个 story 目录）")
+        item["status"] = "done"
+        item["story"] = name
+        queue_file.write_text(json.dumps(queue, ensure_ascii=False, indent=2) + "\n",
+                              encoding="utf-8")
+        return 0
+
+    title = item.get("title", "")
+    out_script = target / "script.txt"
+    print(f"🎬 队列取题：{title}（source_ref={src_ref}）→ story/{name}")
+    r = subprocess.run(
+        [sys.executable, str(BASE_DIR / "scripts" / "generate_script.py"),
+         "--topic", title, "--demo", "--output", str(out_script)],
+        cwd=BASE_DIR, capture_output=True, text=True, timeout=180)
+    if r.returncode != 0:
+        item["status"] = "failed"
+        item["error"] = (r.stderr or r.stdout)[-300:]
+        queue_file.write_text(json.dumps(queue, ensure_ascii=False, indent=2) + "\n",
+                              encoding="utf-8")
+        print(f"❌ generate_script.py 失败：{r.stderr[-300:]}（队列已标记 failed）")
+        return 2
+
+    if out_script.is_file():
+        print(f"✅ 文案已落：story/{name}/script.txt")
+    else:
+        print(f"⚠️ generate_script 未产出预期 script.txt（{out_script}）")
+        item["status"] = "failed"
+        item["error"] = "generate_script 未产出 script.txt"
+        queue_file.write_text(json.dumps(queue, ensure_ascii=False, indent=2) + "\n",
+                              encoding="utf-8")
+        return 2
+
+    item["status"] = "done"
+    item["story"] = name
+    queue_file.write_text(json.dumps(queue, ensure_ascii=False, indent=2) + "\n",
+                          encoding="utf-8")
+    print(f"💾 队列回写：{name} → done（剩余 pending：{sum(1 for q in queue if q.get('status')=='pending')}）")
+    return 0
+
+
 def main():
     parser = argparse.ArgumentParser(
-        description="github-discovery → 抖音视频（两步工作流）",
+        description="github-discovery → 抖音视频（两步工作流 + 选题队列入口）",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 示例:
@@ -533,7 +608,14 @@ def main():
     gen.add_argument("--skip-hyperframes", action="store_true", help="跳过 HyperFrames 渲染")
     gen.add_argument("--no-render", action="store_true", help="只到配音+HTML，不跑 FFmpeg")
 
+    # 增量1：选题队列入口
+    parser.add_argument("--from-queue", action="store_true",
+                        help="从 story/_queue/topics-YYYYMMDD.json 取队首选题 → 文案（自动选题闭环）")
+
     args = parser.parse_args()
+
+    if args.from_queue:
+        sys.exit(handle_queue(args))
 
     if args.generate:
         generate_video(args)

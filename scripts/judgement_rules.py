@@ -3,7 +3,7 @@
 """
 judgement_rules.py —— 判定口径校验器（次级判定三条件 + 三组正交对）
 
-所属产线：hyperframes 竖屏短视频产线（部署根由 PIPELINE_HOME / 仓库位置决定）
+所属产线：/Volumes/PSSD/抖音视频
 资料来源：AI-Film-Studio 第二条私信 2026-09-26
 
 覆盖两条口径

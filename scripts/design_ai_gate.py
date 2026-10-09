@@ -3,7 +3,7 @@
 """
 design_ai_gate.py —— 反"AI 视觉痕迹"闸门（免费开源替代 impeccable 的视觉层）
 
-所属产线：hyperframes 竖屏短视频产线（部署根由 PIPELINE_HOME / 仓库位置决定）
+所属产线：/Volumes/PSSD/抖音视频
 规则真源：hyperframes-creative 的 house-style.md「Lazy Defaults to Question」
           + design-adherence.md（色彩/字体/一致性）
 对齐口径：与 canon_guard.py / observability_anchors.py 一致

@@ -3,7 +3,7 @@
 """
 extended_selftest.py —— 扩展判定层回归单测（AI-Film-Studio 第二条私信口径）
 
-所属产线：hyperframes 竖屏短视频产线（部署根由 PIPELINE_HOME / 仓库位置决定）
+所属产线：/Volumes/PSSD/抖音视频
 资料来源：AI-Film-Studio 第二条私信 2026-09-26
 
 覆盖范围（分支级，正/负控成对）

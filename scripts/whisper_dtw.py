@@ -39,13 +39,6 @@ import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-# 跨平台适配层（真源 scripts/platform_env.py）：whisper-cli 按 PATH + 平台常见位解析，
-# 可用 PIPELINE_WHISPER_CLI / WHISPER_CLI 覆盖，不再写死 /opt/homebrew/bin。
-_SDIR = os.path.dirname(os.path.abspath(__file__))
-if _SDIR not in sys.path:
-    sys.path.insert(0, _SDIR)
-import platform_env  # noqa: E402
-
 
 def resolve(p):
     if not p:
@@ -73,10 +66,7 @@ def preset_of(model, override=""):
 
 def run_dtw(bin_path, model, audio, language, out_json, extra_args=None, tag="", preset=""):
     if not os.path.isfile(bin_path):
-        print(f"错误：找不到 whisper-cli：{bin_path}\n"
-              f"  修复：安装 whisper.cpp（macOS: brew install whisper-cpp；"
-              f"Linux: 见 docs/DEPLOY.md；Windows(WSL2) 同 Linux），"
-              f"或 export PIPELINE_WHISPER_CLI=/绝对/路径/whisper-cli", file=sys.stderr)
+        print(f"错误：找不到 whisper-cli：{bin_path}", file=sys.stderr)
         return 1, None
     if not os.path.isfile(model):
         print(f"错误：找不到 DTW 模型：{model}（可放 models/ggml-small.bin）", file=sys.stderr)
@@ -169,12 +159,7 @@ def main():
     ap.add_argument("--audio", required=True, help="配音音频（mp3/wav）")
     ap.add_argument("--out", default="", help="输出 DTW JSON（默认 story 目录下 captions.dtw.json）")
     ap.add_argument("--model", default=dtw_cfg.get("model") or "models/ggml-small.bin")
-    ap.add_argument("--bin", dest="bin_path",
-                    default=(dtw_cfg.get("bin")
-                             or platform_env.find_tool("whisper-cli")
-                             or "whisper-cli"),
-                    help="whisper.cpp 可执行路径；缺省按 config/karaoke.json::dtw.bin → "
-                         "PIPELINE_WHISPER_CLI/WHISPER_CLI → PATH 解析")
+    ap.add_argument("--bin", dest="bin_path", default=dtw_cfg.get("bin") or "/opt/homebrew/bin/whisper-cli")
     ap.add_argument("--language", default=dtw_cfg.get("language") or "zh")
     ap.add_argument("--dtw-preset", default=dtw_cfg.get("dtw_preset") or "",
                     help="whisper.cpp -dtw 预设名（默认由模型名推导，如 small）")

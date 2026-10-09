@@ -28,12 +28,14 @@
   storyctl build <name> [--no-gate] [--no-check] [--qc]
                                       编排既有链路；段1 内联在 HTML 产出后 / 渲染前
                                       · --check（默认开启）内容层校验前置，--no-check 跳过
+                                      · 段1.5 KB-A6 停顿 + 段1.6 KB-A9 单线音色一致性
+                                        （--no-voice-qc 跳过 / --strict-voice 漂移升级为阻断）
                                       · --qc 显式 opt-in：出片后串联两段门禁（默认只跑段1）
   storyctl qc <name> [--ref <mp4>] [--baseline <…>] [--store-baseline] [--check]
                                       两段门禁，可单独重跑，不依赖 build
                                       · --check 为显式 opt-in（保持 qc 原语义）
+                                      · 段1 之前先跑 KB-A9 单线音色一致性（判据1 硬阻断）
   storyctl catalog voice|video|frontend
-  storyctl doctor [--tts]              跨平台自检：工具链/字体/不变量/TTS provider 配置
 
 产物命名收口：`douyin.mp4` + `douyin_epilogue.mp4`
 （废弃 `douyin_final.mp4` / `output.mp4` 旧命名；既有项目不改动）
@@ -65,14 +67,8 @@ import time
 from datetime import datetime
 from pathlib import Path
 
-# 跨平台适配层（scripts/platform_env.py）与 TTS provider 抽象（scripts/tts_provider.py）
-# 与本脚本同目录：先确保同目录在 sys.path 上，再导入（不依赖调用方式）。
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import platform_env  # noqa: E402
-import tts_provider  # noqa: E402
-
 # ── 路径常量（全部以本脚本位置为准，避免硬编码 cwd） ──────────────────────
-ROOT = Path(__file__).resolve().parent.parent          # 仓库根（自动推导，不写死绝对路径）
+ROOT = Path(__file__).resolve().parent.parent          # /Volumes/PSSD/抖音视频
 STORY_ROOT = ROOT / "story"
 SCRIPTS = ROOT / "scripts"
 GATE_PY = SCRIPTS / "design_ai_gate.py"                # 段1：渲染前门禁
@@ -83,43 +79,17 @@ DEAI_LINT_PY = ROOT / "scripts" / "deai_lint.py"
 # v1.13.0 知识库候选落地（KB-* 命名，避开 frame_audit 既有的 A0–A7 断言编号）
 KB_ANCHORS_PY = ROOT / "scripts" / "anchors_check.py"      # KB-A2 锚点漂移 + KB-A7 光照阈值
 KB_PAUSE_PY = ROOT / "scripts" / "pause_audit.py"          # KB-A6 无意义停顿
+KB_VOICE_PY = ROOT / "scripts" / "voice_consistency.py"    # KB-A9 单线音色一致性
 KB_SEMANTIC_PY = ROOT / "scripts" / "semantic_axis.py"     # KB-A4 语义轴（ASR 回读）
 KB_NONDET_PY = ROOT / "scripts" / "nondeterminism.py"      # KB-A5 渲染非确定段单列
 KB_SLOTS_PY = ROOT / "scripts" / "template_slots.py"       # KB-A8 模板库槽位化
-# v1.16.0 R2 跨边界对账层（对等交换吸纳；与两段门禁「只增不改」）
-ABSORB_PY = ROOT / "scripts" / "absorb_r2.py"              # 段1.7：R1–R8 跨边界对账
+# R2 工程口径吸纳层（v1.15.0：借鉴 AI-Film-Studio 跨边界完整性判据 + OpenMontage 声明式对账思想）
+ABSORB_PY = ROOT / "scripts" / "absorb_r2.py"
 CATALOG_JSON = ROOT / "config" / "selection_catalog.json"
 
 # ── 可调外部命令（环境变量可覆盖，便于换 venv / 本地 CLI） ────────────────
-# 跨平台解析：环境变量 > 仓库 venv > PATH/平台常见目录（Windows 补 .exe）> 兜底
-
-
-def _resolve_python() -> str:
-    env = os.environ.get("STORYCTL_PYTHON", "").strip()
-    if env:
-        return env
-    for rel in (".venv/bin/python", ".venv/Scripts/python.exe",
-                "venv/bin/python", "venv/Scripts/python.exe"):
-        cand = ROOT / rel
-        if cand.is_file():
-            return str(cand)
-    return (platform_env.find_tool("python3") or platform_env.find_tool("python")
-            or sys.executable or "python3")
-
-
-def _resolve_hyperframes() -> list:
-    raw = os.environ.get("STORYCTL_HYPERFRAMES", "").strip()
-    if raw:
-        return raw.split()
-    hit = platform_env.find_tool("hyperframes")
-    if hit:
-        return [hit]
-    npx = platform_env.find_tool("npx") or platform_env.find_tool("npx.cmd") or "npx"
-    return [npx, "hyperframes"]
-
-
-PY = _resolve_python()
-HYPERFRAMES = _resolve_hyperframes()
+PY = os.environ.get("STORYCTL_PYTHON", "python3")
+HYPERFRAMES = os.environ.get("STORYCTL_HYPERFRAMES", "npx hyperframes")
 
 # ── 脚手架模板（per-story 双脚本路线的样板 story） ───────────────────────
 DEFAULT_TEMPLATE = os.environ.get("STORYCTL_TEMPLATE", "compositor-mac")
@@ -221,8 +191,7 @@ def run_step(step: str, cmd, cwd: Path, dry_run: bool = False) -> int:
         _log("  [dry-run] 未执行")
         return EXIT_OK
     try:
-        # 注入跨平台工具链 PATH（node/npx 等 shim 依赖 PATH，避免调用方 shell PATH 精简导致 rc=127）
-        proc = subprocess.run([str(c) for c in cmd], cwd=str(cwd), env=platform_env.tool_env())
+        proc = subprocess.run([str(c) for c in cmd], cwd=str(cwd))
     except FileNotFoundError as exc:
         _err(f"{step}: 找不到可执行文件 —— {exc}")
         return EXIT_ORCH
@@ -299,6 +268,49 @@ def run_kb_step(step: str, script: Path, sd: Path, extra_args, dry_run: bool = F
     return rc
 
 
+def run_voice_consistency(sd: Path, dry_run: bool = False, skip: bool = False,
+                          strict: bool = False) -> int:
+    """KB-A9 单线音色一致性（真源 scripts/voice_consistency.py，产线规范 5.3 v1.14.0）。
+
+    引入背景：2026-10-09 howtolivebetter-54k 成片音色前后不一致（逐句 match_emotion
+    把句 3 的参考音切到 yujie_excited.wav）。判据：
+      * 判据1（硬）全篇参考音唯一性 —— 未过 rc=2，**默认即阻断**；
+      * 判据2（漂移）逐句 F0 中位 / 全篇 F0 中位 双侧比值（阈值收紧为 1.20）
+        —— 未过 rc=3，默认 advisory，`--strict-voice` 升级为阻断；
+      * 脚本 rc=1 → 编排器侧故障（拒绝空口通过）。
+    双人线（gen_guimi_dub.py）与其他生成器：脚本内部 SKIP（rc=0），既有默认不变。
+    """
+    (sd / "qc").mkdir(parents=True, exist_ok=True)
+    if skip:
+        _err("⚠ 已跳过 KB-A9 单线音色一致性校验（--no-voice-qc）—— 留痕在日志")
+        return EXIT_OK
+    if not KB_VOICE_PY.is_file():
+        _err(f"⚠ 已跳过 KB-A9 单线音色一致性校验（脚本缺失：{KB_VOICE_PY}）")
+        return EXIT_OK
+    cmd = [PY, str(KB_VOICE_PY), str(sd),
+           "--json", str(sd / "qc" / "voice_consistency.json")]
+    if strict:
+        cmd.append("--strict")
+    rc = run_step("1.6/6 voice_consistency.py（KB-A9 单线音色一致性）", cmd,
+                  cwd=ROOT, dry_run=dry_run)
+    if rc == EXIT_ORCH:
+        _err("voice_consistency 自身故障（rc=1：用法/依赖问题）—— 编排器侧故障")
+        return EXIT_ORCH
+    if rc == EXIT_DETECT:
+        _err("build 在 KB-A9 单线音色一致性被拦下：**全篇参考音不唯一**"
+             "（单线单音色硬约束）—— 详见 qc/voice_consistency.json")
+        return EXIT_DETECT
+    if rc == 3:
+        _err("⚠ KB-A9 漂移判据有检出（advisory 默认不拦；加 --strict-voice 可升级为阻断）"
+             " —— 详见 qc/voice_consistency.json")
+        return EXIT_OK
+    if rc != EXIT_OK:
+        _err(f"voice_consistency 返回未登记退出码 {rc} —— 按编排器侧故障处理")
+        return EXIT_ORCH
+    _log("1.6/6 KB-A9 单线音色一致性 —— 通过")
+    return EXIT_OK
+
+
 def run_kb_axes(sd: Path, name: str, dry_run: bool = False, semantic: bool = True,
                 nondet: bool = True, strict: bool = False) -> int:
     """qc 侧 KB 增强轴：KB-A4 语义轴（ASR 回读）+ KB-A5 渲染非确定段单列。
@@ -333,7 +345,7 @@ def run_kb_axes(sd: Path, name: str, dry_run: bool = False, semantic: bool = Tru
 
 def run_absorb_layer(sd: Path, name: str, dry_run: bool = False,
                      skip: bool = False, strict: bool = False) -> int:
-    """1.7 R2 跨边界对账层（v1.16.0）：对真实留档跑 R1~R8 八项对账。
+    """1.7 R2 工程口径吸纳层：对真实留档跑 R1~R8 八项跨边界对账。
 
     与两段门禁的关系：**只增不改**。默认 advisory（不参与段1/段2 判据、不改变
     `_run_qc` 退出码语义）；`strict=True`（--strict-absorb）时检出阻断项升级为 rc=2。
@@ -346,7 +358,7 @@ def run_absorb_layer(sd: Path, name: str, dry_run: bool = False,
         _err(f"⚠ 已跳过 absorb_r2（脚本缺失：{ABSORB_PY}）")
         return EXIT_OK
     (sd / "qc").mkdir(parents=True, exist_ok=True)
-    cmd = [PY, str(ABSORB_PY), "check", "--story", name, "--json",
+    cmd = [PY, str(ABSORB_PY), "check", "--json",
            str(sd / "qc" / "absorb_r2.json"), "--quiet"]
     rc = run_step("1.7 absorb_r2.py（R2 八项对账 · advisory）", cmd, cwd=ROOT,
                   dry_run=dry_run)
@@ -770,37 +782,6 @@ def _render_output(sd: Path, name: str) -> Path:
     return sd / "renders" / f"{name}_{stamp}.mp4"
 
 
-def tts_preflight(dry_run: bool = False) -> int:
-    """build_audio 前置：TTS provider 配置自检（跨平台可插拔 provider 闸门）。
-
-    口径（与 config/tts.json 真源一致）：
-      · 自检在 build 实际使用的解释器（PY）里执行，确保 mlx-audio 等依赖的可见性
-        与被测解释器一致；
-      · provider 未配置/依赖缺失/凭据缺失 → 明确报错并中止（退出码 1），
-        **不静默降级**到其它 provider；
-      · 只读检查：不写盘、不联网（云端 provider 的凭据仅从环境变量读取）。
-    """
-    if dry_run:
-        _log("▶ TTS provider 自检（dry-run 仍执行：只读、不联网）")
-    try:
-        proc = subprocess.run([PY, str(SCRIPTS / "tts_provider.py")],
-                              cwd=str(ROOT), capture_output=True, text=True)
-    except FileNotFoundError as exc:
-        _err(f"TTS 自检失败：找不到解释器 {PY}（{exc}）")
-        return EXIT_ORCH
-    msg = (proc.stdout or "").strip() or (proc.stderr or "").strip()
-    first = msg.splitlines()[0] if msg else ""
-    if proc.returncode != 0:
-        _err("TTS provider 配置未就绪，build_audio 未启动（未配置即失败，不静默降级）：\n"
-             + (msg or "（无输出）"))
-        return EXIT_ORCH
-    _log(f"1/6 前置 · TTS provider 自检 —— 就绪：{first}")
-    if msg and msg != first:
-        for line in msg.splitlines()[1:]:
-            _log(f"    {line}")
-    return EXIT_OK
-
-
 def cmd_build(args) -> int:
     name = args.name
     sd = resolve_story(name)
@@ -816,7 +797,7 @@ def cmd_build(args) -> int:
     renders.mkdir(exist_ok=True)
     render_mp4 = _render_output(sd, name)
 
-    _log(f"build {name} · 链路：build_audio → [KB-A6] → build_html → [KB-A2/A7] → [段1] → render → post_process → append_epilogue"
+    _log(f"build {name} · 链路：build_audio → [KB-A6] → [KB-A9] → build_html → [KB-A2/A7] → [段1] → render → post_process → append_epilogue"
          + (" → [qc]" if args.qc else ""))
 
     # 0) 内容层校验（--check 默认前置；--no-check 跳过）—— 方案 B MVP 裁定 d
@@ -856,12 +837,6 @@ def cmd_build(args) -> int:
             _log("0.5/6 文案去 AI 味 —— 完成（无 FAIL 级命中）")
 
     # 1) 配音 + 时间轴回填
-    #    前置：TTS provider 配置自检（跨平台可插拔 provider；未配置即明确报错，
-    #    严禁静默降级到其它 provider）。自检在 build 实际使用的解释器（PY）里执行，
-    #    避免「storyctl 的解释器」与「build_audio 的解释器」不一致导致误判。
-    rc = tts_preflight(dry_run=dry)
-    if rc != EXIT_OK:
-        return rc
     rc = run_step("1/6 build_audio.py（逐句配音 + 时间轴回填）",
                   [PY, str(sd / "build_audio.py")], cwd=sd, dry_run=dry)
     if rc != EXIT_OK:
@@ -882,6 +857,15 @@ def cmd_build(args) -> int:
         return EXIT_ORCH
     if rc == EXIT_DETECT:
         _err("build 在 KB-A6 无意义停顿检测被拦下（--strict-pause：rc=2）")
+        return rc
+
+    # 1.6) KB-A9 单线音色一致性（真源 docs/产线规范.md 5.3 v1.14.0）
+    #      判据1 参考音唯一性 = 硬约束（默认阻断）；判据2 F0 漂移 = advisory 默认；
+    #      --strict-voice 升级为阻断；--no-voice-qc 整步跳过（留痕）。
+    #      双人线/其他生成器：脚本内部 SKIP，既有默认行为不变。
+    rc = run_voice_consistency(sd, dry_run=dry, skip=args.no_voice_qc,
+                               strict=args.strict_voice)
+    if rc != EXIT_OK:
         return rc
 
     # 2) 生成 index.html + hyperframes.json
@@ -934,7 +918,7 @@ def cmd_build(args) -> int:
     #    时默认 portrait-4k 超采样；显式置白名单档位覆盖，置 off/none/1x 则完全不
     #    追加 --resolution（命令行与默认化前逐字节一致）。交付尺寸/编码仍由
     #    post_process 从合同真源收口。
-    render_cmd = list(HYPERFRAMES) + ["render", "--fps", "30", "--quality", "high"]
+    render_cmd = HYPERFRAMES.split() + ["render", "--fps", "30", "--quality", "high"]
     _raw = os.environ.get(RENDER_RESOLUTION_ENV)
     _explicit = _raw is not None and _raw.strip() != ""
     res = _raw.strip() if _explicit else RENDER_RESOLUTION_DEFAULT
@@ -998,6 +982,7 @@ def cmd_build(args) -> int:
     if args.qc:
         rc = _run_qc(sd, name, dry_run=dry, check=False, semantic=args.semantic,
                      nondet=args.nondet, strict_kb=args.strict_kb,
+                     voice_qc=not args.no_voice_qc, strict_voice=args.strict_voice,
                      absorb=not args.no_absorb, strict_absorb=args.strict_absorb)
         if rc != EXIT_OK:
             _err("build --qc：串联的两段门禁未通过（1=编排器侧故障 / 2=成片检出问题）")
@@ -1015,14 +1000,15 @@ def cmd_build(args) -> int:
 
 def _run_qc(sd: Path, name: str, ref=None, baseline=None, store_baseline: bool = False,
             dry_run: bool = False, check: bool = False, semantic: bool = True,
-            nondet: bool = True, strict_kb: bool = False, absorb: bool = True,
+            nondet: bool = True, strict_kb: bool = False, voice_qc: bool = True,
+            strict_voice: bool = False, absorb: bool = True,
             strict_absorb: bool = False) -> int:
     """两段门禁主体。`storyctl qc` 与 `storyctl build --qc` **共用同一实现**，
     退出码语义与 rc 翻译点完全一致（0 通过 / 1 编排器侧故障 / 2 成片检出问题）。
 
     check=True 时在段1 之前先跑内容层校验（qc 侧为显式 opt-in，保持 qc 原语义）。
-    absorb=True（默认）时在 KB 增强轴之后跑段 1.7 R2 跨边界对账：默认 advisory，
-    不改变退出码语义；`strict_absorb=True`（--strict-absorb）时检出阻断项升级为 rc=2。
+    voice_qc=True（默认）时在段1 之前跑 KB-A9 单线音色一致性：判据1（参考音唯一性）
+    未过为**硬阻断**（rc=2），判据2（F0 漂移）advisory，`strict_voice=True` 升级为阻断。
     """
     _log(f"qc {name} · 两段门禁（段1 渲染前 + 段2 渲染后），可单独重跑")
 
@@ -1031,6 +1017,13 @@ def _run_qc(sd: Path, name: str, ref=None, baseline=None, store_baseline: bool =
         if rc != EXIT_OK:
             _err("qc 内容校验未通过 —— 不进入段1/段2")
             return rc
+
+    # KB-A9（v1.14.0）：音色一致性属于"素材层"缺陷，放在段1 之前拦下最廉价。
+    rc = run_voice_consistency(sd, dry_run=dry_run, skip=not voice_qc,
+                               strict=strict_voice)
+    if rc != EXIT_OK:
+        _err("qc KB-A9 单线音色一致性未通过 —— 不进入段1/段2")
+        return rc
 
     rc = run_pre_gate(sd, dry_run=dry_run)
     if rc != EXIT_OK:
@@ -1048,7 +1041,7 @@ def _run_qc(sd: Path, name: str, ref=None, baseline=None, store_baseline: bool =
     run_kb_axes(sd, name, dry_run=dry_run, semantic=semantic, nondet=nondet,
                 strict=strict_kb)
 
-    # 1.7 R2 吸纳层（v1.16.0，只增不改）：R1~R8 跨边界对账。默认 advisory，
+    # 1.7 R2 吸纳层（v1.15.0，只增不改）：R1~R8 跨边界对账。默认 advisory，
     # 不改变退出码语义；--strict-absorb 才把检出项升级为 rc=2。
     rc = run_absorb_layer(sd, name, dry_run=dry_run, skip=not absorb,
                           strict=strict_absorb)
@@ -1074,7 +1067,8 @@ def cmd_qc(args) -> int:
     return _run_qc(sd, name, ref=args.ref, baseline=args.baseline,
                    store_baseline=args.store_baseline, dry_run=args.dry_run,
                    check=args.check, semantic=args.semantic, nondet=args.nondet,
-                   strict_kb=args.strict_kb, absorb=not args.no_absorb,
+                   strict_kb=args.strict_kb, voice_qc=not args.no_voice_qc,
+                   strict_voice=args.strict_voice, absorb=not args.no_absorb,
                    strict_absorb=args.strict_absorb)
 
 
@@ -1145,21 +1139,6 @@ def cmd_catalog(args) -> int:
 # CLI
 # ══════════════════════════════════════════════════════════════════════════
 
-def cmd_doctor(args) -> int:
-    """跨平台自检（scripts/doctor.py 的编排器入口）。
-
-    检查项：平台/架构、python 与工具链（ffmpeg/ffprobe/node/hyperframes/whisper-cli）、
-    中文字体候选、不变量（只读 param_contract.json：1080×1920 / 30fps / 编码链）、
-    TTS provider 配置。退出码沿用 doctor.py：0 = 无阻塞项，1 = 存在阻塞项。
-    """
-    cmd = [PY, str(SCRIPTS / "doctor.py")]
-    if args.tts:
-        cmd.append("--tts")
-    if args.verbose:
-        cmd.append("--verbose")
-    return run_step("doctor.py（跨平台自检）", cmd, cwd=ROOT, dry_run=args.dry_run)
-
-
 def build_parser() -> _Parser:
     ap = _Parser(
         prog="storyctl",
@@ -1168,7 +1147,7 @@ def build_parser() -> _Parser:
         epilog="退出码：0=成功 / 1=编排器侧故障（含门禁用法错误）/ 2=成片检出问题\n"
                "产物命名收口：douyin.mp4 + douyin_epilogue.mp4",
     )
-    sub = ap.add_subparsers(dest="command", metavar="{new,build,qc,catalog,doctor}",
+    sub = ap.add_subparsers(dest="command", metavar="{new,build,qc,catalog}",
                             parser_class=_Parser)
 
     p_new = sub.add_parser("new", help="脚手架：复制模板 story 并注入 STORY/name")
@@ -1213,6 +1192,14 @@ def build_parser() -> _Parser:
                          help="跳过 KB-A6 无意义停顿检测（默认开启，advisory 不拦）")
     p_build.add_argument("--strict-pause", dest="strict_pause", action="store_true",
                          help="把 KB-A6 停顿检出项升级为拦截（退出码 2）")
+    p_build.add_argument("--no-voice-qc", dest="no_voice_qc", action="store_true",
+                         help="跳过 KB-A9 单线音色一致性校验（留痕在日志；默认不跳）")
+    p_build.add_argument("--strict-voice", dest="strict_voice", action="store_true",
+                         help="KB-A9 漂移判据（F0 双侧 1.20）升级为阻断（判据1 参考音唯一性始终阻断）")
+    p_build.add_argument("--no-absorb", dest="no_absorb", action="store_true",
+                         help="跳过 1.7 R2 吸纳层对账（默认开启，advisory，不参与两段门禁判据）")
+    p_build.add_argument("--strict-absorb", dest="strict_absorb", action="store_true",
+                         help="把 1.7 R2 吸纳层检出项升级为阻断（退出码 2）")
     p_build.add_argument("--no-anchors", dest="no_anchors", action="store_true",
                          help="跳过 KB-A2 锚点漂移 + KB-A7 光照阈值检查（默认开启，advisory）")
     p_build.add_argument("--strict-anchors", dest="strict_anchors", action="store_true",
@@ -1223,10 +1210,6 @@ def build_parser() -> _Parser:
                          help="--qc 串联时跳过 KB-A5 渲染非确定段单列")
     p_build.add_argument("--strict-kb", dest="strict_kb", action="store_true",
                          help="把 KB-A4/KB-A5 检出项升级为拦截（退出码 2）")
-    p_build.add_argument("--no-absorb", dest="no_absorb", action="store_true",
-                         help="跳过 1.7 R2 吸纳层对账（默认开启，advisory，不参与两段门禁判据）")
-    p_build.add_argument("--strict-absorb", dest="strict_absorb", action="store_true",
-                         help="把 1.7 R2 吸纳层检出项升级为阻断（退出码 2）")
     p_build.add_argument("--qc", action="store_true",
                          help="显式 opt-in：build 出片后**串联**两段门禁（默认只跑 build "
                               "内联的段1，默认行为不变）。退出码语义同 storyctl qc")
@@ -1256,6 +1239,10 @@ def build_parser() -> _Parser:
                       help="跳过 KB-A5 渲染非确定段单列")
     p_qc.add_argument("--strict-kb", dest="strict_kb", action="store_true",
                       help="把 KB-A4/KB-A5 检出项升级为拦截（退出码 2）")
+    p_qc.add_argument("--no-voice-qc", dest="no_voice_qc", action="store_true",
+                      help="跳过 KB-A9 单线音色一致性校验（默认开启；判据1 硬阻断）")
+    p_qc.add_argument("--strict-voice", dest="strict_voice", action="store_true",
+                      help="KB-A9 漂移判据（F0 双侧 1.20）升级为阻断")
     p_qc.add_argument("--no-absorb", dest="no_absorb", action="store_true",
                       help="跳过 1.7 R2 吸纳层对账（默认开启，advisory，不参与两段门禁判据）")
     p_qc.add_argument("--strict-absorb", dest="strict_absorb", action="store_true",
@@ -1267,13 +1254,6 @@ def build_parser() -> _Parser:
     p_cat.add_argument("category", choices=["voice", "video", "frontend"])
     p_cat.set_defaults(func=cmd_catalog)
 
-    p_doc = sub.add_parser("doctor", help="跨平台自检：工具链/字体/不变量/TTS provider")
-    p_doc.add_argument("--tts", action="store_true",
-                       help="只跑 TTS provider 配置自检（跨平台可插拔 provider 的配置体检）")
-    p_doc.add_argument("--verbose", action="store_true", help="打印每个工具命中的路径明细")
-    p_doc.add_argument("--dry-run", action="store_true", help="只打印命令不执行")
-    p_doc.set_defaults(func=cmd_doctor)
-
     return ap
 
 
@@ -1282,7 +1262,7 @@ def main(argv=None) -> int:
     args = ap.parse_args(argv)
     if not getattr(args, "command", None):
         ap.print_help(sys.stderr)
-        _err("缺少子命令，可选：new / build / qc / catalog / doctor")
+        _err("缺少子命令，可选：new / build / qc / catalog")
         return EXIT_ORCH
     try:
         return args.func(args)

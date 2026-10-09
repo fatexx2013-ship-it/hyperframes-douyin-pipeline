@@ -73,8 +73,7 @@ python scripts/download_materials.py \
 for f in ~/Projects/qwen3-tts-apple-silicon/outputs/批量配音/narration/*.wav; do
   echo "file '$f'"
 done > /tmp/narr_concat.txt
-FFMPEG="$(python3 scripts/platform_env.py tool ffmpeg || command -v ffmpeg)"
-"$FFMPEG" -y -f concat -safe 0 -i "$TMPDIR/narr_concat.txt" \
+/opt/homebrew/bin/ffmpeg -y -f concat -safe 0 -i /tmp/narr_concat.txt \
   -ar 24000 -ac 1 -c:a pcm_s16le story/001-ai-future/narration.wav
 
 export KMP_DUPLICATE_LIB_OK=TRUE
@@ -517,7 +516,7 @@ set +a
 | HyperFrames 渲染黑屏 | 运行 `npx hyperframes lint` 检查 composition 配置 |
 | 视频尺寸不对 | 确保 Pexels 下载的是 `orientation=portrait` 素材 |
 | 片尾未追加 | 检查 `narration.wav` 是否在成片目录；`script.json` 中 `epilogue.enabled` 是否为 true |
-| 片尾段渲染失败（node not found） | 确保 `node` / `hyperframes` 可被解析到（PATH，或 `export PIPELINE_HYPERFRAMES=/绝对/路径/hyperframes`），自检 `python3 scripts/doctor.py` |
+| 片尾段渲染失败（node not found） | 确保 `/opt/homebrew/bin` 在 PATH 中（hyperframes 依赖 node） |
 
 ---
 
@@ -739,18 +738,9 @@ warn 集 = `facts` / `date` / `watermark`。回执落 `qc/content.json`（`passe
 | `--no-absorb` | 整步跳过（留痕） |
 | 独立跑 | `python3 scripts/absorb_r2.py check --story <name>` |
 
-留档：`story/<name>/qc/absorb_r2.json`、`reports/absorb-r2/last_run.json`、锚点 `reports/absorb-r2/{anchors,anchors-volatile}/`（均属本地运行产物，不进仓库）。锚点随运行自动生成；**锚点缺失导致 R1 报 `anchor_absent` 属预期行为**，首次 clone 后跑一次即为预热。
+留档：`story/<name>/qc/absorb_r2.json`、`reports/absorb-r2/last_run.json`、锚点 `reports/absorb-r2/{anchors,anchors-volatile}/`。
 
-### 锚点准入分层（本层关键设计）
-
-| 类别 | 断言内容 | 适用产物 |
-|---|---|---|
-| **anchored** | 内容同一（字节数 + sha256） | 确定性产物（成片、清单、报告） |
-| **volatile** | **仅解码字节数**（`content_identity = not_asserted`） | 含 wall-clock 字段（`generated_at`）的例行留档 |
-
-两层必须互不交集（自检 `anchor_admission_disjoint` 硬校验）；对 volatile 产物强行断言内容同一 → 直接 FAIL，防止准入分层被误用为「跳过校验」。
-
-### 量化结果（实跑产线 `story/howtolivebetter-54k`）
+### 量化结果（实跑 `story/howtolivebetter-54k`）
 
 | 指标 | 改动前 | 改动后 |
 |---|---|---|
@@ -764,10 +754,86 @@ warn 集 = `facts` / `date` / `watermark`。回执落 `qc/content.json`（`passe
 
 ### 回滚点
 
-产线侧 `.bak-20261009-absorb2` / `.bak-20261009-absorb` 备份 + sha256 回滚清单；旧锚点保留为 `…voice_consistency.json.eof.json.orphaned-20261009`（不删除）。本层为纯追加，两段门禁判据与既有章节零改动。
+`config/absorb_r2.json.bak-20261009-absorb2`、`scripts/absorb_r2.py.bak-20261009-absorb2`、`tests/fixtures/r2/cases.json.bak-20261009-absorb2`、`reports/absorb-r2/last_run.json.bak-20261009-absorb2`、`scripts/storyctl.py.bak-20261009-absorb`；旧锚点保留为 `…voice_consistency.json.eof.json.orphaned-20261009`（不删除）。本层为纯追加，两段门禁判据与既有章节零改动。
 
 *（内容由AI生成，仅供参考）*
 
 > AI生成
 *（内容由AI生成，仅供参考）*
 *（内容由AI生成，仅供参考）*
+
+---
+
+## 增量能力（v1.18.0，2026-10-10 落地）
+
+### 自动选题 + 批量出片（增量1+2）
+
+```bash
+# 1. 从 RAG 选题池拉 10 条去重候选队列
+python3 scripts/topic_intake.py --pull 10
+# 2a. 单条：队首选题直接出文案
+python3 scripts/discovery_to_video.py --from-queue
+# 2b. 批量：队列前 N 条一键出片（断点续跑 / 失败隔离）
+python3 scripts/batch_run.py --from-queue story/_queue/topics-YYYYMMDD.json --take 3
+# 2c. 或显式指定 story 批量
+python3 scripts/batch_run.py --pipeline config/batch_pipeline.yaml --stories story/xxx story/yyy
+# 2d. 干跑（只打印计划）
+python3 scripts/batch_run.py --pipeline config/batch_pipeline.yaml --stories story/xxx --dry-run
+```
+
+- 状态与断点：`story/_queue/batch_state.json`；批次报告：`reports/batch-YYYYMMDD.md`。
+
+### 素材策略（增量3+5）
+
+- provider 链：`local-index（本地素材库）→ pexels → local-gen（ffmpeg 补位）→ placeholder（V-BASE 提亮静帧）`
+- 建/查本地素材库：`python3 scripts/material_index.py --build` / `--update` / `--stats` / `--query "科技感城市夜景"` / `--query-image /path/img.jpg`
+- 素材台账：`story/<n>/materials/ledger.json`（记录下载/生成/复用来源）
+
+### 多角色 TTS（增量4，显式开关）
+
+```bash
+# 3 人对话合成（角色名须在 audiobook-markup/config/roles.json）
+python3 scripts/tts_cast.py --lines "旁白:开场词|女主:台词|男二:台词" --out-dir story/<n>/cast/
+# 多音色一致性断言（≥3 角色、组内无漂移、角色间 F0 差≥8%）
+python3 scripts/voice_consistency.py story/<n> --cast --cast-dir story/<n>/cast/
+```
+
+- 默认单人线行为一字不变；`--cast` 之外不启用多角色。
+
+---
+
+## 借鉴增强层（v1.19.0，2026-10-10 落地）
+
+### 运动量化验收（`scripts/motion_audit.py`）
+
+```bash
+# 对成片跑运动量化（运动面积% / 静止帧对% / 跳变 / 抽帧耗时 / 热图）
+python3 scripts/motion_audit.py --video story/<n>/douyin.mp4 --out story/<n>/qc/motion_audit
+# 双版比对（--ref 参照成片）
+python3 scripts/motion_audit.py --video story/<n>/douyin.mp4 --ref story/<n>/versions/xxx.mp4 --out story/<n>/qc/motion_audit_ref
+# 内置负控自测（静→动→静 + 跳变注入，全部 PASS 才可发布）
+python3 scripts/motion_audit.py --self-test
+```
+
+- 产出：`qa.json`（数字）/ `qa.md`（表）/ `motion_heatmap.jpg` / `douyin_frames.jpg`；判据为经验阈值（运动 0.5–8%、静止帧对 >40% 读卡、跳变 >0 逐帧复核）。
+- 纯 numpy/PIL + 系统 ffmpeg，无 playwright；确定性恒 SKIP（ffmpeg 抽帧链路非逐字节确定）。
+
+### 风格配方卡（`docs/风格配方/`）
+
+- 3 张：`01_howtolivebetter-54k.md`（节奏+配乐）、`02_compositor-mac.md`（V-BASE 视觉）、`03_cua.md`（多场景节奏）。
+- 格式：文件/规格/性能（motion_audit 实测）/节奏配方/管线/母题动画/运动量返修建议/短板。
+
+### BPM 节拍网格配乐（`build_music.py --bpm-grid`，可选）
+
+```bash
+# 现有选曲模式（默认，一字不变）
+python3 scripts/build_music.py --story story/xxx
+# 可选：BPM 节拍网格合成配乐（严格网格 / 动机换乐器 / 逐段配器 / 逐段响度对齐）
+python3 scripts/build_music.py --story story/xxx --bpm-grid --bpm 128 --bpm-key dm --out douyin_music_bpm.mp4
+```
+
+- 默认 128 BPM / 八分音符 0.2344s / 网格零点 0.028s；节拍槽只铺配音段；逐段按 beat 换配器；整体 loudnorm I=-19 / TP=-1.5 / LRA=11。
+- 实测：`story/howtolivebetter-54k` 闪避 8.0dB / 旁白保持 0.2 LU / 削波 0。
+- 注意：合成域 [-1,1] float 写 int16 wav 须 ×32767（已修正并复验）。
+
+- 回滚：`scripts/build_music.py` / `docs/产线规范.md` / `PIPELINE.md` 均有 `*.bak-20261010`；`scripts/motion_audit.py` 与 `docs/风格配方/` 为新增，移除即回基线。
